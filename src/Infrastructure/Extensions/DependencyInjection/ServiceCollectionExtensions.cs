@@ -27,6 +27,7 @@ namespace Infrastructure.Extensions.DependencyInjection
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ITenantRepository, TenantRepository>();
 
             return services;
         }
