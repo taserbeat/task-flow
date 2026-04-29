@@ -9,7 +9,7 @@ services:
       - 15432:5432
     restart: always
     environment:
-      - POSTGRES_USER=${TF_POSTGRES_SUPERUSER_USER:-postgres}
+      - POSTGRES_USER=${TF_POSTGRES_SUPERUSER_USERNAME:-postgres}
       - POSTGRES_PASSWORD=${TF_POSTGRES_SUPERUSER_PASSWORD:-postgres}
       - TZ=Asia/Tokyo
       - LANG=ja_JP.utf8
@@ -34,7 +34,7 @@ services:
       - 8081:8081
     environment:
       # postgres://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode={MODE}
-      - DATABASE_URL=postgres://devAdmin:devAdmin@db:5432/taskflow_dev?sslmode=disable
+      - DATABASE_URL=postgres://tfAdmin:tfAdmin@db:5432/taskflow_dev?sslmode=disable
     restart: always
     depends_on:
       db:
