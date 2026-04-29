@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(TaskFlowDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20260429141615_CreateTenantsTable")]
     partial class CreateTenantsTable
     {

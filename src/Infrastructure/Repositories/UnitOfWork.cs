@@ -10,9 +10,9 @@ namespace Infrastructure.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private IDbContextTransaction? _transaction = null;
-        private readonly TaskFlowDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
-        public UnitOfWork(TaskFlowDbContext dbContext)
+        public UnitOfWork(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }

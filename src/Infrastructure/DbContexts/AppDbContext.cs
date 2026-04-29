@@ -3,10 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DbContexts
 {
-    /// <summary>
-    /// TaskFlowのDbContext
-    /// </summary>
-    public class TaskFlowDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         /// <summary>
         /// スキーマ名
@@ -28,7 +25,7 @@ namespace Infrastructure.DbContexts
         /// </summary>
         public static readonly string AppUser = "tfApp";
 
-        public TaskFlowDbContext(DbContextOptions<TaskFlowDbContext> options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
         }
 
@@ -40,7 +37,7 @@ namespace Infrastructure.DbContexts
             modelBuilder.HasDefaultSchema(SchemaName);
 
             // テーブルの設定
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskFlowDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
         }
     }
 }

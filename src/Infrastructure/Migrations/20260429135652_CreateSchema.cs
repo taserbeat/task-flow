@@ -12,7 +12,7 @@ namespace Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             // スキーマを作成
-            string schemaName = TaskFlowDbContext.SchemaName;
+            string schemaName = AppDbContext.SchemaName;
             migrationBuilder.Sql($@"CREATE SCHEMA IF NOT EXISTS ""{schemaName}"";");
 
             // データベースのデフォルトのスキーマを設定
@@ -28,8 +28,8 @@ END $$;
 ");
 
             // 既存テーブルへの権限設定
-            string appUser = TaskFlowDbContext.AppUser;
-            string migrationUser = TaskFlowDbContext.MigrationUser;
+            string appUser = AppDbContext.AppUser;
+            string migrationUser = AppDbContext.MigrationUser;
             migrationBuilder.Sql($@"GRANT USAGE ON SCHEMA ""{schemaName}"" TO ""{appUser}"";");
             migrationBuilder.Sql($@"GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA ""{schemaName}"" TO ""{appUser}"";");
             migrationBuilder.Sql($@"GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA ""{schemaName}"" TO ""{appUser}"";");
@@ -42,7 +42,7 @@ END $$;
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.Sql($@"DROP SCHEMA IF EXISTS ""{TaskFlowDbContext.SchemaName}"";");
+            migrationBuilder.Sql($@"DROP SCHEMA IF EXISTS ""{AppDbContext.SchemaName}"";");
         }
     }
 }

@@ -21,7 +21,7 @@ namespace Infrastructure.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<TaskFlowDbContext>(options =>
+            services.AddDbContext<AppDbContext>(options =>
             {
                 options.UseNpgsql(configuration.GetConnectionString(ConnectionStringNames.DefaultConnection));
             });

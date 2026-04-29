@@ -6,11 +6,11 @@ using Microsoft.Extensions.Configuration;
 namespace Infrastructure.DbContexts
 {
     /// <summary>
-    /// EF Coreのマイグレーション時に呼び出される<see cref="TaskFlowDbContext" />のファクトリー
+    /// EF Coreのマイグレーション時に呼び出される<see cref="AppDbContext" />のファクトリー
     /// </summary>
-    public class DesignTimeTaskFlowDbContextFactory : IDesignTimeDbContextFactory<TaskFlowDbContext>
+    public class DesignTimeAppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
-        public TaskFlowDbContext CreateDbContext(string[] args)
+        public AppDbContext CreateDbContext(string[] args)
         {
             string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Development";
 
@@ -21,13 +21,13 @@ namespace Infrastructure.DbContexts
                 .Build();
 
             var connectionString = configuration.GetConnectionString(ConnectionStringNames.MigrateConnection);
-            var optionBuilder = new DbContextOptionsBuilder<TaskFlowDbContext>();
+            var optionBuilder = new DbContextOptionsBuilder<AppDbContext>();
             optionBuilder.UseNpgsql(connectionString, optionBuilder =>
             {
-                optionBuilder.MigrationsHistoryTable(TaskFlowDbContext.MigrationsHistoryTableName, TaskFlowDbContext.SchemaName);
+                optionBuilder.MigrationsHistoryTable(AppDbContext.MigrationsHistoryTableName, AppDbContext.SchemaName);
             });
 
-            return new TaskFlowDbContext(optionBuilder.Options);
+            return new AppDbContext(optionBuilder.Options);
         }
     }
 }

@@ -6,9 +6,9 @@ namespace Infrastructure.Repositories
 {
     public class TenantRepository : ITenantRepository
     {
-        private readonly TaskFlowDbContext _dbContext;
+        private readonly AppDbContext _dbContext;
 
-        public TenantRepository(TaskFlowDbContext dbContext)
+        public TenantRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
         }
