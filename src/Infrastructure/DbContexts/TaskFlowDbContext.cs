@@ -32,7 +32,7 @@ namespace Infrastructure.DbContexts
         {
         }
 
-        // public DbSet<TenantEm> Tenants { get; set; }
+        public DbSet<TenantEm> Tenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,7 +40,7 @@ namespace Infrastructure.DbContexts
             modelBuilder.HasDefaultSchema(SchemaName);
 
             // テーブルの設定
-            // modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskFlowDbContext).Assembly);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskFlowDbContext).Assembly);
         }
     }
 }

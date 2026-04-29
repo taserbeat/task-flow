@@ -15,7 +15,7 @@ namespace Domain.Common
         /// 作成者
         /// </summary>
         /// <value></value>
-        public required DateTimeOffset? CreatedBy { get; set; }
+        public required Guid? CreatedBy { get; set; }
 
         /// <summary>
         /// 最終更新日時
@@ -27,6 +27,6 @@ namespace Domain.Common
         /// 最終更新者
         /// </summary>
         /// <value></value>
-        public required DateTimeOffset? UpdatedBy { get; set; }
+        public required Guid? UpdatedBy { get; set; }
     }
 }
