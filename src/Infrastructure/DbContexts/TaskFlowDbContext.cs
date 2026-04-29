@@ -1,5 +1,4 @@
 using Domain.Entities;
-using Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DbContexts
@@ -14,11 +13,26 @@ namespace Infrastructure.DbContexts
         /// </summary>
         public static readonly string SchemaName = "tf";
 
+        /// <summary>
+        /// マイグレーション履歴テーブル名
+        /// </summary>
+        public static readonly string MigrationsHistoryTableName = "__EFMigrationsHistory";
+
+        /// <summary>
+        /// マイグレーション用のDBユーザー名
+        /// </summary>
+        public static readonly string MigrationUser = "tfAdmin";
+
+        /// <summary>
+        /// アプリケーション用のDBユーザー名
+        /// </summary>
+        public static readonly string AppUser = "tfApp";
+
         public TaskFlowDbContext(DbContextOptions<TaskFlowDbContext> options) : base(options)
         {
         }
 
-        public DbSet<TenantEm> Tenants { get; set; }
+        // public DbSet<TenantEm> Tenants { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -27,7 +41,6 @@ namespace Infrastructure.DbContexts
 
             // テーブルの設定
             // modelBuilder.ApplyConfigurationsFromAssembly(typeof(TaskFlowDbContext).Assembly);
-            modelBuilder.ApplyConfiguration(new TenantTableConfiguration());
         }
     }
 }
