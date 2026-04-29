@@ -1,0 +1,79 @@
+services:
+  db:
+    build:
+      context: ./.docker/postgres
+      dockerfile: Dockerfile
+    image: taskflow-postgres:${TF_POSTGRES_IMAGE_TAG:-latest}
+    container_name: tf_postgres
+    ports:
+      - 15432:5432
+    restart: always
+    environment:
+      - POSTGRES_USER=${TF_POSTGRES_SUPERUSER_USER:-postgres}
+      - POSTGRES_PASSWORD=${TF_POSTGRES_SUPERUSER_PASSWORD:-postgres}
+      - TZ=Asia/Tokyo
+      - LANG=ja_JP.utf8
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 3
+    volumes:
+      - tf_postgres_volume:/var/lib/postgresql
+
+  pgweb:
+    # https://hub.docker.com/layers/sosedoff/pgweb/0.17.0/images/sha256-dfc237e40bd0d88e28a2b1254e63e1a3133ec4d21715ca383434d252044d40a5
+    image: sosedoff/pgweb:0.17.0
+    container_name: tf_pgweb
+    ports:
+      - 8081:8081
+    environment:
+      # postgres://{USER}:{PASSWORD}@{HOST}:{PORT}/{DB_NAME}?sslmode={MODE}
+      - DATABASE_URL=postgres://devAdmin:devAdmin@db:5432/taskflow_dev?sslmode=disable
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
+  redis:
+    image: redis:7.0.0-alpine
+    container_name: tf_redis
+    ports:
+      - 6379:6379
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli ping | grep PONG"]
+      interval: 1s
+      timeout: 3s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 3
+
+  redis-insight:
+    # https://hub.docker.com/layers/redislabs/redisinsight/3.2.0/images/sha256-5f7ea275a34626b54ab3c97a3af03771ae1d94635f5c5acbfcac2def83e35068
+    image: redislabs/redisinsight:3.2.0
+    container_name: tf_redisinsight
+    ports:
+      - 5540:5540
+    restart: always
+    depends_on:
+      - redis
+    logging:
+      driver: json-file
+      options:
+        max-size: 1m
+        max-file: 3
+    volumes:
+      - tf_redisinsight_volume:/data
+
+volumes:
+  tf_postgres_volume:
+  tf_redisinsight_volume:
