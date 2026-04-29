@@ -1,5 +1,7 @@
+using Application.Repositories;
 using Infrastructure.Common.Constants;
 using Infrastructure.DbContexts;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +25,8 @@ namespace Infrastructure.Extensions.DependencyInjection
             {
                 options.UseNpgsql(configuration.GetConnectionString(ConnectionStringNames.DefaultConnection));
             });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             return services;
         }
