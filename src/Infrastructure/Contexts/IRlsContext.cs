@@ -1,9 +1,9 @@
-namespace Application.Contexts
+namespace Infrastructure.Contexts
 {
     /// <summary>
-    /// テナント情報を扱うコンテキスト
+    /// Row Level Securityのコンテキスト情報
     /// </summary>
-    public interface ITenantContext
+    public interface IRlsContext
     {
         /// <summary>
         /// テナントID

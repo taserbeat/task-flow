@@ -1,4 +1,5 @@
 using Infrastructure.Extensions.DependencyInjection;
+using Web.Extensions.DependencyInjection;
 using Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,7 @@ builder.Services.AddControllersWithViews();
 
 // DIコンテナへの登録
 builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddWeb();
 
 var app = builder.Build();
 
