@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Domain.Entities.Tenants;
 
 namespace Application.Repositories
 {

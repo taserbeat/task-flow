@@ -1,5 +1,5 @@
 using Application.Repositories;
-using Domain.Entities;
+using Domain.Entities.Tenants;
 using Infrastructure.DbContexts;
 
 namespace Infrastructure.Repositories
