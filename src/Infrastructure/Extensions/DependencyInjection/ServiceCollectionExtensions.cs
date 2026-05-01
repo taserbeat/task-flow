@@ -21,9 +21,14 @@ namespace Infrastructure.Extensions.DependencyInjection
         /// <returns></returns>
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddDbContext<AppDbContext>(options =>
+            services.AddDbContext<AppDbContext>((provider, options) =>
             {
                 options.UseNpgsql(configuration.GetConnectionString(ConnectionStringNames.DefaultConnection));
+
+                // TODO: テーブル構成が整ってきた段階で、RLSを適用する場合はインターセプターのコメントアウトを解除する
+                options.AddInterceptors([
+                    // provider.GetRequiredService<AppDbConnectionInterceptor>(),
+                ]);
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
