@@ -3,7 +3,7 @@ using Domain.Entities.Tenants;
 namespace Application.Repositories
 {
     /// <summary>
-    /// テナントリポジトリ
+    /// テナントのリポジトリ
     /// </summary>
     public interface ITenantRepository
     {
@@ -13,5 +13,12 @@ namespace Application.Repositories
         /// <param name="tenantEm"></param>
         /// <returns></returns>
         Task AddAsync(TenantEm tenantEm);
+
+        /// <summary>
+        /// 指定のテナントを取得する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <returns></returns>
+        Task<TenantEm?> GetByIdAsync(TenantId tenantId);
     }
 }

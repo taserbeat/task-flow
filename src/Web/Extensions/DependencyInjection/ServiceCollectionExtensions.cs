@@ -1,5 +1,7 @@
 using Application.Contexts;
+using Application.Repositories;
 using Infrastructure.Contexts;
+using Infrastructure.Repositories;
 using Web.Contexts;
 
 namespace Web.Extensions.DependencyInjection
@@ -11,9 +13,15 @@ namespace Web.Extensions.DependencyInjection
     {
         public static IServiceCollection AddWeb(this IServiceCollection services)
         {
-            services.AddSingleton<IHttpContextAccessor>();
+            services.AddHttpContextAccessor();
+            services.AddSingleton(TimeProvider.System);
+
             services.AddScoped<IRlsContext, RlsContext>();
             services.AddScoped<IUserContext, UserContext>();
+
+            services.AddScoped<ITenantRepository, TenantRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
 
             return services;
         }

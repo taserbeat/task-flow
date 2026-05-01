@@ -1,8 +1,12 @@
 using Infrastructure.Extensions.DependencyInjection;
 using Web.Extensions.DependencyInjection;
 using Web.Middlewares;
+using Web.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// HostedServiceの登録
+builder.Services.AddHostedService<InitWorker>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
