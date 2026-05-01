@@ -1,5 +1,5 @@
--- 開発時に管理者として接続するユーザー
-CREATE ROLE "devAdmin" WITH
+-- マイグレーションで接続するユーザー
+CREATE ROLE "tfAdmin" WITH
 	LOGIN
 	SUPERUSER
 	CREATEDB
@@ -8,10 +8,10 @@ CREATE ROLE "devAdmin" WITH
 	REPLICATION
 	BYPASSRLS
 	CONNECTION LIMIT -1
-	PASSWORD 'devAdmin';
+	PASSWORD 'tfAdmin';
 
--- 開発時にアプリケーションから接続するユーザー
-CREATE ROLE "devApp" WITH
+-- アプリケーションの運用で接続するユーザー
+CREATE ROLE "tfApp" WITH
 	LOGIN
 	NOSUPERUSER
 	NOCREATEDB
@@ -20,4 +20,4 @@ CREATE ROLE "devApp" WITH
 	REPLICATION
 	NOBYPASSRLS
 	CONNECTION LIMIT -1
-	PASSWORD 'devApp';
+	PASSWORD 'tfApp';

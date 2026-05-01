@@ -1,6 +1,6 @@
 CREATE DATABASE "taskflow_dev"
     WITH
-    OWNER = "devAdmin"
+    OWNER = "tfAdmin"
     ENCODING = 'UTF8'
     LOCALE_PROVIDER = 'libc'
     CONNECTION LIMIT = -1
