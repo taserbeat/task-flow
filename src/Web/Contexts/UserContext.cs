@@ -1,9 +1,9 @@
 using System.Security.Claims;
 using Application.Contexts;
-using Application.Exceptions;
 using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
+using Domain.Exceptions;
 using Web.Common.Constants;
 
 namespace Web.Contexts

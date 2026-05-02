@@ -1,6 +1,6 @@
-using Application.Exceptions;
 using Application.Services;
 using Domain.Entities.Users;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
 
 namespace Infrastructure.Services

@@ -1,4 +1,4 @@
-namespace Application.Exceptions
+namespace Domain.Exceptions
 {
     /// <summary>
     /// リソースが見つからないエラーの例外

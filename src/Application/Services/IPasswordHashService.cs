@@ -1,5 +1,5 @@
 using Domain.Entities.Users;
-using Application.Exceptions;
+using Domain.Exceptions;
 
 namespace Application.Services
 {

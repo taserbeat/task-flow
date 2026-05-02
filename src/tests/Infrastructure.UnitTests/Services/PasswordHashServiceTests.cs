@@ -1,5 +1,5 @@
-using Application.Exceptions;
 using Application.Services;
+using Domain.Exceptions;
 using Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

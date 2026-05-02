@@ -1,4 +1,4 @@
-namespace Application.Exceptions
+namespace Domain.Exceptions
 {
     /// <summary>
     /// 認証エラーの例外

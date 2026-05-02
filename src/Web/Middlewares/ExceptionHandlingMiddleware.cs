@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Application.Exceptions;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Middlewares
