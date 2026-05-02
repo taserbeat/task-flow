@@ -1,7 +1,9 @@
 using Application.Contexts;
 using Application.Repositories;
+using Application.Services;
 using Infrastructure.Contexts;
 using Infrastructure.Repositories;
+using Infrastructure.Services;
 using Web.Contexts;
 
 namespace Web.Extensions.DependencyInjection
@@ -22,6 +24,8 @@ namespace Web.Extensions.DependencyInjection
             services.AddScoped<ITenantRepository, TenantRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+            services.AddScoped<IPasswordHashService, PasswordHashService>();
 
             return services;
         }

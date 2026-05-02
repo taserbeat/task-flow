@@ -1,8 +1,10 @@
 using Application.Repositories;
+using Application.Services;
 using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Infrastructure.Contexts;
+using Web.Common.Constants;
 
 namespace Web.Workers
 {
@@ -42,7 +44,7 @@ namespace Web.Workers
 
         private static readonly UserId _rootUserId = new(Guid.Parse("019de42e-3e3c-7667-a13d-a0edd99ccd09"));
         private static readonly UserId _adminUserId = new(Guid.Parse("019de42e-3e3d-74df-8781-d584b4150307"));
-        private static readonly UserId _sample1UserId = new(Guid.Parse("019de42e-3e3d-7b1b-a9d6-90b0f7d608c2"));
+        private static readonly UserId _sampleUserId = new(Guid.Parse("019de42e-3e3d-7b1b-a9d6-90b0f7d608c2"));
 
         /// <summary>
         /// 初期データを登録する
@@ -79,12 +81,12 @@ namespace Web.Workers
                         await tenantRepository.AddAsync(rootTenantEm);
                         await uow.SaveChangesAsync();
 
-                        _logger.LogInformation($"テナント: '{rootTenantEm.Name}' を作成しました。");
+                        _logger.LogInformation($"テナント: '{rootTenantEm.Name}' を登録しました。");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"テナント: '{rootTenantEm.Name}' の作成に失敗しました。");
+                    _logger.LogError(ex, $"テナント: '{rootTenantEm.Name}' の登録に失敗しました。");
                 }
             }
 
@@ -126,12 +128,12 @@ namespace Web.Workers
                         await roleRepository.AddAsync(roleEm);
                         await uow.SaveChangesAsync();
 
-                        _logger.LogInformation($"ロール: '{roleEm.Name}' を作成しました。");
+                        _logger.LogInformation($"ロール: '{roleEm.Name}' を登録しました。");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"ロール: '{roleEm.Name}' の作成に失敗しました。");
+                    _logger.LogError(ex, $"ロール: '{roleEm.Name}' の登録に失敗しました。");
                 }
             }
 
@@ -139,42 +141,83 @@ namespace Web.Workers
 
             #region ユーザー
 
-            var userEms = new UserEm[]
+            using var userScope = _scopeFactory.CreateScope();
+            var configuration = userScope.ServiceProvider.GetRequiredService<IConfiguration>();
+            var passwordHashService = userScope.ServiceProvider.GetRequiredService<IPasswordHashService>();
+
+            var userEms = new List<UserEm>();
+
             {
-                UserEm.Create(
-                    userId: _rootUserId,
-                    tenantId: _rootTenantId,
-                    createdAt: now,
-                    updatedAt: now,
-                    createdBy: null,
-                    updatedBy: null,
-                    email: new ("root@example.com"),
-                    passwordHash: new ("abc123_hashed_password"),
-                    roleId: _systemAdminRoleId
-                ),
-                UserEm.Create(
-                    userId: _adminUserId,
-                    tenantId: _rootTenantId,
-                    createdAt: now,
-                    updatedAt: now,
-                    createdBy: null,
-                    updatedBy: null,
-                    email: new ("admin@example.com"),
-                    passwordHash: new ("abc123_hashed_password"),
-                    roleId: _adminRoleId
-                ),
-                UserEm.Create(
-                    userId: _sample1UserId,
-                    tenantId: _rootTenantId,
-                    createdAt: now,
-                    updatedAt: now,
-                    createdBy: null,
-                    updatedBy: null,
-                    email: new ("sample1@example.com"),
-                    passwordHash: new ("abc123_hashed_password"),
-                    roleId: _userRoleId
-                ),
-            };
+                var email = configuration[InitDataEnvKeys.TF_SYSTEM_ADMIN_USER_EMAIl_KEY];
+                var password = configuration[InitDataEnvKeys.TF_SYSTEM_ADMIN_USER_PASSWORD_KEY];
+
+                if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+                {
+                    var passwordHash = passwordHashService.GenerateHash(password);
+
+                    userEms.Add(
+                        UserEm.Create(
+                            userId: _rootUserId,
+                            tenantId: _rootTenantId,
+                            createdAt: now,
+                            updatedAt: now,
+                            createdBy: null,
+                            updatedBy: null,
+                            email: new(email),
+                            passwordHash: passwordHash,
+                            roleId: _systemAdminRoleId
+                        )
+                    );
+                }
+            }
+
+            {
+                var email = configuration[InitDataEnvKeys.TF_ADMIN_USER_EMAIL_KEY];
+                var password = configuration[InitDataEnvKeys.TF_ADMIN_USER_PASSWORD_KEY];
+
+                if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+                {
+                    var passwordHash = passwordHashService.GenerateHash(password);
+
+                    userEms.Add(
+                        UserEm.Create(
+                            userId: _adminUserId,
+                            tenantId: _rootTenantId,
+                            createdAt: now,
+                            updatedAt: now,
+                            createdBy: null,
+                            updatedBy: null,
+                            email: new(email),
+                            passwordHash: passwordHash,
+                            roleId: _adminRoleId
+                        )
+                    );
+                }
+            }
+
+            {
+                var email = configuration[InitDataEnvKeys.TF_SAMPLE_USER_EMAIL_KEY];
+                var password = configuration[InitDataEnvKeys.TF_SAMPLE_USER_PASSWORD_KEY];
+
+                if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
+                {
+                    var passwordHash = passwordHashService.GenerateHash(password);
+
+                    userEms.Add(
+                        UserEm.Create(
+                            userId: _sampleUserId,
+                            tenantId: _rootTenantId,
+                            createdAt: now,
+                            updatedAt: now,
+                            createdBy: null,
+                            updatedBy: null,
+                            email: new(email),
+                            passwordHash: passwordHash,
+                            roleId: _userRoleId
+                        )
+                    );
+                }
+            }
 
             foreach (var userEm in userEms)
             {
@@ -191,16 +234,15 @@ namespace Web.Workers
                     var savedUserEm = await userRepository.GetByIdAsync(userEm.Id);
                     if (savedUserEm is null)
                     {
-                        // TODO: パスワードハッシュの生成を見直す
                         await userRepository.AddAsync(userEm);
                         await uow.SaveChangesAsync();
 
-                        _logger.LogInformation($"ユーザー: '{userEm.Email}' を作成しました。");
+                        _logger.LogInformation($"ユーザー: '{userEm.Email}' を登録しました。");
                     }
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, $"ユーザー: '{userEm.Email}' の作成に失敗しました。");
+                    _logger.LogError(ex, $"ユーザー: '{userEm.Email}' の登録に失敗しました。");
                 }
             }
 
