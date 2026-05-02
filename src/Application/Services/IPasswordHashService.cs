@@ -1,4 +1,5 @@
 using Domain.Entities.Users;
+using Application.Exceptions;
 
 namespace Application.Services
 {
@@ -12,6 +13,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="password">パスワード</param>
         /// <returns></returns>
+        /// <exception cref="AppValidateException" />
         UserPasswordHash GenerateHash(string password);
 
         /// <summary>

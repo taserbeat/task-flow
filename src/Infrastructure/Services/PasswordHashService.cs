@@ -1,3 +1,4 @@
+using Application.Exceptions;
 using Application.Services;
 using Domain.Entities.Users;
 using Microsoft.AspNetCore.Identity;
@@ -13,6 +14,11 @@ namespace Infrastructure.Services
 
         public UserPasswordHash GenerateHash(string password)
         {
+            if (string.IsNullOrWhiteSpace(password))
+            {
+                throw new AppValidateException("パスワードが空です。");
+            }
+
             var hash = _hasher.HashPassword(null!, password);
             return new UserPasswordHash(hash);
         }
