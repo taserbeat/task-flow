@@ -1,0 +1,28 @@
+@model Web.Models.LoginViewModel;
+
+@{
+    ViewData["Title"] = "ログイン";
+    Layout = "_Layout";
+}
+<div class="wrapper">
+    <div class="login__container">
+        <div class="login__inner">
+            <div class="login__window">
+                <div class="login__text">
+                    <div class="login__text--title">TaskFlow</div>
+                    <div class="login__text--version">ver. @Model.Version</div>
+                    @if (!string.IsNullOrWhiteSpace(@Model?.ErrorMessage))
+                    {
+                        <p class="login__text--error">@Model.ErrorMessage</p>
+                    }
+                </div>
+                <form method="post" class="login__input" role="form" asp-controller="Auth" asp-action="Login" asp-route-returnurl=@Model?.ReturnUrl>
+                    <input type="text" id="email" class="login-form__input" name="email" placeholder="メールアドレス">
+                    <input type="password" id="password" class="login-form__input" name="password" placeholder="パスワード">
+                    <input type="submit" class="login-form__submit" value="ログイン">
+                    <input name="__RequestVerificationToken" type="hidden" value=""/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

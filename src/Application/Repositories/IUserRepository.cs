@@ -22,10 +22,10 @@ namespace Application.Repositories
         Task<UserEm?> GetByIdAsync(UserId userId);
 
         /// <summary>
-        /// 指定のメールアドレスから有効なユーザーを取得する
+        /// ログイン処理として、メールアドレスからユーザーを取得する
         /// </summary>
         /// <param name="email">メールアドレス</param>
         /// <returns></returns>
-        Task<UserEm?> GetActiveByEmailAsync(UserEmail email);
+        Task<UserEm?> GetForLoginAsync(UserEmail email);
     }
 }

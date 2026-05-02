@@ -29,5 +29,10 @@ namespace Web.Common.Constants
         /// ロール名
         /// </summary>
         public const string RoleName = "role_name";
+
+        /// <summary>
+        /// セッションID
+        /// </summary>
+        public const string SessionId = "session_id";
     }
 }
