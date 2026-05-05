@@ -1,14 +1,18 @@
+using System.Reflection;
 using Application.Extensions.DependencyInjection;
 using Domain.Exceptions;
 using Infrastructure.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
 using Web.Attributes;
 using Web.Common.Constants;
 using Web.Controllers;
+using Web.Dtos.Version;
 using Web.Extensions.DependencyInjection;
 using Web.Middlewares;
 using Web.Workers;
@@ -118,6 +122,26 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = SessionSettings.CookieName;
 });
 
+// Swagger(Open API)の設定
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc(SwaggerSettings.DocumentName, new OpenApiInfo()
+    {
+        Version = new VersionInfo().Version,
+        Title = "TaskFlow API",
+        Description = "TaskFlowのWeb APIです。",
+    });
+
+    // TODO: JWT認証を追加
+
+    // TODO: Swaggerのカスタムフィルターを追加
+
+    // summaryコメントでアノテーションする
+    var xmlFile = Assembly.GetExecutingAssembly().GetName().Name + ".xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
+});
+
 // DIコンテナへの登録
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -160,6 +184,33 @@ app.UseAuthorization();
 
 // セッションのミドルウェアを使用
 app.UseSession();
+
+// Swagger UIに認証をかける
+app.UseWhen(
+    ctx => ctx.Request.Path.StartsWithSegments("/swagger"),
+    branch =>
+    {
+        branch.Use(async (context, next) =>
+        {
+            bool isAuthenticated = context.User.Identity?.IsAuthenticated ?? false;
+            if (!isAuthenticated)
+            {
+                await context.ChallengeAsync();
+                return;
+            }
+
+            await next();
+        });
+    }
+);
+
+// Swaggerのミドルウェアを使用
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint(SwaggerSettings.EndPointUrl, SwaggerSettings.DocumentName);
+    options.DisplayRequestDuration();
+});
 
 // フロントエンドの静的コンテンツを返す対応
 string frontendDir = app.Environment.IsProduction()
