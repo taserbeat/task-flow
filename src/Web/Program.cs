@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
+using NLog.Extensions.Logging;
 using Web.Attributes;
 using Web.Common.Constants;
 using Web.Controllers;
@@ -18,7 +19,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging
     .ClearProviders()
     .AddConsole()
-    .SetMinimumLevel(LogLevel.Trace);
+    .SetMinimumLevel(LogLevel.Trace)
+    .AddNLog();
 
 // HostedServiceの登録
 builder.Services.AddHostedService<InitWorker>();
