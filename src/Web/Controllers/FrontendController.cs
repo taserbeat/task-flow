@@ -5,6 +5,9 @@ using Microsoft.Extensions.FileProviders;
 
 namespace Web.Controllers
 {
+    /// <summary>
+    /// フロントエンドのWebアプリにフォールバックするコントローラー
+    /// </summary>
     public class FrontendController : Controller
     {
         private readonly ILogger<FrontendController> _logger;
