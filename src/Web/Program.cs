@@ -5,10 +5,14 @@ using Infrastructure.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
+using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption.ConfigurationModel;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
+using StackExchange.Redis;
 using Web.Attributes;
 using Web.Common.Constants;
 using Web.Controllers;
@@ -109,7 +113,7 @@ builder.Services
 // セッション(一時データの格納用)の設定
 builder.Services.AddSession(options =>
 {
-    // セッション情報を格納するクッキーはHttpOnly(JavaScriptでアクセス禁止)とする
+    // セッション情報を格納するCookieはHttpOnly(JavaScriptでアクセス禁止)とする
     options.Cookie.HttpOnly = true;
 
     // クッキーのSameSite設定
@@ -141,6 +145,35 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     options.IncludeXmlComments(xmlPath);
 });
+
+// Redisの設定
+bool isRedisEnabled = builder.Configuration[RedisEnvNames.EnableRedis]?.ToLower() == "true";
+if (isRedisEnabled)
+{
+    string? redisConnectionString = builder.Configuration.GetConnectionString(RedisEnvNames.RedisConnectionString);
+    if (string.IsNullOrWhiteSpace(redisConnectionString))
+    {
+        throw new InvalidOperationException("Redisの接続文字列を設定してください。");
+    }
+
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = redisConnectionString;
+        options.InstanceName = "TaskFlow_";
+    });
+
+    // データ保護の設定
+    var redis = ConnectionMultiplexer.Connect(redisConnectionString);
+    builder.Services
+        .AddDataProtection()
+        .UseCryptographicAlgorithms(new AuthenticatedEncryptorConfiguration()
+        {
+            EncryptionAlgorithm = EncryptionAlgorithm.AES_256_CBC,
+            ValidationAlgorithm = ValidationAlgorithm.HMACSHA256,
+        })
+        .SetApplicationName("TaskFlow")
+        .PersistKeysToStackExchangeRedis(redis, "TaskFlow_RedisProtectionKey");  // Redisの秘密鍵を保存するキー(名前空間)を指定
+}
 
 // DIコンテナへの登録
 builder.Services.AddApplication();
