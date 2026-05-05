@@ -148,8 +148,8 @@ namespace Web.Workers
             var userEms = new List<UserEm>();
 
             {
-                var email = configuration[InitDataEnvKeys.TF_SYSTEM_ADMIN_USER_EMAIl_KEY];
-                var password = configuration[InitDataEnvKeys.TF_SYSTEM_ADMIN_USER_PASSWORD_KEY];
+                var email = configuration[InitDataEnvNames.TF_SYSTEM_ADMIN_USER_EMAIl_KEY];
+                var password = configuration[InitDataEnvNames.TF_SYSTEM_ADMIN_USER_PASSWORD_KEY];
 
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {
@@ -172,8 +172,8 @@ namespace Web.Workers
             }
 
             {
-                var email = configuration[InitDataEnvKeys.TF_ADMIN_USER_EMAIL_KEY];
-                var password = configuration[InitDataEnvKeys.TF_ADMIN_USER_PASSWORD_KEY];
+                var email = configuration[InitDataEnvNames.TF_ADMIN_USER_EMAIL_KEY];
+                var password = configuration[InitDataEnvNames.TF_ADMIN_USER_PASSWORD_KEY];
 
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {
@@ -196,8 +196,8 @@ namespace Web.Workers
             }
 
             {
-                var email = configuration[InitDataEnvKeys.TF_SAMPLE_USER_EMAIL_KEY];
-                var password = configuration[InitDataEnvKeys.TF_SAMPLE_USER_PASSWORD_KEY];
+                var email = configuration[InitDataEnvNames.TF_SAMPLE_USER_EMAIL_KEY];
+                var password = configuration[InitDataEnvNames.TF_SAMPLE_USER_PASSWORD_KEY];
 
                 if (!string.IsNullOrWhiteSpace(email) && !string.IsNullOrWhiteSpace(password))
                 {

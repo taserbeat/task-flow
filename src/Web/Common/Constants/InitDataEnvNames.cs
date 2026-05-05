@@ -3,7 +3,7 @@ namespace Web.Common.Constants
     /// <summary>
     /// 初期データを指定する環境変数のキー
     /// </summary>
-    public static class InitDataEnvKeys
+    public static class InitDataEnvNames
     {
         /// <summary>
         /// システム管理者権限を持つユーザーのメールアドレスを指定するキー
