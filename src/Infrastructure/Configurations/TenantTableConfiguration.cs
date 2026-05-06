@@ -1,4 +1,4 @@
-using Domain.Entities;
+using Domain.Entities.Tenants;
 using Infrastructure.Extensions.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -34,7 +34,7 @@ namespace Infrastructure.Configurations
 
             #region カラム設定
 
-            builder.ConfigureAuditableColumns();
+            builder.ConfigureAuditableColumns<TenantEm, TenantId>();
 
             // テナント名
             builder.Property(x => x.Name)

@@ -1,4 +1,6 @@
-using Domain.Entities;
+using Domain.Entities.Roles;
+using Domain.Entities.Tenants;
+using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DbContexts
@@ -30,6 +32,10 @@ namespace Infrastructure.DbContexts
         }
 
         public DbSet<TenantEm> Tenants { get; set; }
+
+        public DbSet<RoleEm> Roles { get; set; }
+
+        public DbSet<UserEm> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
