@@ -1,5 +1,6 @@
 using System.Reflection;
 using Application.Extensions.DependencyInjection;
+using Domain.Entities.Roles;
 using Domain.Exceptions;
 using Infrastructure.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication;
@@ -14,6 +15,7 @@ using Microsoft.OpenApi;
 using NLog.Extensions.Logging;
 using StackExchange.Redis;
 using Web.Attributes;
+using Web.Authorization;
 using Web.Common.Constants;
 using Web.Controllers;
 using Web.Dtos.Version;
@@ -109,6 +111,15 @@ builder.Services
         // 有効期限のスライド(=有効期限が残り半分を過ぎていると自動で期限を更新)するか?
         options.SlidingExpiration = AuthSessionSettings.AllowSlidingExpiration;
     });
+
+// 認可の設定
+builder.Services.AddAuthorization(options =>
+{
+    // 必須権限のポリシーを登録
+    options.AddPolicy(AuthorizePolicyNames.RequireUser, policy => policy.Requirements.Add(new RoleLevelRequirement(RoleLevelEnum.User)));
+    options.AddPolicy(AuthorizePolicyNames.RequireAdmin, policy => policy.Requirements.Add(new RoleLevelRequirement(RoleLevelEnum.Admin)));
+    options.AddPolicy(AuthorizePolicyNames.RequireSystemAdmin, policy => policy.Requirements.Add(new RoleLevelRequirement(RoleLevelEnum.SystemAdmin)));
+});
 
 // セッション(一時データの格納用)の設定
 builder.Services.AddSession(options =>

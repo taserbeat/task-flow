@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Caching.Distributed;
 using Web.Common.Constants;
 
-namespace Web.Authenticate
+namespace Web.Authentication
 {
     public class AuthSessionStore : ITicketStore
     {

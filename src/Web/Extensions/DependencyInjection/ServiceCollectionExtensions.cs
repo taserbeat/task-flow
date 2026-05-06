@@ -5,7 +5,9 @@ using Infrastructure.Contexts;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Web.Authenticate;
+using Microsoft.AspNetCore.Authorization;
+using Web.Authentication;
+using Web.Authorization.Handlers;
 using Web.Contexts;
 
 namespace Web.Extensions.DependencyInjection
@@ -35,6 +37,8 @@ namespace Web.Extensions.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
 
             services.AddScoped<IPasswordHashService, PasswordHashService>();
+            services.AddScoped<IAuthorizeService, AuthorizeService>();
+            services.AddScoped<IAuthorizationHandler, RoleLevelHandler>();
 
             return services;
         }
