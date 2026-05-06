@@ -97,16 +97,19 @@ namespace Web.Workers
             var roleEms = new RoleEm[]
             {
                 RoleEm.Create(
-                    roleId: _systemAdminRoleId,
-                    name: RoleNameEnum.SystemAdmin
+                    roleId: _userRoleId,
+                    name: RoleNameEnum.User,
+                    level: RoleLevelEnum.User
                 ),
                 RoleEm.Create(
                     roleId: _adminRoleId,
-                    name: RoleNameEnum.Admin
+                    name: RoleNameEnum.Admin,
+                    level: RoleLevelEnum.Admin
                 ),
                 RoleEm.Create(
-                    roleId: _userRoleId,
-                    name: RoleNameEnum.User
+                    roleId: _systemAdminRoleId,
+                    name: RoleNameEnum.SystemAdmin,
+                    level: RoleLevelEnum.SystemAdmin
                 ),
             };
 

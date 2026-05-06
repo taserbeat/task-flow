@@ -44,5 +44,11 @@ namespace Application.Contexts
         /// </summary>
         /// <value></value>
         RoleNameEnum RoleName { get; }
+
+        /// <summary>
+        /// ロールレベル
+        /// </summary>
+        /// <value></value>
+        RoleLevelEnum RoleLevel { get; }
     }
 }

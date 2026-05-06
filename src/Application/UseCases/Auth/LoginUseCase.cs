@@ -54,6 +54,7 @@ namespace Application.UseCases.Auth
                 Email: userEm.Email,
                 RoleId: userEm.RoleId,
                 RoleName: userEm.Role.Name,
+                RoleLevel: userEm.Role.Level,
                 SessionId: sessionId
             );
         }
@@ -70,11 +71,13 @@ namespace Application.UseCases.Auth
     /// <summary>
     /// ログインの出力
     /// </summary>
-    /// <param name="TenantId"></param>
-    /// <param name="UserId"></param>
-    /// <param name="Email"></param>
-    /// <param name="RoleId"></param>
-    /// <param name="RoleName"></param>
+    /// <param name="TenantId">テナントID</param>
+    /// <param name="UserId">ユーザーID</param>
+    /// <param name="Email">メールアドレス</param>
+    /// <param name="RoleId">ロールID</param>
+    /// <param name="RoleName">ロール名</param>
+    /// <param name="RoleLevel">ロールレベル</param>
+    /// <param name="SessionId">セッションID</param>
     /// <returns></returns>
     public record LoginResult(
         TenantId TenantId,
@@ -82,6 +85,7 @@ namespace Application.UseCases.Auth
         UserEmail Email,
         RoleId RoleId,
         RoleNameEnum RoleName,
+        RoleLevelEnum RoleLevel,
         SessionId SessionId
     );
 }

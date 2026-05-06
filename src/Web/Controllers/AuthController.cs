@@ -110,6 +110,7 @@ namespace Web.Controllers
                 new Claim(CustomClaimTypes.Email, loginResult.Email.ToString()),
                 new Claim(CustomClaimTypes.RoleId, loginResult.RoleId.ToString()),
                 new Claim(CustomClaimTypes.RoleName, loginResult.RoleName.ToString()),
+                new Claim(CustomClaimTypes.RoleLevel, loginResult.RoleLevel.ToString()),
                 new Claim(CustomClaimTypes.SessionId, loginResult.SessionId.ToString()),
             };
 

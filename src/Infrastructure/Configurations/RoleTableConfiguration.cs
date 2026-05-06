@@ -25,7 +25,7 @@ namespace Infrastructure.Configurations
                 x.Id,
             });
 
-            // 制約
+            // ユニーク制約
             builder.HasIndex(x => new { x.Name }).IsUnique();
 
             #region カラム設定
@@ -38,6 +38,13 @@ namespace Infrastructure.Configurations
                 .HasMaxLength(32)
                 .HasConversion(new EnumToStringConverter<RoleNameEnum>())
                 .HasComment("ロール名")
+                .IsRequired();
+
+            // ロールレベル
+            builder.Property(x => x.Level)
+                .HasColumnName("level")
+                .HasConversion<int>()
+                .HasComment("ロールレベル")
                 .IsRequired();
 
             #endregion

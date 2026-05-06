@@ -31,6 +31,11 @@ namespace Web.Common.Constants
         public const string RoleName = "role_name";
 
         /// <summary>
+        /// ロールレベル
+        /// </summary>
+        public const string RoleLevel = "role_level";
+
+        /// <summary>
         /// セッションID
         /// </summary>
         public const string SessionId = "session_id";

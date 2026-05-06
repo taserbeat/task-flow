@@ -20,7 +20,8 @@ namespace Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, comment: "エンティティのID"),
-                    name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false, comment: "ロール名")
+                    name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false, comment: "ロール名"),
+                    level = table.Column<int>(type: "integer", nullable: false, comment: "ロールレベル")
                 },
                 constraints: table =>
                 {

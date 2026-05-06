@@ -13,12 +13,19 @@ namespace Domain.Entities.Roles
         /// <value></value>
         public RoleNameEnum Name { get; private set; }
 
-        public static RoleEm Create(RoleId roleId, RoleNameEnum name)
+        /// <summary>
+        /// ロールレベル (高いほど強い権限)
+        /// </summary>
+        /// <value></value>
+        public RoleLevelEnum Level { get; private set; }
+
+        public static RoleEm Create(RoleId roleId, RoleNameEnum name, RoleLevelEnum level)
         {
             return new RoleEm
             {
                 Id = roleId,
                 Name = name,
+                Level = level,
             };
         }
     }
@@ -42,5 +49,15 @@ namespace Domain.Entities.Roles
         /// システム管理者
         /// </summary>
         SystemAdmin,
+    }
+
+    /// <summary>
+    /// ロールレベル (高いほど強い権限)
+    /// </summary>
+    public enum RoleLevelEnum
+    {
+        User = 10,
+        Admin = 20,
+        SystemAdmin = 30,
     }
 }

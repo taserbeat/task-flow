@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260501100813_CreateBaseTables")]
+    [Migration("20260506060828_CreateBaseTables")]
     partial class CreateBaseTables
     {
         /// <inheritdoc />
@@ -32,6 +32,11 @@ namespace Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id")
                         .HasComment("エンティティのID");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("integer")
+                        .HasColumnName("level")
+                        .HasComment("ロールレベル");
 
                     b.Property<string>("Name")
                         .IsRequired()

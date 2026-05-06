@@ -63,6 +63,15 @@ namespace Web.Contexts
             }
         }
 
+        public RoleLevelEnum RoleLevel
+        {
+            get
+            {
+                var roleLevel = GetClaim(CustomClaimTypes.RoleLevel);
+                return Enum.TryParse<RoleLevelEnum>(roleLevel, out var roleLevelEnum) ? roleLevelEnum : throw new AppAuthenticateException("未認証エラーです。");
+            }
+        }
+
         private ClaimsPrincipal? _user => _contextAccessor.HttpContext?.User;
 
         private string GetClaim(string claimType)

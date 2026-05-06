@@ -30,6 +30,11 @@ namespace Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasComment("エンティティのID");
 
+                    b.Property<int>("Level")
+                        .HasColumnType("integer")
+                        .HasColumnName("level")
+                        .HasComment("ロールレベル");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(32)
