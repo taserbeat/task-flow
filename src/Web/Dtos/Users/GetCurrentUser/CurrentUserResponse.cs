@@ -13,34 +13,34 @@ namespace Web.Dtos.Users.GetCurrentUser
         /// </summary>
         /// <value></value>
         [JsonPropertyName("tenantId")]
-        public Guid TenantId { get; init; }
+        public required Guid TenantId { get; set; }
 
         /// <summary>
         /// ユーザーID
         /// </summary>
         /// <value></value>
         [JsonPropertyName("userId")]
-        public Guid UserId { get; init; }
+        public required Guid UserId { get; set; }
 
         /// <summary>
         /// メールアドレス
         /// </summary>
         /// <value></value>
         [JsonPropertyName("email")]
-        public string Email { get; init; } = string.Empty;
+        public required string Email { get; set; }
 
         /// <summary>
         /// ロール名
         /// </summary>
         /// <value></value>
         [JsonPropertyName("roleName")]
-        public string RoleName { get; init; } = string.Empty;
+        public required string RoleName { get; set; }
 
         /// <summary>
         /// ロールレベル
         /// </summary>
         /// <value></value>
         [JsonPropertyName("roleLevel")]
-        public int RoleLevel { get; init; }
+        public required int RoleLevel { get; set; }
     }
 }

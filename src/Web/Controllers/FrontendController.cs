@@ -26,12 +26,12 @@ namespace Web.Controllers
         /// <summary>
         /// 開発環境での静的コンテンツのディレクトリパス
         /// </summary>
-        public static string StaticDirPathWithDevEnv = "privateroot";
+        public static string StaticDirPathWithDevEnv = "../../frontend/dist";
 
         /// <summary>
         /// 本番環境での静的コンテンツのディレクトリパス
         /// </summary>
-        public static string StaticDirPathWithProdEnv = "../../frontend/dist";
+        public static string StaticDirPathWithProdEnv = "privateroot";
 
         public FrontendController(ILogger<FrontendController> logger, IWebHostEnvironment environment, IUserContext userContext)
         {
@@ -68,8 +68,7 @@ namespace Web.Controllers
             }
 
             // 認証済みの場合はフロントエンドのWebアプリを返す
-            // string frontendDirPath = _environment.IsProduction() ? StaticDirPathWithProdEnv : StaticDirPathWithDevEnv;
-            string frontendDirPath = _environment.IsProduction() ? StaticDirPathWithDevEnv : StaticDirPathWithDevEnv;
+            string frontendDirPath = _environment.IsProduction() ? StaticDirPathWithProdEnv : StaticDirPathWithDevEnv;
             var fileProvider = new PhysicalFileProvider(Path.Combine(_environment.ContentRootPath, frontendDirPath));
             var htmlFileInfo = fileProvider.GetFileInfo("index.html");
 

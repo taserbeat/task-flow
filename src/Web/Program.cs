@@ -3,7 +3,6 @@ using Application.Extensions.DependencyInjection;
 using Domain.Entities.Roles;
 using Domain.Exceptions;
 using Infrastructure.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.DataProtection;
@@ -147,6 +146,9 @@ builder.Services.AddSwaggerGen(options =>
         Description = "TaskFlowのWeb APIです。",
     });
 
+    // 非null型のサポートを有効 (型定義の自動生成のため)
+    options.SupportNonNullableReferenceTypes();
+
     // TODO: JWT認証を追加
 
     // TODO: Swaggerのカスタムフィルターを追加
@@ -193,6 +195,8 @@ builder.Services.AddWeb();
 
 var app = builder.Build();
 
+#region リクエストパイプライン
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -229,25 +233,6 @@ app.UseAuthorization();
 // セッションのミドルウェアを使用
 app.UseSession();
 
-// Swagger UIに認証をかける
-app.UseWhen(
-    ctx => ctx.Request.Path.StartsWithSegments("/swagger"),
-    branch =>
-    {
-        branch.Use(async (context, next) =>
-        {
-            bool isAuthenticated = context.User.Identity?.IsAuthenticated ?? false;
-            if (!isAuthenticated)
-            {
-                await context.ChallengeAsync();
-                return;
-            }
-
-            await next();
-        });
-    }
-);
-
 // Swaggerのミドルウェアを使用
 app.UseSwagger();
 app.UseSwaggerUI(options =>
@@ -258,7 +243,7 @@ app.UseSwaggerUI(options =>
 
 // フロントエンドの静的コンテンツを返す対応
 string frontendDir = app.Environment.IsProduction()
-    ? FrontendController.StaticDirPathWithDevEnv
+    ? FrontendController.StaticDirPathWithProdEnv
     : FrontendController.StaticDirPathWithDevEnv;
 string frontendDirPath = Path.Combine(app.Environment.ContentRootPath, frontendDir);
 var frontendFileProvider = new PhysicalFileProvider(frontendDirPath);
@@ -286,6 +271,8 @@ app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Inde
 app.MapControllers();
 
 app.MapFallbackToController(nameof(FrontendController.Index), FrontendController.ControllerName);
+
+#endregion
 
 // 開発環境の場合、カレントディレクトリを実行ファイル(exe)の場所に設定する
 if (app.Environment.IsDevelopment() && !string.IsNullOrWhiteSpace(AppDomain.CurrentDomain.BaseDirectory))
