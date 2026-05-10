@@ -1,13 +1,13 @@
 <Solution>
-  <Folder Name="/src/">
-    <Project Path="src/Application/Application.csproj" />
-    <Project Path="src/Domain/Domain.csproj" />
-    <Project Path="src/Infrastructure/Infrastructure.csproj" />
-    <Project Path="src/Web/Web.csproj" />
+  <Folder Name="/backend/">
+    <Project Path="backend/Application/Application.csproj" />
+    <Project Path="backend/Domain/Domain.csproj" />
+    <Project Path="backend/Infrastructure/Infrastructure.csproj" />
+    <Project Path="backend/Web/Web.csproj" />
   </Folder>
-  <Folder Name="/src/tests/">
-    <Project Path="src/tests/Application.UnitTests/Application.UnitTests.csproj" />
-    <Project Path="src/tests/Domain.UnitTests/Domain.UnitTests.csproj" />
-    <Project Path="src/tests/Infrastructure.UnitTests/Infrastructure.UnitTests.csproj" />
+  <Folder Name="/backend/tests/">
+    <Project Path="backend/tests/Application.UnitTests/Application.UnitTests.csproj" />
+    <Project Path="backend/tests/Domain.UnitTests/Domain.UnitTests.csproj" />
+    <Project Path="backend/tests/Infrastructure.UnitTests/Infrastructure.UnitTests.csproj" />
   </Folder>
 </Solution>
