@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Application.Extensions.DependencyInjection;
 using Domain.Entities.Roles;
 using Domain.Exceptions;
@@ -35,7 +36,13 @@ builder.Logging
 builder.Services.AddHostedService<InitWorker>();
 
 // MVCの設定を追加
-builder.Services.AddControllersWithViews();
+builder.Services
+    .AddControllersWithViews()
+    .AddJsonOptions(options =>
+    {
+        // enumをリテラルな文字列に変換するように設定
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    });
 
 // Cookieポリシーの設定
 builder.Services.Configure<CookiePolicyOptions>(options =>
