@@ -1,4 +1,9 @@
 import type React from "react";
+import {
+  RectangleStackIcon,
+  UserIcon,
+  BuildingOfficeIcon,
+} from "@heroicons/react/24/solid";
 
 import type { RoleName } from "../models/roles/Role";
 import TaskIndexPage from "../components/pages/tasks/TaskIndexPage";
@@ -17,6 +22,9 @@ type RouteConfig = {
   /** ラベル */
   label?: string;
 
+  /** アイコン */
+  icon?: React.ReactNode;
+
   /** ネストするルーティング設定 */
   children?: RouteConfig[];
 
@@ -24,19 +32,27 @@ type RouteConfig = {
   roles?: RoleName[];
 };
 
-/** アプリケーションのルーティング設定 */
+/**
+ * アプリケーションのルーティング設定
+ *
+ * NOTE:
+ * アイコンは下記サイトを参照して取得できる
+ * https://heroicons.com/solid
+ */
 export const routes: RouteConfig[] = [
   {
     path: "/tasks",
-    label: "タスク",
     element: <TaskIndexPage />,
+    label: "タスク",
+    icon: <RectangleStackIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin", "User"],
     children: [],
   },
   {
     path: "/users",
-    label: "ユーザー管理",
     element: <UserIndexPage />,
+    label: "ユーザー管理",
+    icon: <UserIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin"],
     children: [
       {
@@ -47,8 +63,9 @@ export const routes: RouteConfig[] = [
   },
   {
     path: "/tenants",
-    label: "テナント管理",
     element: <TenantIndexPage />,
+    label: "テナント管理",
+    icon: <BuildingOfficeIcon className="w-5 h-5" />,
     roles: ["SystemAdmin"],
     children: [],
   },

@@ -21,9 +21,11 @@ const Sidebar: React.FC = () => {
             <li key={route.path} className="">
               <NavLink
                 to={route.path}
-                className="flex items-center justify-center w-full h-10 tex2t-xl hover:bg-emerald-400"
+                className="flex items-center w-full h-10 tex2t-xl hover:bg-emerald-400 px-4 gap-3"
               >
-                {route.label}
+                {route.icon && <span className="shrink-0">{route.icon}</span>}
+
+                <span>{route.label}</span>
               </NavLink>
             </li>
           );
