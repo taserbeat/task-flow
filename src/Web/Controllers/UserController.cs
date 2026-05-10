@@ -37,7 +37,7 @@ namespace Web.Controllers
                 TenantId = _userContext.TenantId.Value,
                 UserId = _userContext.UserId.Value,
                 Email = _userContext.Email.Value,
-                RoleName = _userContext.RoleName.ToString(),
+                RoleName = _userContext.RoleName,
                 RoleLevel = (int)_userContext.RoleLevel
             };
         }

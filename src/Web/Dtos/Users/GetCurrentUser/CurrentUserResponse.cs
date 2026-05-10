@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Domain.Entities.Roles;
 
 namespace Web.Dtos.Users.GetCurrentUser
 {
@@ -34,7 +35,7 @@ namespace Web.Dtos.Users.GetCurrentUser
         /// </summary>
         /// <value></value>
         [JsonPropertyName("roleName")]
-        public required string RoleName { get; set; }
+        public required RoleNameEnum RoleName { get; set; }
 
         /// <summary>
         /// ロールレベル

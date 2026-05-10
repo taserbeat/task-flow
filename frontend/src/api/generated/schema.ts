@@ -140,14 +140,15 @@ export interface components {
             userId: string;
             /** @description メールアドレス */
             email: string;
-            /** @description ロール名 */
-            roleName: string;
+            roleName: components["schemas"]["RoleNameEnum"];
             /**
              * Format: int32
              * @description ロールレベル
              */
             roleLevel: number;
         };
+        /** @enum {string} */
+        RoleNameEnum: "User" | "Admin" | "SystemAdmin";
         /** @description バージョン情報 */
         VersionInfo: {
             /** @description バージョン */
