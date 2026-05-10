@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 
 import { useAppDispatch } from "./app/hook";
 import { getCurrentUser } from "./features/profile/profileSlice";
-import "./App.css";
 
 function App() {
   const dispatch = useAppDispatch();
