@@ -22,6 +22,11 @@ namespace Infrastructure.Repositories
             await _dbContext.Roles.AddAsync(roleEm);
         }
 
+        public async Task<IEnumerable<RoleEm>> GetRolesAsync()
+        {
+            return await _dbContext.Roles.OrderBy(x => x.Level).ToListAsync();
+        }
+
         public async Task<RoleEm?> GetByIdAsync(RoleId roleId)
         {
             return await _dbContext.Roles.FirstOrDefaultAsync(x => x.Id == roleId);

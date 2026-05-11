@@ -15,6 +15,12 @@ namespace Application.Repositories
         Task AddAsync(RoleEm roleEm);
 
         /// <summary>
+        /// ロールの一覧を取得する
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<RoleEm>> GetRolesAsync();
+
+        /// <summary>
         /// 指定のロールを取得する
         /// </summary>
         /// <param name="roleId">ロールID</param>
