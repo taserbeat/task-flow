@@ -1,3 +1,4 @@
+using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 
 namespace Application.Repositories
@@ -13,6 +14,13 @@ namespace Application.Repositories
         /// <param name="userEm"></param>
         /// <returns></returns>
         Task AddAsync(UserEm userEm);
+
+        /// <summary>
+        /// ユーザー一覧を取得する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <returns></returns>
+        Task<IEnumerable<UserEm>> GetUsersAsync(TenantId tenantId);
 
         /// <summary>
         /// 指定のユーザーを取得する

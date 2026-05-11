@@ -1,4 +1,5 @@
 using Application.Repositories;
+using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Infrastructure.Contexts;
 using Infrastructure.DbContexts;
@@ -23,6 +24,15 @@ namespace Infrastructure.Repositories
         public async Task AddAsync(UserEm userEm)
         {
             await _dbContext.Users.AddAsync(userEm);
+        }
+
+        public async Task<IEnumerable<UserEm>> GetUsersAsync(TenantId tenantId)
+        {
+            return await _dbContext.Users
+                .Include(x => x.Role)
+                .Where(x => x.TenantId == tenantId)
+                .OrderByDescending(x => x.Email)
+                .ToListAsync();
         }
 
         public async Task<UserEm?> GetByIdAsync(UserId userId)
