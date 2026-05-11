@@ -27,11 +27,11 @@ namespace Web.Controllers
         [HttpGet]
         [Route("")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<IEnumerable<RoleResponse>>> GetRoles()
+        public async Task<ActionResult<IEnumerable<RoleDetailResponse>>> GetRoles()
         {
             var roleEms = await _getRolesUseCase.Execute();
             var response = roleEms
-                .Select(x => RoleResponse.FromEntity(x))
+                .Select(x => RoleDetailResponse.FromEntity(x))
                 .ToList();
 
             return response;

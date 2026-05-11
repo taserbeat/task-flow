@@ -14,17 +14,24 @@ namespace Domain.Entities.Roles
         public RoleNameEnum Name { get; private set; }
 
         /// <summary>
+        /// 表示名
+        /// </summary>
+        /// <value></value>
+        public RoleLabel Label { get; private set; } = default!;
+
+        /// <summary>
         /// ロールレベル (高いほど強い権限)
         /// </summary>
         /// <value></value>
         public RoleLevelEnum Level { get; private set; }
 
-        public static RoleEm Create(RoleId roleId, RoleNameEnum name, RoleLevelEnum level)
+        public static RoleEm Create(RoleId roleId, RoleNameEnum name, RoleLabel label, RoleLevelEnum level)
         {
             return new RoleEm
             {
                 Id = roleId,
                 Name = name,
+                Label = label,
                 Level = level,
             };
         }

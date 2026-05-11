@@ -21,6 +21,7 @@ namespace Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, comment: "エンティティのID"),
                     name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false, comment: "ロール名"),
+                    label = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false, comment: "ロールラベル"),
                     level = table.Column<int>(type: "integer", nullable: false, comment: "ロールレベル")
                 },
                 constraints: table =>
@@ -77,6 +78,13 @@ namespace Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 },
                 comment: "ユーザーテーブル");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_roles_label",
+                schema: "tf",
+                table: "roles",
+                column: "label",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_roles_name",

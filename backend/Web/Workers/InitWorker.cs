@@ -99,16 +99,19 @@ namespace Web.Workers
                 RoleEm.Create(
                     roleId: _userRoleId,
                     name: RoleNameEnum.User,
+                    label: new("一般"),
                     level: RoleLevelEnum.User
                 ),
                 RoleEm.Create(
                     roleId: _adminRoleId,
                     name: RoleNameEnum.Admin,
+                    label: new("管理者"),
                     level: RoleLevelEnum.Admin
                 ),
                 RoleEm.Create(
                     roleId: _systemAdminRoleId,
                     name: RoleNameEnum.SystemAdmin,
+                    label: new("システム管理者"),
                     level: RoleLevelEnum.SystemAdmin
                 ),
             };
@@ -168,7 +171,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
-                            username: new UserName("[System]", ""),
+                            username: new("[System]", ""),
                             roleId: _systemAdminRoleId
                         )
                     );
@@ -193,7 +196,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
-                            username: new UserName("管理", "太郎"),
+                            username: new("管理", "太郎"),
                             roleId: _adminRoleId
                         )
                     );
@@ -218,7 +221,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
-                            username: new UserName("ユーザー", "花子"),
+                            username: new("ユーザー", "花子"),
                             roleId: _userRoleId
                         )
                     );

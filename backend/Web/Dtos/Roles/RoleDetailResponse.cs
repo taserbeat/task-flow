@@ -4,9 +4,9 @@ using Domain.Entities.Roles;
 namespace Web.Dtos.Roles
 {
     /// <summary>
-    /// ロール情報のレスポンス
+    /// ロールの詳細レスポンス
     /// </summary>
-    public class RoleResponse
+    public class RoleDetailResponse
     {
         /// <summary>
         /// ロールID
@@ -23,6 +23,13 @@ namespace Web.Dtos.Roles
         public required RoleNameEnum Name { get; set; }
 
         /// <summary>
+        /// ラベル名
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("label")]
+        public required string Label { get; set; }
+
+        /// <summary>
         /// ロールレベル
         /// </summary>
         /// <value></value>
@@ -34,12 +41,13 @@ namespace Web.Dtos.Roles
         /// </summary>
         /// <param name="em"></param>
         /// <returns></returns>
-        public static RoleResponse FromEntity(RoleEm em)
+        public static RoleDetailResponse FromEntity(RoleEm em)
         {
-            return new RoleResponse
+            return new RoleDetailResponse
             {
                 Id = em.Id.Value,
                 Name = em.Name,
+                Label = em.Label.Value,
                 Level = (int)em.Level,
             };
         }
