@@ -178,7 +178,35 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.OwnsOne("Domain.Entities.Users.UserName", "Username", b1 =>
+                        {
+                            b1.Property<Guid>("UserEmId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasMaxLength(32)
+                                .HasColumnType("character varying(32)")
+                                .HasColumnName("first_name");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasMaxLength(32)
+                                .HasColumnType("character varying(32)")
+                                .HasColumnName("last_name");
+
+                            b1.HasKey("UserEmId");
+
+                            b1.ToTable("users", "tf");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserEmId");
+                        });
+
                     b.Navigation("Role");
+
+                    b.Navigation("Username")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

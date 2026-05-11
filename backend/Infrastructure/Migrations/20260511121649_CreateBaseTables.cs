@@ -55,6 +55,8 @@ namespace Infrastructure.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false, comment: "エンティティのID"),
                     email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: false, comment: "メールアドレス"),
                     password_hash = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: false, comment: "パスワードハッシュ"),
+                    last_name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
+                    first_name = table.Column<string>(type: "character varying(32)", maxLength: 32, nullable: false),
                     role_id = table.Column<Guid>(type: "uuid", nullable: false, comment: "ロールID"),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, comment: "有効状態"),
                     created_at = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false, comment: "作成日時"),

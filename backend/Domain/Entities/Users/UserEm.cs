@@ -22,6 +22,12 @@ namespace Domain.Entities.Users
         public UserPasswordHash PasswordHash { get; private set; } = default!;
 
         /// <summary>
+        /// ユーザーの氏名
+        /// </summary>
+        /// <value></value>
+        public UserName Username { get; private set; } = default!;
+
+        /// <summary>
         /// ロールID
         /// </summary>
         /// <value></value>
@@ -34,14 +40,12 @@ namespace Domain.Entities.Users
         public bool IsActive { get; private set; }
 
         /// <summary>
-        /// 
+        /// ロールのナビゲーションプロパティ
         /// </summary>
         /// <value></value>
         public RoleEm Role { get; private set; } = default!;
 
-        private UserEm() { }
-
-        public static UserEm Create(UserId userId, TenantId tenantId, DateTimeOffset createdAt, DateTimeOffset updatedAt, UserId? createdBy, UserId? updatedBy, UserEmail email, UserPasswordHash passwordHash, RoleId roleId)
+        public static UserEm Create(UserId userId, TenantId tenantId, DateTimeOffset createdAt, DateTimeOffset updatedAt, UserId? createdBy, UserId? updatedBy, UserEmail email, UserPasswordHash passwordHash, UserName username, RoleId roleId)
         {
             return new UserEm
             {
@@ -53,6 +57,7 @@ namespace Domain.Entities.Users
                 UpdatedBy = updatedBy,
                 Email = email,
                 PasswordHash = passwordHash,
+                Username = username,
                 RoleId = roleId,
                 IsActive = true,
             };
@@ -68,6 +73,13 @@ namespace Domain.Entities.Users
         public void ChangePassword(UserPasswordHash newPasswordHash, DateTimeOffset updatedAt, UserId? updatedBy)
         {
             PasswordHash = newPasswordHash;
+            UpdatedAt = updatedAt;
+            UpdatedBy = updatedBy;
+        }
+
+        public void ChangeName(UserName newUsername, DateTimeOffset updatedAt, UserId? updatedBy)
+        {
+            Username = newUsername;
             UpdatedAt = updatedAt;
             UpdatedBy = updatedBy;
         }

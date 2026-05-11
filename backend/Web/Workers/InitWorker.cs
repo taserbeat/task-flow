@@ -168,6 +168,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
+                            username: new UserName("[System]", ""),
                             roleId: _systemAdminRoleId
                         )
                     );
@@ -192,6 +193,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
+                            username: new UserName("管理", "太郎"),
                             roleId: _adminRoleId
                         )
                     );
@@ -216,6 +218,7 @@ namespace Web.Workers
                             updatedBy: null,
                             email: new(email),
                             passwordHash: passwordHash,
+                            username: new UserName("ユーザー", "花子"),
                             roleId: _userRoleId
                         )
                     );
