@@ -28,11 +28,11 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ children }) => {
         </NavLink>
 
         <div className="flex ml-16">
-          {/* TODO: テナント名に変更 */}
-          <span className="ml-2 mr-4">テナント: {userInfo?.tenant.id}</span>
+          {/* テナント名 */}
+          <span className="ml-2 mr-4">テナント: {userInfo?.tenant.name}</span>
 
-          {/* TODO: 氏名に変更 */}
-          <span>ユーザー: {userInfo?.user.email}</span>
+          {/* 氏名 */}
+          <span>ユーザー: {userInfo?.user.username}</span>
         </div>
 
         <a
