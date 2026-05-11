@@ -17,6 +17,7 @@ namespace Application.Extensions.DependencyInjection
             services.AddScoped<GetRolesUseCase>();
 
             services.AddScoped<LoginUseCase>();
+            services.AddScoped<GetCurrentUserUseCase>();
             services.AddScoped<GetUsersUseCase>();
 
             return services;

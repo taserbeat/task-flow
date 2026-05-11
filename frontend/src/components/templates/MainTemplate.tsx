@@ -29,10 +29,10 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ children }) => {
 
         <div className="flex ml-16">
           {/* TODO: テナント名に変更 */}
-          <span className="ml-2 mr-4">テナント: {userInfo?.tenantId}</span>
+          <span className="ml-2 mr-4">テナント: {userInfo?.tenant.id}</span>
 
           {/* TODO: 氏名に変更 */}
-          <span>ユーザー: {userInfo?.email}</span>
+          <span>ユーザー: {userInfo?.user.email}</span>
         </div>
 
         <a

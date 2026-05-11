@@ -21,7 +21,7 @@ const ProtectedRoute: React.FC<ProtectedRoute> = ({ roles, children }) => {
     return <></>;
   }
 
-  const canAccess = roles && roles.includes(profile.userInfo?.roleName);
+  const canAccess = roles && roles.includes(profile.userInfo?.user.role.name);
   if (!canAccess) {
     // アクセスできない場合は空のコンポーネント
     return <></>;

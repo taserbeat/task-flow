@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Domain.Entities.Roles;
+using Domain.Entities.Users;
 
 namespace Web.Dtos.Users.GetUser
 {
@@ -13,8 +14,8 @@ namespace Web.Dtos.Users.GetUser
         /// ユーザーID
         /// </summary>
         /// <value></value>
-        [JsonPropertyName("userId")]
-        public required Guid UserId { get; set; }
+        [JsonPropertyName("id")]
+        public required Guid Id { get; set; }
 
         /// <summary>
         /// メールアドレス
@@ -36,5 +37,16 @@ namespace Web.Dtos.Users.GetUser
         /// <value></value>
         [JsonPropertyName("roleName")]
         public required RoleNameEnum RoleName { get; set; }
+
+        public static UserSummaryResponse FromEntity(UserEm em)
+        {
+            return new UserSummaryResponse
+            {
+                Id = em.Id.Value,
+                Email = em.Email.Value,
+                Username = em.Username.FullName,
+                RoleName = em.Role.Name,
+            };
+        }
     }
 }

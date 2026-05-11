@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
-using Domain.Entities.Roles;
+using Web.Dtos.Tenants.GetTenant;
+using Web.Dtos.Users.GetUser;
 
 namespace Web.Dtos.Users.GetCurrentUser
 {
@@ -10,38 +11,17 @@ namespace Web.Dtos.Users.GetCurrentUser
     public record CurrentUserResponse
     {
         /// <summary>
-        /// テナントID
+        /// テナント
         /// </summary>
         /// <value></value>
-        [JsonPropertyName("tenantId")]
-        public required Guid TenantId { get; set; }
+        [JsonPropertyName("tenant")]
+        public required TenantDetailResponse Tenant { get; set; }
 
         /// <summary>
-        /// ユーザーID
+        /// ユーザー
         /// </summary>
         /// <value></value>
-        [JsonPropertyName("userId")]
-        public required Guid UserId { get; set; }
-
-        /// <summary>
-        /// メールアドレス
-        /// </summary>
-        /// <value></value>
-        [JsonPropertyName("email")]
-        public required string Email { get; set; }
-
-        /// <summary>
-        /// ロール名
-        /// </summary>
-        /// <value></value>
-        [JsonPropertyName("roleName")]
-        public required RoleNameEnum RoleName { get; set; }
-
-        /// <summary>
-        /// ロールレベル
-        /// </summary>
-        /// <value></value>
-        [JsonPropertyName("roleLevel")]
-        public required int RoleLevel { get; set; }
+        [JsonPropertyName("user")]
+        public required UserDetailResponse User { get; set; }
     }
 }

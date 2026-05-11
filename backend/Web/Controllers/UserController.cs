@@ -1,9 +1,11 @@
 using Application.Contexts;
 using Application.UseCases.Users;
+using Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Common.Constants;
+using Web.Dtos.Tenants.GetTenant;
 using Web.Dtos.Users.GetCurrentUser;
 using Web.Dtos.Users.GetUser;
 
@@ -17,12 +19,14 @@ namespace Web.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUserContext _userContext;
         private readonly GetUsersUseCase _getUsersUseCase;
+        private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
 
-        public UserController(ILogger<UserController> logger, IUserContext userContext, GetUsersUseCase getUsersUseCase)
+        public UserController(ILogger<UserController> logger, IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase)
         {
             _logger = logger;
             _userContext = userContext;
             _getUsersUseCase = getUsersUseCase;
+            _getCurrentUserUseCase = getCurrentUserUseCase;
         }
 
         /// <summary>
@@ -37,7 +41,7 @@ namespace Web.Controllers
             var userEms = await _getUsersUseCase.Execute(_userContext.TenantId);
             var users = userEms.Select(x => new UserSummaryResponse
             {
-                UserId = x.Id.Value,
+                Id = x.Id.Value,
                 Email = x.Email.Value,
                 Username = x.Username.FullName,
                 RoleName = x.Role.Name,
@@ -56,15 +60,18 @@ namespace Web.Controllers
         [HttpGet]
         [Route("me")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public ActionResult<CurrentUserResponse> GetCurrentUser()
+        public async Task<ActionResult<CurrentUserResponse>> GetCurrentUser()
         {
+            var (tenantEm, userEm) = await _getCurrentUserUseCase.Execute(_userContext.TenantId, _userContext.UserId);
+            if (tenantEm is null || userEm is null)
+            {
+                throw new AppAuthenticateException("未認証エラー");
+            }
+
             return new CurrentUserResponse
             {
-                TenantId = _userContext.TenantId.Value,
-                UserId = _userContext.UserId.Value,
-                Email = _userContext.Email.Value,
-                RoleName = _userContext.RoleName,
-                RoleLevel = (int)_userContext.RoleLevel
+                Tenant = TenantDetailResponse.FromEntity(tenantEm),
+                User = UserDetailResponse.FromEntity(userEm),
             };
         }
     }

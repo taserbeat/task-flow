@@ -35,9 +35,16 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<UserEm?> GetByIdAsync(UserId userId)
+        public async Task<UserEm?> GetByIdAsync(UserId userId, bool isIncludeRole = false)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var query = _dbContext.Users.AsQueryable();
+
+            if (isIncludeRole)
+            {
+                query = query.Include(x => x.Role);
+            }
+
+            return await query.FirstOrDefaultAsync(x => x.Id == userId);
         }
 
         public async Task<UserEm?> GetForLoginAsync(UserEmail email)

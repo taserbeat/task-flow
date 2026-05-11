@@ -26,8 +26,9 @@ namespace Application.Repositories
         /// 指定のユーザーを取得する
         /// </summary>
         /// <param name="userId">ユーザーID</param>
+        /// <param name="isIncludeRole">ロールを含めるか?</param>
         /// <returns></returns>
-        Task<UserEm?> GetByIdAsync(UserId userId);
+        Task<UserEm?> GetByIdAsync(UserId userId, bool isIncludeRole = false);
 
         /// <summary>
         /// ログイン処理として、メールアドレスからユーザーを取得する

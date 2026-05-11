@@ -15,7 +15,9 @@ import ProtectedRoute from "./routers/ProtectedRoute";
 
 function App() {
   const dispatch = useAppDispatch();
-  const roleName = useAppSelector((root) => root.profile.userInfo?.roleName);
+  const roleName = useAppSelector(
+    (root) => root.profile.userInfo?.user.role.name,
+  );
 
   useEffect(() => {
     const initLoad = async () => {
@@ -85,7 +87,9 @@ function App() {
 
 /** デフォルトのリダイレクト処理を行うコンポーネント */
 const DefaultRedirect = () => {
-  const roleName = useAppSelector((state) => state.profile.userInfo?.roleName);
+  const roleName = useAppSelector(
+    (state) => state.profile.userInfo?.user.role.name,
+  );
   const navigate = useNavigate();
 
   useEffect(() => {
