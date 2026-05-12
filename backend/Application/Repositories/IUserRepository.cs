@@ -46,5 +46,13 @@ namespace Application.Repositories
         /// <param name="userId">ユーザーID</param>
         /// <returns></returns>
         Task<RoleEm?> GetRoleByUserIdAsync(TenantId tenantId, UserId userId);
+
+        /// <summary>
+        /// 指定ユーザーを削除する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <param name="userId">ユーザーID</param>
+        /// <returns>削除したレコード数</returns>
+        Task<int> DeleteAsync(TenantId tenantId, UserId userId);
     }
 }

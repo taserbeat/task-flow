@@ -13,7 +13,6 @@ namespace Application.UseCases.Users
     public class CreateUserUseCase
     {
         private readonly IAuthorizeService _authorizeService;
-
         private readonly IRoleService _roleService;
         private readonly TimeProvider _timeProvider;
         private readonly IPasswordHashService _passwordHashService;

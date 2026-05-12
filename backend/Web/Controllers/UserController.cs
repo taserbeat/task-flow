@@ -1,5 +1,6 @@
 using Application.Contexts;
 using Application.UseCases.Users;
+using Domain.Entities.Users;
 using Domain.Exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -21,13 +22,15 @@ namespace Web.Controllers
         private readonly GetUsersUseCase _getUsersUseCase;
         private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
         private readonly CreateUserUseCase _createUserUseCase;
+        private readonly DeleteUserUseCase _deleteUserUseCase;
 
-        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase)
+        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase, DeleteUserUseCase deleteUserUseCase)
         {
             _userContext = userContext;
             _getUsersUseCase = getUsersUseCase;
             _getCurrentUserUseCase = getCurrentUserUseCase;
             _createUserUseCase = createUserUseCase;
+            _deleteUserUseCase = deleteUserUseCase;
         }
 
         /// <summary>
@@ -109,6 +112,26 @@ namespace Web.Controllers
                 Tenant = TenantDetailResponse.FromEntity(tenantEm),
                 User = UserDetailResponse.FromEntity(userEm),
             };
+        }
+
+        /// <summary>
+        /// ユーザーの削除
+        /// </summary>
+        /// <param name="userId">削除対象のユーザーID</param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpDelete]
+        [Route("{userId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
+        {
+            await _deleteUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, UserId.New(userId));
+
+            return Ok();
         }
     }
 }
