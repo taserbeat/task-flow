@@ -35,6 +35,56 @@ namespace Domain.Entities.Roles
                 Level = level,
             };
         }
+
+        /// <summary>
+        /// ロールレベルが指定ロールよりも高いかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsHigherLevelThan(RoleEm target)
+        {
+            return Level > target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロール以上であるかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsHigherOrEqualLevelThan(RoleEm target)
+        {
+            return Level >= target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロールよりも低いかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsLowerLevelThan(RoleEm target)
+        {
+            return Level < target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロール以下であるかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsLowerOrEqualLevelThan(RoleEm target)
+        {
+            return Level <= target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが等しいかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsEqualLevel(RoleEm target)
+        {
+            return Level == target.Level;
+        }
     }
 
     /// <summary>

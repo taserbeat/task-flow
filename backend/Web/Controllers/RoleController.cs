@@ -24,6 +24,9 @@ namespace Web.Controllers
         /// ロール一覧の取得
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
         [HttpGet]
         [Route("")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]

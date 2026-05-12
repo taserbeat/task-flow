@@ -1,4 +1,5 @@
 using Application.Repositories;
+using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Infrastructure.Contexts;
@@ -35,16 +36,16 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<UserEm?> GetByIdAsync(UserId userId, bool isIncludeRole = false)
+        public async Task<UserEm?> GetByIdAsync(TenantId tenantId, UserId userId, bool isIncludeRole = false)
         {
-            var query = _dbContext.Users.AsQueryable();
+            var query = _dbContext.Users.Where(x => x.TenantId == tenantId && x.Id == userId);
 
             if (isIncludeRole)
             {
                 query = query.Include(x => x.Role);
             }
 
-            return await query.FirstOrDefaultAsync(x => x.Id == userId);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<UserEm?> GetForLoginAsync(UserEmail email)
@@ -57,6 +58,16 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Email == email && x.IsActive);
 
             return userEm;
+        }
+
+        public async Task<RoleEm?> GetRoleByUserIdAsync(TenantId tenantId, UserId userId)
+        {
+            var userEm = await _dbContext.Users
+                .Where(x => x.TenantId == tenantId && x.Id == userId)
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync();
+
+            return userEm?.Role;
         }
     }
 }

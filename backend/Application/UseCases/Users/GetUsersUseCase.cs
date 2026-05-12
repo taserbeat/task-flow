@@ -1,8 +1,6 @@
 using Application.Repositories;
-using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
-using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Users
 {
@@ -11,12 +9,10 @@ namespace Application.UseCases.Users
     /// </summary>
     public class GetUsersUseCase
     {
-        private readonly ILogger<GetUsersUseCase> _logger;
         private readonly IUserRepository _userRepository;
 
-        public GetUsersUseCase(ILogger<GetUsersUseCase> logger, IUserRepository userRepository)
+        public GetUsersUseCase(IUserRepository userRepository)
         {
-            _logger = logger;
             _userRepository = userRepository;
         }
 

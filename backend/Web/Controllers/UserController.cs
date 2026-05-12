@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Common.Constants;
 using Web.Dtos.Tenants.GetTenant;
+using Web.Dtos.Users.CreateUser;
 using Web.Dtos.Users.GetCurrentUser;
 using Web.Dtos.Users.GetUser;
 
@@ -16,23 +17,27 @@ namespace Web.Controllers
     [Tags("ユーザー")]
     public class UserController : ControllerBase
     {
-        private readonly ILogger<UserController> _logger;
         private readonly IUserContext _userContext;
         private readonly GetUsersUseCase _getUsersUseCase;
         private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
+        private readonly CreateUserUseCase _createUserUseCase;
 
-        public UserController(ILogger<UserController> logger, IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase)
+        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase)
         {
-            _logger = logger;
             _userContext = userContext;
             _getUsersUseCase = getUsersUseCase;
             _getCurrentUserUseCase = getCurrentUserUseCase;
+            _createUserUseCase = createUserUseCase;
         }
 
         /// <summary>
         /// ユーザー一覧の取得
         /// </summary>
         /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
         [HttpGet]
         [Route("")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
@@ -48,6 +53,37 @@ namespace Web.Controllers
             }).ToList();
 
             return users;
+        }
+
+        /// <summary>
+        /// ユーザーの作成
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPost]
+        [Route("")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        public async Task<IActionResult> CreateUser(CreateUserRequest request)
+        {
+            var input = new CreateUserInput
+            {
+                TenantId = _userContext.TenantId,
+                ActorId = _userContext.UserId,
+                Email = request.Email,
+                Password = request.Password,
+                LastName = request.LastName,
+                FirstName = request.FirstName,
+                RoleId = request.RoleId,
+            };
+
+            await _createUserUseCase.Execute(input);
+
+            return Ok();
         }
 
         /// <summary>

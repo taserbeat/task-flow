@@ -240,7 +240,7 @@ namespace Web.Workers
 
                 try
                 {
-                    var savedUserEm = await userRepository.GetByIdAsync(userEm.Id);
+                    var savedUserEm = await userRepository.GetByIdAsync(userEm.TenantId, userEm.Id);
                     if (savedUserEm is null)
                     {
                         await userRepository.AddAsync(userEm);
