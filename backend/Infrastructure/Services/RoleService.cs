@@ -35,7 +35,7 @@ namespace Infrastructure.Services
             return actorRoleEm.IsHigherOrEqualLevelThan(targetRoleEm);
         }
 
-        public async Task<bool> CanEditUserAsync(TenantId tenantId, UserId actorId, UserId target)
+        public async Task<bool> CanUpdateUserAsync(TenantId tenantId, UserId actorId, UserId target)
         {
             var actorRoleEm = await _userRepository.GetRoleByUserIdAsync(tenantId, actorId);
             if (actorRoleEm is null)

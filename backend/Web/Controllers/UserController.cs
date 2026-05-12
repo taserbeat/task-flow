@@ -73,10 +73,8 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
         public async Task<IActionResult> CreateUser(CreateUserRequest request)
         {
-            var input = new CreateUserInput
+            var param = new CreateUserParam
             {
-                TenantId = _userContext.TenantId,
-                ActorId = _userContext.UserId,
                 Email = request.Email,
                 Password = request.Password,
                 LastName = request.LastName,
@@ -84,7 +82,7 @@ namespace Web.Controllers
                 RoleId = request.RoleId,
             };
 
-            await _createUserUseCase.Execute(input);
+            await _createUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, param);
 
             return Ok();
         }

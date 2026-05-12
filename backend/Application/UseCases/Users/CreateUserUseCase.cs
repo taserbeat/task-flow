@@ -29,7 +29,7 @@ namespace Application.UseCases.Users
             _uow = uow;
         }
 
-        public async Task Execute(CreateUserInput input)
+        public async Task Execute(TenantId tenantId, UserId actorId, CreateUserParam param)
         {
             // 実行者の権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))
@@ -38,29 +38,29 @@ namespace Application.UseCases.Users
             }
 
             // 実行者と作成対象ユーザーのロールレベル(強さ)をチェック
-            var targetRoleId = RoleId.New(input.RoleId);
-            bool canCreate = await _roleService.CanCreateUserAsync(input.TenantId, input.ActorId, targetRoleId);
+            var targetRoleId = RoleId.New(param.RoleId);
+            bool canCreate = await _roleService.CanCreateUserAsync(tenantId, actorId, targetRoleId);
             if (!canCreate)
             {
                 throw new AppForbiddenException("操作は許可されていません。");
             }
 
             // パスワード生成
-            var passwordhash = _passwordHashService.GenerateHash(input.Password);
+            var passwordhash = _passwordHashService.GenerateHash(param.Password);
 
             var now = _timeProvider.GetUtcNow();
 
             // パラメータ作成 (バリデーション含む)
             var userEm = UserEm.Create(
                 userId: UserId.New(),
-                tenantId: input.TenantId,
+                tenantId: tenantId,
                 createdAt: now,
                 updatedAt: now,
-                createdBy: input.ActorId,
-                updatedBy: input.ActorId,
-                email: new(input.Email),
+                createdBy: actorId,
+                updatedBy: actorId,
+                email: new(param.Email),
                 passwordHash: passwordhash,
-                username: new(input.LastName, input.FirstName),
+                username: new(param.LastName, param.FirstName),
                 roleId: targetRoleId
             );
 
@@ -71,23 +71,11 @@ namespace Application.UseCases.Users
     }
 
     /// <summary>
-    /// ユーザー作成ユースケースへの入力情報
+    /// ユーザー作成のパラメータ
     /// </summary>
     /// <value></value>
-    public record CreateUserInput
+    public record CreateUserParam
     {
-        /// <summary>
-        /// テナントID
-        /// </summary>
-        /// <value></value>
-        public required TenantId TenantId { get; init; }
-
-        /// <summary>
-        /// 実行者のユーザーID
-        /// </summary>
-        /// <value></value>
-        public required UserId ActorId { get; init; }
-
         /// <summary>
         /// メールアドレス
         /// </summary>

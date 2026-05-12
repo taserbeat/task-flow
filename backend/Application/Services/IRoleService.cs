@@ -25,7 +25,7 @@ namespace Application.Services
         /// <param name="actorId">実行者</param>
         /// <param name="target">対象者</param>
         /// <returns></returns>
-        Task<bool> CanEditUserAsync(TenantId tenantId, UserId actorId, UserId target);
+        Task<bool> CanUpdateUserAsync(TenantId tenantId, UserId actorId, UserId target);
 
         /// <summary>
         /// 実行者が対象ユーザーを削除できるか判定する
