@@ -38,6 +38,13 @@ namespace Web.Dtos.Users.GetUser
         [JsonPropertyName("roleName")]
         public required RoleNameEnum RoleName { get; set; }
 
+        /// <summary>
+        /// 有効状態
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("isActive")]
+        public required bool IsActive { get; set; }
+
         public static UserSummaryResponse FromEntity(UserEm em)
         {
             return new UserSummaryResponse
@@ -46,6 +53,7 @@ namespace Web.Dtos.Users.GetUser
                 Email = em.Email.Value,
                 Username = em.Username.FullName,
                 RoleName = em.Role.Name,
+                IsActive = em.IsActive,
             };
         }
     }

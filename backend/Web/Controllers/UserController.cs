@@ -81,13 +81,7 @@ namespace Web.Controllers
         public async Task<ActionResult<IEnumerable<UserSummaryResponse>>> GetUsers()
         {
             var userEms = await _getUsersUseCase.Execute(_userContext.TenantId);
-            var users = userEms.Select(x => new UserSummaryResponse
-            {
-                Id = x.Id.Value,
-                Email = x.Email.Value,
-                Username = x.Username.FullName,
-                RoleName = x.Role.Name,
-            }).ToList();
+            var users = userEms.Select(x => UserSummaryResponse.FromEntity(x)).ToList();
 
             return users;
         }
