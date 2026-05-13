@@ -1,6 +1,6 @@
 using System.Text.Json.Serialization;
-using Domain.Entities.Roles;
 using Domain.Entities.Users;
+using Web.Dtos.Roles;
 
 namespace Web.Dtos.Users.GetUser
 {
@@ -32,18 +32,18 @@ namespace Web.Dtos.Users.GetUser
         public required string Username { get; set; }
 
         /// <summary>
-        /// ロール名
-        /// </summary>
-        /// <value></value>
-        [JsonPropertyName("roleName")]
-        public required RoleNameEnum RoleName { get; set; }
-
-        /// <summary>
         /// 有効状態
         /// </summary>
         /// <value></value>
         [JsonPropertyName("isActive")]
         public required bool IsActive { get; set; }
+
+        /// <summary>
+        /// ロール
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("role")]
+        public required RoleDetailResponse Role { get; set; }
 
         public static UserSummaryResponse FromEntity(UserEm em)
         {
@@ -52,8 +52,8 @@ namespace Web.Dtos.Users.GetUser
                 Id = em.Id.Value,
                 Email = em.Email.Value,
                 Username = em.Username.FullName,
-                RoleName = em.Role.Name,
                 IsActive = em.IsActive,
+                Role = RoleDetailResponse.FromEntity(em.Role),
             };
         }
     }
