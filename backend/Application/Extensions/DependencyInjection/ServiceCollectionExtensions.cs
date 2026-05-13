@@ -20,6 +20,7 @@ namespace Application.Extensions.DependencyInjection
             services.AddScoped<GetCurrentUserUseCase>();
             services.AddScoped<GetUsersUseCase>();
             services.AddScoped<CreateUserUseCase>();
+            services.AddScoped<UpdateUserUseCase>();
             services.AddScoped<DeleteUserUseCase>();
 
             return services;

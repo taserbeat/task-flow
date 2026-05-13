@@ -43,7 +43,7 @@ namespace Domain.Entities.Roles
         /// <returns></returns>
         public bool IsHigherLevelThan(RoleEm target)
         {
-            return Level > target.Level;
+            return (int)Level > (int)target.Level;
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Domain.Entities.Roles
         /// <returns></returns>
         public bool IsHigherOrEqualLevelThan(RoleEm target)
         {
-            return Level >= target.Level;
+            return (int)Level >= (int)target.Level;
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Domain.Entities.Roles
         /// <returns></returns>
         public bool IsLowerLevelThan(RoleEm target)
         {
-            return Level < target.Level;
+            return (int)Level < (int)target.Level;
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Domain.Entities.Roles
         /// <returns></returns>
         public bool IsLowerOrEqualLevelThan(RoleEm target)
         {
-            return Level <= target.Level;
+            return (int)Level <= (int)target.Level;
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Domain.Entities.Roles
         /// <returns></returns>
         public bool IsEqualLevel(RoleEm target)
         {
-            return Level == target.Level;
+            return (int)Level == (int)target.Level;
         }
     }
 

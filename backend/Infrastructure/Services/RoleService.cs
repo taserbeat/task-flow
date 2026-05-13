@@ -35,23 +35,6 @@ namespace Infrastructure.Services
             return actorRoleEm.IsHigherOrEqualLevelThan(targetRoleEm);
         }
 
-        public async Task<bool> CanUpdateUserAsync(TenantId tenantId, UserId actorId, UserId target)
-        {
-            var actorRoleEm = await _userRepository.GetRoleByUserIdAsync(tenantId, actorId);
-            if (actorRoleEm is null)
-            {
-                throw new AppValidateException("実行者のロールが不明です。");
-            }
-
-            var targetUserRoleEm = await _userRepository.GetRoleByUserIdAsync(tenantId, target);
-            if (targetUserRoleEm is null)
-            {
-                throw new AppValidateException("対象ユーザーが不明です。");
-            }
-
-            return actorRoleEm.IsHigherOrEqualLevelThan(targetUserRoleEm);
-        }
-
         public async Task<bool> CanDeleteUserAsync(TenantId tenantId, UserId actorId, UserId target)
         {
             var actorRoleEm = await _userRepository.GetRoleByUserIdAsync(tenantId, actorId);

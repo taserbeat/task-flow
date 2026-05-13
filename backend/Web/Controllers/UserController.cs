@@ -10,6 +10,7 @@ using Web.Dtos.Tenants.GetTenant;
 using Web.Dtos.Users.CreateUser;
 using Web.Dtos.Users.GetCurrentUser;
 using Web.Dtos.Users.GetUser;
+using Web.Dtos.Users.UpdateUser;
 
 namespace Web.Controllers
 {
@@ -22,14 +23,16 @@ namespace Web.Controllers
         private readonly GetUsersUseCase _getUsersUseCase;
         private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
         private readonly CreateUserUseCase _createUserUseCase;
+        private readonly UpdateUserUseCase _updateUserUseCase;
         private readonly DeleteUserUseCase _deleteUserUseCase;
 
-        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase, DeleteUserUseCase deleteUserUseCase)
+        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase, UpdateUserUseCase updateUserUseCase, DeleteUserUseCase deleteUserUseCase)
         {
             _userContext = userContext;
             _getUsersUseCase = getUsersUseCase;
             _getCurrentUserUseCase = getCurrentUserUseCase;
             _createUserUseCase = createUserUseCase;
+            _updateUserUseCase = updateUserUseCase;
             _deleteUserUseCase = deleteUserUseCase;
         }
 
@@ -110,6 +113,37 @@ namespace Web.Controllers
                 Tenant = TenantDetailResponse.FromEntity(tenantEm),
                 User = UserDetailResponse.FromEntity(userEm),
             };
+        }
+
+        /// <summary>
+        /// ユーザーの更新
+        /// </summary>
+        /// <param name="userId">更新対象のユーザーID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPut]
+        [Route("{userId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        public async Task<IActionResult> UpdateUser([FromRoute] Guid userId, UpdateUserRequest request)
+        {
+            var param = new UpdateUserParam
+            {
+                Email = request.Email,
+                Password = request.Password,
+                LastName = request.LastName,
+                FirstName = request.FirstName,
+                RoleId = request.RoleId,
+                IsActive = request.IsActive,
+            };
+
+            await _updateUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, UserId.New(userId), param);
+
+            return Ok();
         }
 
         /// <summary>
