@@ -20,45 +20,22 @@ namespace Web.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserContext _userContext;
-        private readonly GetUsersUseCase _getUsersUseCase;
-        private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
         private readonly CreateUserUseCase _createUserUseCase;
+        private readonly GetUsersUseCase _getUsersUseCase;
+        private readonly GetUserUseCase _getUserUseCase;
+        private readonly GetCurrentUserUseCase _getCurrentUserUseCase;
         private readonly UpdateUserUseCase _updateUserUseCase;
         private readonly DeleteUserUseCase _deleteUserUseCase;
 
-        public UserController(IUserContext userContext, GetUsersUseCase getUsersUseCase, GetCurrentUserUseCase getCurrentUserUseCase, CreateUserUseCase createUserUseCase, UpdateUserUseCase updateUserUseCase, DeleteUserUseCase deleteUserUseCase)
+        public UserController(IUserContext userContext, CreateUserUseCase createUserUseCase, GetUsersUseCase getUsersUseCase, GetUserUseCase getUserUseCase, GetCurrentUserUseCase getCurrentUserUseCase, UpdateUserUseCase updateUserUseCase, DeleteUserUseCase deleteUserUseCase)
         {
             _userContext = userContext;
-            _getUsersUseCase = getUsersUseCase;
-            _getCurrentUserUseCase = getCurrentUserUseCase;
             _createUserUseCase = createUserUseCase;
+            _getUsersUseCase = getUsersUseCase;
+            _getUserUseCase = getUserUseCase;
+            _getCurrentUserUseCase = getCurrentUserUseCase;
             _updateUserUseCase = updateUserUseCase;
             _deleteUserUseCase = deleteUserUseCase;
-        }
-
-        /// <summary>
-        /// ユーザー一覧の取得
-        /// </summary>
-        /// <returns></returns>
-        /// <response code="200">OK</response>
-        /// <response code="401">未認証エラー</response>
-        /// <response code="403">権限エラー</response>
-        /// <response code="500">サーバーが処理に失敗</response>
-        [HttpGet]
-        [Route("")]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
-        public async Task<ActionResult<IEnumerable<UserSummaryResponse>>> GetUsers()
-        {
-            var userEms = await _getUsersUseCase.Execute(_userContext.TenantId);
-            var users = userEms.Select(x => new UserSummaryResponse
-            {
-                Id = x.Id.Value,
-                Email = x.Email.Value,
-                Username = x.Username.FullName,
-                RoleName = x.Role.Name,
-            }).ToList();
-
-            return users;
         }
 
         /// <summary>
@@ -88,6 +65,55 @@ namespace Web.Controllers
             await _createUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, param);
 
             return Ok();
+        }
+
+        /// <summary>
+        /// ユーザー一覧の取得
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpGet]
+        [Route("")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        public async Task<ActionResult<IEnumerable<UserSummaryResponse>>> GetUsers()
+        {
+            var userEms = await _getUsersUseCase.Execute(_userContext.TenantId);
+            var users = userEms.Select(x => new UserSummaryResponse
+            {
+                Id = x.Id.Value,
+                Email = x.Email.Value,
+                Username = x.Username.FullName,
+                RoleName = x.Role.Name,
+            }).ToList();
+
+            return users;
+        }
+
+        /// <summary>
+        /// ユーザーの取得
+        /// </summary>
+        /// <param name="userId">取得対象のユーザーID</param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="404">存在しない</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpGet]
+        [Route("{userId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        public async Task<ActionResult<UserDetailResponse>> GetUser([FromRoute] Guid userId)
+        {
+            var userEm = await _getUserUseCase.Execute(_userContext.TenantId, UserId.New(userId));
+            if (userEm is null)
+            {
+                return NotFound();
+            }
+
+            return UserDetailResponse.FromEntity(userEm);
         }
 
         /// <summary>

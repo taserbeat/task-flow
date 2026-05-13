@@ -32,7 +32,8 @@ namespace Infrastructure.Repositories
             return await _dbContext.Users
                 .Include(x => x.Role)
                 .Where(x => x.TenantId == tenantId)
-                .OrderByDescending(x => x.Email)
+                .OrderByDescending(x => x.Role.Level)
+                .ThenBy(x => x.Email)
                 .ToListAsync();
         }
 
