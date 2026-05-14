@@ -8,7 +8,8 @@ import {
 import type { RoleName } from "../models/roles/Role";
 import TaskIndexPage from "../components/pages/tasks/TaskIndexPage";
 import UserIndexPage from "../components/pages/users/UserIndexPage";
-import UserDetailPage from "../components/pages/users/UserDetailPage";
+import UserNewPage from "../components/pages/users/UserNewPage";
+import UserEditPage from "../components/pages/users/UserEditPage";
 import TenantIndexPage from "../components/pages/tenants/TenantIndexPage";
 
 /** ルーティング設定 */
@@ -56,8 +57,12 @@ export const routes: RouteConfig[] = [
     roles: ["SystemAdmin", "Admin"],
     children: [
       {
-        path: "/users/:userId",
-        element: <UserDetailPage />,
+        path: "/users/new",
+        element: <UserNewPage />,
+      },
+      {
+        path: "/users/:userId/edit",
+        element: <UserEditPage />,
       },
     ],
   },

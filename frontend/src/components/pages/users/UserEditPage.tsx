@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 
-/** ユーザー詳細ページ */
-const UserDetailPage = () => {
+/** ユーザー編集ページ */
+const UserEditPage = () => {
   const { userId } = useParams();
 
   return (
@@ -13,4 +13,4 @@ const UserDetailPage = () => {
   );
 };
 
-export default UserDetailPage;
+export default UserEditPage;

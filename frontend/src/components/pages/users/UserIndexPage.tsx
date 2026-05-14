@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import type { UserSummary } from "../../../models/users/UserSummary";
 import { apiClient } from "../../../api/clients/ApiClient";
 import { useAppSelector } from "../../../app/hook";
 
 /** ユーザー一覧ページ */
 const UserIndexPage = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserSummary[]>([]);
   const [selectedUser, setSelectedUser] = useState<UserSummary | null>(null);
   const currentUser = useAppSelector((root) => root.profile.userInfo?.user);
@@ -31,13 +34,14 @@ const UserIndexPage = () => {
 
   /** 新規ボタンのクリック処理 */
   const handleNew = () => {
-    // TODO: 新規作成ボタンへの遷移
+    navigate("/users/new");
   };
 
   /** 編集ボタンのクリック処理 */
   const handleEdit = () => {
     if (!selectedUser) return;
-    // TODO: 編集画面への遷移またはモーダル表示
+
+    navigate(`/users/${selectedUser.id}/edit`);
   };
 
   /** 削除ボタンのクリック処理 */
