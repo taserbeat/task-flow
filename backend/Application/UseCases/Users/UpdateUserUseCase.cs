@@ -72,7 +72,7 @@ namespace Application.UseCases.Users
             }
 
             // 氏名
-            if (!string.IsNullOrWhiteSpace(param.LastName) || !string.IsNullOrWhiteSpace(param.FirstName))
+            if (param.LastName != null || param.FirstName != null)
             {
                 var newUsername = new UserName(param.LastName ?? targetUserEm.Username.LastName, param.FirstName ?? targetUserEm.Username.FirstName);
                 targetUserEm.ChangeName(newUsername, now, actorId);
