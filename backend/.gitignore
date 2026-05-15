@@ -363,5 +363,8 @@ FodyWeavers.xsd
 
 .idea/
 
+# VSCode cache
+*.lscache
+
 # build directory
 build/
