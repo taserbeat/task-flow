@@ -22,6 +22,6 @@ namespace Web.Dtos.Users.GetCurrentUser
         /// </summary>
         /// <value></value>
         [JsonPropertyName("user")]
-        public required UserDetailResponse User { get; set; }
+        public required UserSummaryResponse User { get; set; }
     }
 }

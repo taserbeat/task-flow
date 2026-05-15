@@ -24,11 +24,18 @@ namespace Web.Dtos.Users.GetUser
         public required string Email { get; set; }
 
         /// <summary>
-        /// 氏名
+        /// 姓
         /// </summary>
         /// <value></value>
-        [JsonPropertyName("username")]
-        public required string Username { get; set; }
+        [JsonPropertyName("lastName")]
+        public required string LastName { get; set; }
+
+        /// <summary>
+        /// 名
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("firstName")]
+        public required string FirstName { get; set; }
 
         /// <summary>
         /// 有効状態
@@ -50,7 +57,8 @@ namespace Web.Dtos.Users.GetUser
             {
                 Id = em.Id.Value,
                 Email = em.Email.Value,
-                Username = em.Username.FullName,
+                LastName = em.Username.LastName,
+                FirstName = em.Username.FirstName,
                 IsActive = em.IsActive,
                 Role = RoleDetailResponse.FromEntity(em.Role)
             };

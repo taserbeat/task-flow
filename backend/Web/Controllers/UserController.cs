@@ -131,7 +131,7 @@ namespace Web.Controllers
             return new CurrentUserResponse
             {
                 Tenant = TenantDetailResponse.FromEntity(tenantEm),
-                User = UserDetailResponse.FromEntity(userEm),
+                User = UserSummaryResponse.FromEntity(userEm),
             };
         }
 

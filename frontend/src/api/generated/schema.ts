@@ -481,7 +481,7 @@ export interface components {
         /** @description 自身のユーザー情報 */
         CurrentUserResponse: {
             tenant: components["schemas"]["TenantDetailResponse"];
-            user: components["schemas"]["UserDetailResponse"];
+            user: components["schemas"]["UserSummaryResponse"];
         };
         /** @description ロールの詳細レスポンス */
         RoleDetailResponse: {
@@ -538,8 +538,10 @@ export interface components {
             id: string;
             /** @description メールアドレス */
             email: string;
-            /** @description 氏名 */
-            username: string;
+            /** @description 姓 */
+            lastName: string;
+            /** @description 名 */
+            firstName: string;
             /** @description 有効状態 */
             isActive: boolean;
             role: components["schemas"]["RoleDetailResponse"];
