@@ -14,19 +14,76 @@ namespace Domain.Entities.Roles
         public RoleNameEnum Name { get; private set; }
 
         /// <summary>
+        /// 表示名
+        /// </summary>
+        /// <value></value>
+        public RoleLabel Label { get; private set; } = default!;
+
+        /// <summary>
         /// ロールレベル (高いほど強い権限)
         /// </summary>
         /// <value></value>
         public RoleLevelEnum Level { get; private set; }
 
-        public static RoleEm Create(RoleId roleId, RoleNameEnum name, RoleLevelEnum level)
+        public static RoleEm Create(RoleId roleId, RoleNameEnum name, RoleLabel label, RoleLevelEnum level)
         {
             return new RoleEm
             {
                 Id = roleId,
                 Name = name,
+                Label = label,
                 Level = level,
             };
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロールよりも高いかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsHigherLevelThan(RoleEm target)
+        {
+            return (int)Level > (int)target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロール以上であるかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsHigherOrEqualLevelThan(RoleEm target)
+        {
+            return (int)Level >= (int)target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロールよりも低いかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsLowerLevelThan(RoleEm target)
+        {
+            return (int)Level < (int)target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが指定ロール以下であるかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsLowerOrEqualLevelThan(RoleEm target)
+        {
+            return (int)Level <= (int)target.Level;
+        }
+
+        /// <summary>
+        /// ロールレベルが等しいかチェックする
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsEqualLevel(RoleEm target)
+        {
+            return (int)Level == (int)target.Level;
         }
     }
 

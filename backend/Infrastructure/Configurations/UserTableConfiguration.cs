@@ -82,6 +82,26 @@ namespace Infrastructure.Configurations
                 .OnDelete(DeleteBehavior.Restrict);  // ロール削除防止
 
             // ======================================
+            // 氏名
+            // ======================================
+            builder.OwnsOne(
+                x => x.Username,
+                username =>
+                {
+                    // ValueObject(姓+名)を設定
+                    username.Property(x => x.LastName)
+                        .HasColumnName("last_name")
+                        .HasMaxLength(32)
+                        .IsRequired();
+
+                    username.Property(x => x.FirstName)
+                        .HasColumnName("first_name")
+                        .HasMaxLength(32)
+                        .IsRequired();
+                }
+            );
+
+            // ======================================
             // 有効状態
             // ======================================
             builder.Property(x => x.IsActive)

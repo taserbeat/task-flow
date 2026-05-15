@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260506060828_CreateBaseTables")]
+    [Migration("20260511141157_CreateBaseTables")]
     partial class CreateBaseTables
     {
         /// <inheritdoc />
@@ -33,6 +33,13 @@ namespace Infrastructure.Migrations
                         .HasColumnName("id")
                         .HasComment("エンティティのID");
 
+                    b.Property<string>("Label")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasColumnName("label")
+                        .HasComment("ロールラベル");
+
                     b.Property<int>("Level")
                         .HasColumnType("integer")
                         .HasColumnName("level")
@@ -46,6 +53,9 @@ namespace Infrastructure.Migrations
                         .HasComment("ロール名");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Label")
+                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -181,7 +191,35 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.OwnsOne("Domain.Entities.Users.UserName", "Username", b1 =>
+                        {
+                            b1.Property<Guid>("UserEmId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("FirstName")
+                                .IsRequired()
+                                .HasMaxLength(32)
+                                .HasColumnType("character varying(32)")
+                                .HasColumnName("first_name");
+
+                            b1.Property<string>("LastName")
+                                .IsRequired()
+                                .HasMaxLength(32)
+                                .HasColumnType("character varying(32)")
+                                .HasColumnName("last_name");
+
+                            b1.HasKey("UserEmId");
+
+                            b1.ToTable("users", "tf");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserEmId");
+                        });
+
                     b.Navigation("Role");
+
+                    b.Navigation("Username")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

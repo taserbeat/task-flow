@@ -1,18 +1,22 @@
+import axios from "axios";
 import type { AxiosInstance } from "axios";
+
 import { UsersApi } from "../users/usersApi";
+import { RolesApi } from "../roles/rolesApi";
 import { axiosInstance } from "./axios";
 import type { ErrorResponse, HttpError } from "../common/httpError";
-import axios from "axios";
 
 export class ApiClient {
   private readonly instance: AxiosInstance;
 
   users: UsersApi;
+  roles: RolesApi;
 
   constructor(instance: AxiosInstance) {
     this.instance = instance;
 
     this.users = new UsersApi(this.instance);
+    this.roles = new RolesApi(this.instance);
   }
 
   /** HTTPエラーをパースする */

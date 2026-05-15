@@ -38,6 +38,7 @@ namespace Web.Extensions.DependencyInjection
 
             services.AddScoped<IPasswordHashService, PasswordHashService>();
             services.AddScoped<IAuthorizeService, AuthorizeService>();
+            services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IAuthorizationHandler, RoleLevelHandler>();
 
             return services;

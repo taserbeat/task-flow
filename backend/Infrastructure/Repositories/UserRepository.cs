@@ -1,4 +1,6 @@
 using Application.Repositories;
+using Domain.Entities.Roles;
+using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Infrastructure.Contexts;
 using Infrastructure.DbContexts;
@@ -25,9 +27,26 @@ namespace Infrastructure.Repositories
             await _dbContext.Users.AddAsync(userEm);
         }
 
-        public async Task<UserEm?> GetByIdAsync(UserId userId)
+        public async Task<IEnumerable<UserEm>> GetUsersAsync(TenantId tenantId)
         {
-            return await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            return await _dbContext.Users
+                .Include(x => x.Role)
+                .Where(x => x.TenantId == tenantId)
+                .OrderByDescending(x => x.Role.Level)
+                .ThenBy(x => x.Email)
+                .ToListAsync();
+        }
+
+        public async Task<UserEm?> GetByIdAsync(TenantId tenantId, UserId userId, bool isIncludeRole = false)
+        {
+            var query = _dbContext.Users.Where(x => x.TenantId == tenantId && x.Id == userId);
+
+            if (isIncludeRole)
+            {
+                query = query.Include(x => x.Role);
+            }
+
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<UserEm?> GetForLoginAsync(UserEmail email)
@@ -40,6 +59,23 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(x => x.Email == email && x.IsActive);
 
             return userEm;
+        }
+
+        public async Task<RoleEm?> GetRoleByUserIdAsync(TenantId tenantId, UserId userId)
+        {
+            var userEm = await _dbContext.Users
+                .Where(x => x.TenantId == tenantId && x.Id == userId)
+                .Include(x => x.Role)
+                .FirstOrDefaultAsync();
+
+            return userEm?.Role;
+        }
+
+        public async Task<int> DeleteAsync(TenantId tenantId, UserId userId)
+        {
+            return await _dbContext.Users
+                .Where(x => x.TenantId == tenantId && x.Id == userId)
+                .ExecuteDeleteAsync();
         }
     }
 }

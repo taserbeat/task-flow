@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Domain.Exceptions;
+using Infrastructure.Extensions.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Middlewares
@@ -32,6 +33,18 @@ namespace Web.Middlewares
             catch (AppException ex)
             {
                 await HandleAppExceptionAsync(context, ex);
+            }
+            catch (Exception ex) when (ex.IsUniqueConstraintViolation())
+            {
+                await HandleAppExceptionAsync(context, new AppValidateException("重複しているデータがあります。"));
+            }
+            catch (Exception ex) when (ex.IsForeignKeyViolation())
+            {
+                await HandleAppExceptionAsync(context, new AppNotFoundException("参照しているデータが存在しません。"));
+            }
+            catch (Exception ex) when (ex.IsNotNullViolation())
+            {
+                await HandleAppExceptionAsync(context, new AppValidateException("未指定のデータがあります。"));
             }
             catch (Exception ex)
             {

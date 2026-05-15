@@ -25,14 +25,13 @@ namespace Infrastructure.Configurations
                 x.Id,
             });
 
-            // ユニーク制約
-            builder.HasIndex(x => new { x.Name }).IsUnique();
-
             #region カラム設定
 
             builder.ConfigureBaseColumns<RoleEm, RoleId>();
 
+            // ======================================
             // ロール名
+            // ======================================
             builder.Property(x => x.Name)
                 .HasColumnName("name")
                 .HasMaxLength(32)
@@ -40,7 +39,28 @@ namespace Infrastructure.Configurations
                 .HasComment("ロール名")
                 .IsRequired();
 
+            // ユニーク制約
+            builder.HasIndex(x => new { x.Name }).IsUnique();
+
+            // ======================================
+            // ラベル
+            // ======================================
+            builder.Property(x => x.Label)
+                .HasColumnName("label")
+                .HasMaxLength(32)
+                .HasConversion(
+                    v => v.Value,
+                    v => new RoleLabel(v)
+                )
+                .HasComment("ロールラベル")
+                .IsRequired();
+
+            // ユニーク制約
+            builder.HasIndex(x => new { x.Label }).IsUnique();
+
+            // ======================================
             // ロールレベル
+            // ======================================
             builder.Property(x => x.Level)
                 .HasColumnName("level")
                 .HasConversion<int>()

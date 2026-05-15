@@ -6,7 +6,9 @@ import { routes } from "../../../routers/routeConfig";
 
 /** サイドバー */
 const Sidebar: React.FC = () => {
-  const roleName = useAppSelector((root) => root.profile.userInfo?.roleName);
+  const roleName = useAppSelector(
+    (root) => root.profile.userInfo?.user.role.name,
+  );
 
   if (!roleName) {
     return <></>;

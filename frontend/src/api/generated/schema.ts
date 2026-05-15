@@ -70,6 +70,290 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ユーザー一覧の取得 */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["UserSummaryResponse"][];
+                        "application/json": components["schemas"]["UserSummaryResponse"][];
+                        "text/json": components["schemas"]["UserSummaryResponse"][];
+                    };
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        /** ユーザーの作成 */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateUserRequest"];
+                    "text/json": components["schemas"]["CreateUserRequest"];
+                    "application/*+json": components["schemas"]["CreateUserRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/users/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ユーザーの取得 */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 取得対象のユーザーID */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["UserDetailResponse"];
+                        "application/json": components["schemas"]["UserDetailResponse"];
+                        "text/json": components["schemas"]["UserDetailResponse"];
+                    };
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 存在しない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        /** ユーザーの更新 */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 更新対象のユーザーID */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateUserRequest"];
+                    "text/json": components["schemas"]["UpdateUserRequest"];
+                    "application/*+json": components["schemas"]["UpdateUserRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        /** ユーザーの削除 */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 削除対象のユーザーID */
+                    userId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/users/me": {
         parameters: {
             query?: never;
@@ -122,33 +406,161 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/roles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ロール一覧の取得 */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["RoleDetailResponse"][];
+                        "application/json": components["schemas"]["RoleDetailResponse"][];
+                        "text/json": components["schemas"]["RoleDetailResponse"][];
+                    };
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description 自身のユーザー情報 */
-        CurrentUserResponse: {
-            /**
-             * Format: uuid
-             * @description テナントID
-             */
-            tenantId: string;
-            /**
-             * Format: uuid
-             * @description ユーザーID
-             */
-            userId: string;
+        /** @description ユーザー作成リクエスト */
+        CreateUserRequest: {
             /** @description メールアドレス */
             email: string;
-            roleName: components["schemas"]["RoleNameEnum"];
+            /** @description パスワード */
+            password: string;
+            /** @description 姓 */
+            lastName: string;
+            /** @description 名 */
+            firstName: string;
+            /**
+             * Format: uuid
+             * @description ロールID
+             */
+            roleId: string;
+        };
+        /** @description 自身のユーザー情報 */
+        CurrentUserResponse: {
+            tenant: components["schemas"]["TenantDetailResponse"];
+            user: components["schemas"]["UserSummaryResponse"];
+        };
+        /** @description ロールの詳細レスポンス */
+        RoleDetailResponse: {
+            /**
+             * Format: uuid
+             * @description ロールID
+             */
+            id: string;
+            name: components["schemas"]["RoleNameEnum"];
+            /** @description ラベル名 */
+            label: string;
             /**
              * Format: int32
              * @description ロールレベル
              */
-            roleLevel: number;
+            level: number;
         };
         /** @enum {string} */
         RoleNameEnum: "User" | "Admin" | "SystemAdmin";
+        /** @description テナントの詳細レスポンス */
+        TenantDetailResponse: {
+            /**
+             * Format: uuid
+             * @description テナントID
+             */
+            id: string;
+            /** @description テナント名 */
+            name: string;
+        };
+        /** @description ユーザーの更新リクエスト */
+        UpdateUserRequest: {
+            /** @description メールアドレス */
+            email?: string | null;
+            /** @description パスワード */
+            password?: string | null;
+            /** @description 姓 */
+            lastName?: string | null;
+            /** @description 名 */
+            firstName?: string | null;
+            /**
+             * Format: uuid
+             * @description ロールID
+             */
+            roleId?: string | null;
+            /** @description 有効フラグ */
+            isActive?: boolean | null;
+        };
+        /** @description ユーザーの詳細レスポンス */
+        UserDetailResponse: {
+            /**
+             * Format: uuid
+             * @description ユーザーID
+             */
+            id: string;
+            /** @description メールアドレス */
+            email: string;
+            /** @description 姓 */
+            lastName: string;
+            /** @description 名 */
+            firstName: string;
+            /** @description 有効状態 */
+            isActive: boolean;
+            role: components["schemas"]["RoleDetailResponse"];
+        };
+        /** @description ユーザー情報 */
+        UserSummaryResponse: {
+            /**
+             * Format: uuid
+             * @description ユーザーID
+             */
+            id: string;
+            /** @description メールアドレス */
+            email: string;
+            /** @description 氏名 */
+            username: string;
+            /** @description 有効状態 */
+            isActive: boolean;
+            role: components["schemas"]["RoleDetailResponse"];
+        };
         /** @description バージョン情報 */
         VersionInfo: {
             /** @description バージョン */
