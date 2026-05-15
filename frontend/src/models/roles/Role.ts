@@ -1,4 +1,7 @@
-import type { CurrentUserResponse } from "../../api/users/usersDtos";
+import type { RoleDetailResponse } from "../../api/roles/rolesDtos";
+
+/** ロール */
+export type Role = RoleDetailResponse;
 
 /** ロール名 */
-export type RoleName = CurrentUserResponse["user"]["role"]["name"];
+export type RoleName = RoleDetailResponse["name"];

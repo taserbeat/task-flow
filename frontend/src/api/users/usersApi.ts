@@ -31,7 +31,7 @@ export class UsersApi {
   public async createUser(request: CreateUserRequest): Promise<void> {
     const url = "/api/users";
     await this.instance.post(url, {
-      request,
+      ...request,
     });
   }
 
@@ -51,10 +51,13 @@ export class UsersApi {
   }
 
   /** ユーザーを更新する */
-  public async updateUser(request: UpdateUserRequest): Promise<void> {
-    const url = "/api/users";
+  public async updateUser(
+    userId: string,
+    request: UpdateUserRequest,
+  ): Promise<void> {
+    const url = `/api/users/${userId}`;
     await this.instance.put(url, {
-      request,
+      ...request,
     });
   }
 
