@@ -1,5 +1,6 @@
 using Application.UseCases.Auth;
 using Application.UseCases.Roles;
+using Application.UseCases.Tenants;
 using Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,6 +16,8 @@ namespace Application.Extensions.DependencyInjection
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddScoped<GetRolesUseCase>();
+
+            services.AddScoped<CreateTenantUseCase>();
 
             services.AddScoped<LoginUseCase>();
             services.AddScoped<GetCurrentUserUseCase>();
