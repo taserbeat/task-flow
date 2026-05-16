@@ -18,6 +18,7 @@ namespace Application.Extensions.DependencyInjection
             services.AddScoped<GetRolesUseCase>();
 
             services.AddScoped<CreateTenantUseCase>();
+            services.AddScoped<GetTenantsUseCase>();
 
             services.AddScoped<LoginUseCase>();
             services.AddScoped<GetCurrentUserUseCase>();
