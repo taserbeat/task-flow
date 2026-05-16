@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Web.Common.Constants;
 using Web.Dtos.Tenants.CreateTenant;
 using Web.Dtos.Tenants.GetTenant;
+using Web.Dtos.Tenants.UpdateTenant;
 
 namespace Web.Controllers
 {
@@ -19,13 +20,15 @@ namespace Web.Controllers
         private readonly IUserContext _userContext;
         private readonly CreateTenantUseCase _createTenantUseCase;
         private readonly GetTenantsUseCase _getTenantUseCase;
+        private readonly UpdateTenantUseCase _updateTenantUseCase;
         private readonly DeleteTenantUseCase _deleteTenantUseCase;
 
-        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantUseCase, DeleteTenantUseCase deleteTenantUseCase)
+        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantUseCase, UpdateTenantUseCase updateTenantUseCase, DeleteTenantUseCase deleteTenantUseCase)
         {
             _userContext = userContext;
             _createTenantUseCase = createTenantUseCase;
             _getTenantUseCase = getTenantUseCase;
+            _updateTenantUseCase = updateTenantUseCase;
             _deleteTenantUseCase = deleteTenantUseCase;
         }
 
@@ -79,6 +82,32 @@ namespace Web.Controllers
             var response = tenantEms.Select(x => TenantSummaryResponse.FromEntity(x)).ToList();
 
             return response;
+        }
+
+        /// <summary>
+        /// テナントの更新
+        /// </summary>
+        /// <param name="tenantId">更新対象のテナントID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPut]
+        [Route("{tenantId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireSystemAdmin)]
+        public async Task<IActionResult> UpdateTenant([FromRoute] Guid tenantId, UpdateTenantRequest request)
+        {
+            var param = new UpdateTenantParam
+            {
+                Name = request.Name,
+            };
+
+            await _updateTenantUseCase.ExecuteAsync(_userContext.UserId, TenantId.New(tenantId), param);
+
+            return Ok();
         }
 
         /// <summary>

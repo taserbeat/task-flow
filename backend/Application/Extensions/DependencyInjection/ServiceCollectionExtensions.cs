@@ -19,6 +19,7 @@ namespace Application.Extensions.DependencyInjection
 
             services.AddScoped<CreateTenantUseCase>();
             services.AddScoped<GetTenantsUseCase>();
+            services.AddScoped<UpdateTenantUseCase>();
             services.AddScoped<DeleteTenantUseCase>();
 
             services.AddScoped<LoginUseCase>();
