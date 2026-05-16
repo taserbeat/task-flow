@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260511141157_CreateBaseTables")]
+    [Migration("20260516080944_CreateBaseTables")]
     partial class CreateBaseTables
     {
         /// <inheritdoc />
@@ -191,6 +191,12 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Tenants.TenantEm", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("Domain.Entities.Users.UserName", "Username", b1 =>
                         {
                             b1.Property<Guid>("UserEmId")
@@ -217,6 +223,8 @@ namespace Infrastructure.Migrations
                         });
 
                     b.Navigation("Role");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("Username")
                         .IsRequired();

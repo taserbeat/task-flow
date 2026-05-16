@@ -76,6 +76,13 @@ namespace Infrastructure.Migrations
                         principalTable: "roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_users_tenants_tenant_id",
+                        column: x => x.tenant_id,
+                        principalSchema: "tf",
+                        principalTable: "tenants",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 },
                 comment: "ユーザーテーブル");
 
@@ -129,15 +136,15 @@ namespace Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "tenants",
-                schema: "tf");
-
-            migrationBuilder.DropTable(
                 name: "users",
                 schema: "tf");
 
             migrationBuilder.DropTable(
                 name: "roles",
+                schema: "tf");
+
+            migrationBuilder.DropTable(
+                name: "tenants",
                 schema: "tf");
         }
     }

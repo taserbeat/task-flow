@@ -40,6 +40,12 @@ namespace Domain.Entities.Users
         public bool IsActive { get; private set; }
 
         /// <summary>
+        /// テナントのナビゲーションプロパティ
+        /// </summary>
+        /// <value></value>
+        public TenantEm Tenant { get; private set; } = default!;
+
+        /// <summary>
         /// ロールのナビゲーションプロパティ
         /// </summary>
         /// <value></value>
