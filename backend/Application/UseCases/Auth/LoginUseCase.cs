@@ -16,12 +16,14 @@ namespace Application.UseCases.Auth
     {
         private readonly ILogger<LoginUseCase> _logger;
         private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _uow;
         private readonly IPasswordHashService _passwordHashService;
 
-        public LoginUseCase(ILogger<LoginUseCase> logger, IUserRepository userRepository, IPasswordHashService passwordHashService)
+        public LoginUseCase(ILogger<LoginUseCase> logger, IUserRepository userRepository, IUnitOfWork uow, IPasswordHashService passwordHashService)
         {
             _logger = logger;
             _userRepository = userRepository;
+            _uow = uow;
             _passwordHashService = passwordHashService;
         }
 
@@ -34,7 +36,14 @@ namespace Application.UseCases.Auth
         public async Task<LoginResult> ExecuteAsync(LoginRequest request)
         {
             // ユーザーを取得
-            var userEm = await _userRepository.GetForLoginAsync(request.Email);
+            UserEm? userEm;
+            using (_uow.CreateBypassScope())
+            {
+                // NOTE:
+                // 認証処理ではどのテナントのユーザー情報でも取得できる必要があるため、RLSをバイパスする (テナントを横断)
+                userEm = await _userRepository.GetByEmailAsync(request.Email);
+            }
+
             if (userEm is null)
             {
                 throw new AppValidateException("メールアドレスまたはパスワードが間違っています。");

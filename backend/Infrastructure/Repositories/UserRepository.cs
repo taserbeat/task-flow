@@ -14,12 +14,10 @@ namespace Infrastructure.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _dbContext;
-        private readonly IRlsContext _rlsContext;
 
-        public UserRepository(AppDbContext dbContext, IRlsContext rlsContext)
+        public UserRepository(AppDbContext dbContext)
         {
             _dbContext = dbContext;
-            _rlsContext = rlsContext;
         }
 
         public async Task AddAsync(UserEm userEm)
@@ -49,11 +47,8 @@ namespace Infrastructure.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<UserEm?> GetForLoginAsync(UserEmail email)
+        public async Task<UserEm?> GetByEmailAsync(UserEmail email)
         {
-            // 認証処理ではどんなユーザー情報でも取得できる必要があるため、RLSをバイパスする
-            using var _ = _rlsContext.CreateBypassScope();
-
             var userEm = await _dbContext.Users
                 .Include(x => x.Role)
                 .FirstOrDefaultAsync(x => x.Email == email && x.IsActive);

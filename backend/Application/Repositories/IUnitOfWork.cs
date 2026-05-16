@@ -1,7 +1,7 @@
 namespace Application.Repositories
 {
     /// <summary>
-    /// トランザクションを管理するインターフェース
+    /// トランザクションとRLSの境界を管理するインターフェース
     /// </summary>
     public interface IUnitOfWork
     {
@@ -44,5 +44,18 @@ namespace Application.Repositories
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
         Task ExecuteTransactionAsync(Func<Task> action, CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// 明示的にテナントIDを設定したスコープを作成する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <returns></returns>
+        IDisposable CreateTenantIdScope(string tenantId);
+
+        /// <summary>
+        /// 明示的にRLSをバイパスするスコープを作成する
+        /// </summary>
+        /// <returns></returns>
+        IDisposable CreateBypassScope();
     }
 }

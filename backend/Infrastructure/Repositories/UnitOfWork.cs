@@ -1,4 +1,5 @@
 using Application.Repositories;
+using Infrastructure.Contexts;
 using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -11,10 +12,12 @@ namespace Infrastructure.Repositories
     {
         private IDbContextTransaction? _transaction = null;
         private readonly AppDbContext _dbContext;
+        private readonly IRlsContext _rlsContext;
 
-        public UnitOfWork(AppDbContext dbContext)
+        public UnitOfWork(AppDbContext dbContext, IRlsContext rlsContext)
         {
             _dbContext = dbContext;
+            _rlsContext = rlsContext;
         }
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
@@ -89,6 +92,16 @@ namespace Infrastructure.Repositories
                 await RollbackAsync(cancellationToken);
                 throw;
             }
+        }
+
+        public IDisposable CreateTenantIdScope(string tenantId)
+        {
+            return _rlsContext.CreateTenantIdScope(tenantId);
+        }
+
+        public IDisposable CreateBypassScope()
+        {
+            return _rlsContext.CreateBypassScope();
         }
     }
 }
