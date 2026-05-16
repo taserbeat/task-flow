@@ -33,5 +33,12 @@ namespace Infrastructure.Repositories
                 .OrderBy(x => x.CreatedAt)
                 .ToListAsync();
         }
+
+        public async Task<int> DeleteAsync(TenantId tenantId)
+        {
+            return await _dbContext.Tenants
+                .Where(x => x.Id == tenantId)
+                .ExecuteDeleteAsync();
+        }
     }
 }

@@ -1,6 +1,7 @@
 using Application.Contexts;
 using Application.UseCases.Tenants;
 using Application.UseCases.Users;
+using Domain.Entities.Tenants;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,12 +19,14 @@ namespace Web.Controllers
         private readonly IUserContext _userContext;
         private readonly CreateTenantUseCase _createTenantUseCase;
         private readonly GetTenantsUseCase _getTenantUseCase;
+        private readonly DeleteTenantUseCase _deleteTenantUseCase;
 
-        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantUseCase)
+        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantUseCase, DeleteTenantUseCase deleteTenantUseCase)
         {
             _userContext = userContext;
             _createTenantUseCase = createTenantUseCase;
             _getTenantUseCase = getTenantUseCase;
+            _deleteTenantUseCase = deleteTenantUseCase;
         }
 
         /// <summary>
@@ -76,6 +79,25 @@ namespace Web.Controllers
             var response = tenantEms.Select(x => TenantSummaryResponse.FromEntity(x)).ToList();
 
             return response;
+        }
+
+        /// <summary>
+        /// テナントの削除
+        /// </summary>
+        /// <param name="tenantId">削除対象のテナントID</param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpDelete]
+        [Route("{tenantId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireSystemAdmin)]
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid tenantId)
+        {
+            await _deleteTenantUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, TenantId.New(tenantId));
+
+            return Ok();
         }
     }
 }
