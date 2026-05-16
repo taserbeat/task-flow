@@ -2,7 +2,6 @@ using Application.Repositories;
 using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
-using Infrastructure.Contexts;
 using Infrastructure.DbContexts;
 using Microsoft.EntityFrameworkCore;
 

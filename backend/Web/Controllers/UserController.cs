@@ -62,7 +62,7 @@ namespace Web.Controllers
                 RoleId = request.RoleId,
             };
 
-            await _createUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, param);
+            await _createUserUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, param);
 
             return Ok();
         }
@@ -80,7 +80,7 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
         public async Task<ActionResult<IEnumerable<UserSummaryResponse>>> GetUsers()
         {
-            var userEms = await _getUsersUseCase.Execute(_userContext.TenantId);
+            var userEms = await _getUsersUseCase.ExecuteAsync(_userContext.TenantId);
             var users = userEms.Select(x => UserSummaryResponse.FromEntity(x)).ToList();
 
             return users;
@@ -101,7 +101,7 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
         public async Task<ActionResult<UserDetailResponse>> GetUser([FromRoute] Guid userId)
         {
-            var userEm = await _getUserUseCase.Execute(_userContext.TenantId, UserId.New(userId));
+            var userEm = await _getUserUseCase.ExecuteAsync(_userContext.TenantId, UserId.New(userId));
             if (userEm is null)
             {
                 return NotFound();
@@ -122,7 +122,7 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<ActionResult<CurrentUserResponse>> GetCurrentUser()
         {
-            var (tenantEm, userEm) = await _getCurrentUserUseCase.Execute(_userContext.TenantId, _userContext.UserId);
+            var (tenantEm, userEm) = await _getCurrentUserUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId);
             if (tenantEm is null || userEm is null)
             {
                 throw new AppAuthenticateException("未認証エラー");
@@ -161,7 +161,7 @@ namespace Web.Controllers
                 IsActive = request.IsActive,
             };
 
-            await _updateUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, UserId.New(userId), param);
+            await _updateUserUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, UserId.New(userId), param);
 
             return Ok();
         }
@@ -181,7 +181,7 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userId)
         {
-            await _deleteUserUseCase.Execute(_userContext.TenantId, _userContext.UserId, UserId.New(userId));
+            await _deleteUserUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, UserId.New(userId));
 
             return Ok();
         }

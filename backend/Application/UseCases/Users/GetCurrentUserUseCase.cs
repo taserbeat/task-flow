@@ -18,7 +18,7 @@ namespace Application.UseCases.Users
             _userRepository = userRepository;
         }
 
-        public async Task<(TenantEm?, UserEm?)> Execute(TenantId tenantId, UserId userId)
+        public async Task<(TenantEm?, UserEm?)> ExecuteAsync(TenantId tenantId, UserId userId)
         {
             var tenantEm = await _tenantRepository.GetByIdAsync(tenantId);
             var userEm = await _userRepository.GetByIdAsync(tenantId, userId, true);

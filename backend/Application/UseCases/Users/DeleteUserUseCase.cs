@@ -23,7 +23,7 @@ namespace Application.UseCases.Users
             _roleService = roleService;
         }
 
-        public async Task<int> Execute(TenantId tenantId, UserId actorId, UserId targetId)
+        public async Task<int> ExecuteAsync(TenantId tenantId, UserId actorId, UserId targetId)
         {
             // 実行者の権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))

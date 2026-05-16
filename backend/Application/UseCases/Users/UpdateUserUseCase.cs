@@ -29,7 +29,7 @@ namespace Application.UseCases.Users
             _passwordHashService = passwordHashService;
         }
 
-        public async Task Execute(TenantId tenantId, UserId actorId, UserId targetId, UpdateUserParam param)
+        public async Task ExecuteAsync(TenantId tenantId, UserId actorId, UserId targetId, UpdateUserParam param)
         {
             // 実行者の権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))
