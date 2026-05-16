@@ -29,7 +29,6 @@ namespace Application.UseCases.Tenants
         public async Task<IEnumerable<TenantEm>> ExecuteAsync(TenantId tenantId, UserId actorId)
         {
             // 実行権限チェック
-            // 実行権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.SystemAdmin))
             {
                 _logger.LogError($"テナントID: '{tenantId}', ユーザーID: '{actorId}' が許可されていない操作 (テナント作成) を要求したため、拒否しました。");

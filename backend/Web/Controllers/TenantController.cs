@@ -19,14 +19,16 @@ namespace Web.Controllers
     {
         private readonly IUserContext _userContext;
         private readonly CreateTenantUseCase _createTenantUseCase;
-        private readonly GetTenantsUseCase _getTenantUseCase;
+        private readonly GetTenantsUseCase _getTenantsUseCase;
+        private readonly GetTenantUseCase _getTenantUseCase;
         private readonly UpdateTenantUseCase _updateTenantUseCase;
         private readonly DeleteTenantUseCase _deleteTenantUseCase;
 
-        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantUseCase, UpdateTenantUseCase updateTenantUseCase, DeleteTenantUseCase deleteTenantUseCase)
+        public TenantController(IUserContext userContext, CreateTenantUseCase createTenantUseCase, GetTenantsUseCase getTenantsUseCase, GetTenantUseCase getTenantUseCase, UpdateTenantUseCase updateTenantUseCase, DeleteTenantUseCase deleteTenantUseCase)
         {
             _userContext = userContext;
             _createTenantUseCase = createTenantUseCase;
+            _getTenantsUseCase = getTenantsUseCase;
             _getTenantUseCase = getTenantUseCase;
             _updateTenantUseCase = updateTenantUseCase;
             _deleteTenantUseCase = deleteTenantUseCase;
@@ -78,10 +80,29 @@ namespace Web.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireSystemAdmin)]
         public async Task<ActionResult<IEnumerable<TenantSummaryResponse>>> GetTenants()
         {
-            var tenantEms = await _getTenantUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId);
+            var tenantEms = await _getTenantsUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId);
             var response = tenantEms.Select(x => TenantSummaryResponse.FromEntity(x)).ToList();
 
             return response;
+        }
+
+        /// <summary>
+        /// テナントの取得
+        /// </summary>
+        /// <param name="tenantId">取得対象のテナントID</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("{tenantId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireSystemAdmin)]
+        public async Task<ActionResult<TenantDetailResponse>> GetTenant([FromRoute] Guid tenantId)
+        {
+            var tenantEm = await _getTenantUseCase.ExecuteAsync(TenantId.New(tenantId));
+            if (tenantEm is null)
+            {
+                return NotFound();
+            }
+
+            return TenantDetailResponse.FromEntity(tenantEm);
         }
 
         /// <summary>

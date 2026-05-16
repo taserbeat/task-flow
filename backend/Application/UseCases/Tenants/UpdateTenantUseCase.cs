@@ -37,6 +37,9 @@ namespace Application.UseCases.Tenants
                 throw new AppForbiddenException("操作は許可されていません。");
             }
 
+            // 指定のテナントを参照できるようにRLSをバイパスする
+            using var scope = _uow.CreateTenantIdScope(targetId.ToString());
+
             var targetTenantEm = await _tenantRepository.GetByIdAsync(targetId);
             if (targetTenantEm is null)
             {
