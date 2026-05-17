@@ -1,4 +1,5 @@
 using Application.UseCases.Auth;
+using Application.UseCases.Boards;
 using Application.UseCases.Roles;
 using Application.UseCases.Tenants;
 using Application.UseCases.Users;
@@ -30,6 +31,12 @@ namespace Application.Extensions.DependencyInjection
             services.AddScoped<CreateUserUseCase>();
             services.AddScoped<UpdateUserUseCase>();
             services.AddScoped<DeleteUserUseCase>();
+
+            services.AddScoped<CreateBoardUseCase>();
+            services.AddScoped<GetBoardsUseCase>();
+            services.AddScoped<GetBoardUseCase>();
+            services.AddScoped<UpdateBoardUseCase>();
+            services.AddScoped<DeleteBoardUseCase>();
 
             return services;
         }

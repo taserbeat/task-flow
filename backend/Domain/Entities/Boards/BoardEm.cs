@@ -1,6 +1,8 @@
 using Domain.Entities.BoardColumns;
 using Domain.Entities.Common;
 using Domain.Entities.Tenants;
+using Domain.Entities.Users;
+using Domain.Exceptions;
 
 namespace Domain.Entities.Boards
 {
@@ -27,5 +29,41 @@ namespace Domain.Entities.Boards
         /// </summary>
         /// <value></value>
         public TenantEm Tenant { get; private set; } = default!;
+
+        public static BoardEm Create(BoardId boardId, TenantId tenantId, BoardName name, DateTimeOffset createdAt, DateTimeOffset updatedAt, UserId? createdBy, UserId? updatedBy)
+        {
+            if (!ValidateBoardName(name))
+            {
+                throw new AppValidateException("ボード名を指定してください。");
+            }
+
+            return new BoardEm
+            {
+                Id = boardId,
+                TenantId = tenantId,
+                CreatedAt = createdAt,
+                UpdatedAt = updatedAt,
+                CreatedBy = createdBy,
+                UpdatedBy = updatedBy,
+                Name = name,
+            };
+        }
+
+        public void ChangeName(BoardName newName, DateTimeOffset updatedAt, UserId? updatedBy)
+        {
+            if (!ValidateBoardName(newName))
+            {
+                throw new AppValidateException("ボード名を指定してください。");
+            }
+
+            Name = newName;
+            UpdatedAt = updatedAt;
+            UpdatedBy = updatedBy;
+        }
+
+        private static bool ValidateBoardName(BoardName name)
+        {
+            return !string.IsNullOrWhiteSpace(name.Value);
+        }
     }
 }
