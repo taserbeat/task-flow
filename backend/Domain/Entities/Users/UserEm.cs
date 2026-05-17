@@ -1,5 +1,6 @@
 using Domain.Entities.Common;
 using Domain.Entities.Roles;
+using Domain.Entities.TaskItems;
 using Domain.Entities.Tenants;
 
 namespace Domain.Entities.Users
@@ -50,6 +51,13 @@ namespace Domain.Entities.Users
         /// </summary>
         /// <value></value>
         public RoleEm Role { get; private set; } = default!;
+
+        /// <summary>
+        /// 担当しているタスク一覧のナビゲーションプロパティ
+        /// </summary>
+        /// <typeparam name="TaskItemEm"></typeparam>
+        /// <returns></returns>
+        public ICollection<TaskItemEm> AssignedTasks { get; private set; } = new List<TaskItemEm>();
 
         public static UserEm Create(UserId userId, TenantId tenantId, DateTimeOffset createdAt, DateTimeOffset updatedAt, UserId? createdBy, UserId? updatedBy, UserEmail email, UserPasswordHash passwordHash, UserName username, RoleId roleId)
         {
