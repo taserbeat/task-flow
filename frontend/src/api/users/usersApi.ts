@@ -35,6 +35,7 @@ export class UsersApi {
     });
   }
 
+  /** ユーザーの一覧を取得する */
   public async getUsers(): Promise<UserSummary[]> {
     const url = "/api/users";
     const response = await this.instance.get<UserSummaryResponse[]>(url);
