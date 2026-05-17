@@ -20,5 +20,18 @@ namespace Application.Repositories
         /// <param name="tenantId">テナントID</param>
         /// <returns></returns>
         Task<TenantEm?> GetByIdAsync(TenantId tenantId);
+
+        /// <summary>
+        /// テナント一覧を取得する
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<TenantEm>> GetTenantsAsync();
+
+        /// <summary>
+        /// 指定のテナントを削除する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <returns></returns>
+        Task<int> DeleteAsync(TenantId tenantId);
     }
 }

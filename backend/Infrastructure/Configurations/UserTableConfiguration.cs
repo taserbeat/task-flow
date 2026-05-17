@@ -29,6 +29,13 @@ namespace Infrastructure.Configurations
 
             builder.ConfigureTenantAuditableColumns<UserEm, UserId>();
 
+            // 外部キー制約 (UserEm -> TenantEm)
+            // (Cascade: テナント削除時に該当テナントに所属するユーザーを削除)
+            builder.HasOne(x => x.Tenant)
+                .WithMany()
+                .HasForeignKey(x => x.TenantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             // ======================================
             // メールアドレス
             // ======================================

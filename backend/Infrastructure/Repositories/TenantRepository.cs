@@ -26,5 +26,19 @@ namespace Infrastructure.Repositories
         {
             return await _dbContext.Tenants.FirstOrDefaultAsync(x => x.Id == tenantId);
         }
+
+        public async Task<IEnumerable<TenantEm>> GetTenantsAsync()
+        {
+            return await _dbContext.Tenants
+                .OrderBy(x => x.CreatedAt)
+                .ToListAsync();
+        }
+
+        public async Task<int> DeleteAsync(TenantId tenantId)
+        {
+            return await _dbContext.Tenants
+                .Where(x => x.Id == tenantId)
+                .ExecuteDeleteAsync();
+        }
     }
 }

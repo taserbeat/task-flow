@@ -69,9 +69,8 @@ namespace Web.Workers
             {
                 var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var tenantRepository = scope.ServiceProvider.GetRequiredService<ITenantRepository>();
-                var rlsContext = scope.ServiceProvider.GetRequiredService<IRlsContext>();
 
-                using var _ = rlsContext.CreateBypassScope();
+                using var _ = uow.CreateTenantIdScope(rootTenantEm.Id.ToString());
 
                 try
                 {
@@ -122,9 +121,6 @@ namespace Web.Workers
 
                 var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var roleRepository = scope.ServiceProvider.GetRequiredService<IRoleRepository>();
-                var rlsContext = scope.ServiceProvider.GetRequiredService<IRlsContext>();
-
-                using var _ = rlsContext.CreateBypassScope();
 
                 try
                 {
@@ -234,9 +230,8 @@ namespace Web.Workers
 
                 var uow = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
                 var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
-                var rlsContext = scope.ServiceProvider.GetRequiredService<IRlsContext>();
 
-                using var _ = rlsContext.CreateBypassScope();
+                using var _ = uow.CreateTenantIdScope(userEm.TenantId.ToString());
 
                 try
                 {

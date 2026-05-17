@@ -29,7 +29,7 @@ namespace Application.UseCases.Users
             _uow = uow;
         }
 
-        public async Task Execute(TenantId tenantId, UserId actorId, CreateUserParam param)
+        public async Task ExecuteAsync(TenantId tenantId, UserId actorId, CreateUserParam param)
         {
             // 実行者の権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))

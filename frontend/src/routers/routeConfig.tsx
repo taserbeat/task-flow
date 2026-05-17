@@ -11,6 +11,8 @@ import UserIndexPage from "../components/pages/users/UserIndexPage";
 import UserNewPage from "../components/pages/users/UserNewPage";
 import UserEditPage from "../components/pages/users/UserEditPage";
 import TenantIndexPage from "../components/pages/tenants/TenantIndexPage";
+import TenantNewPage from "../components/pages/tenants/TenantNewPage";
+import TenantEditPage from "../components/pages/tenants/TenantEditPage";
 
 /** ルーティング設定 */
 type RouteConfig = {
@@ -72,6 +74,15 @@ export const routes: RouteConfig[] = [
     label: "テナント管理",
     icon: <BuildingOfficeIcon className="w-5 h-5" />,
     roles: ["SystemAdmin"],
-    children: [],
+    children: [
+      {
+        path: "/tenants/new",
+        element: <TenantNewPage />,
+      },
+      {
+        path: "/tenants/:tenantId/edit",
+        element: <TenantEditPage />,
+      },
+    ],
   },
 ];

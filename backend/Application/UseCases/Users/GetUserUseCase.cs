@@ -21,7 +21,7 @@ namespace Application.UseCases.Users
             _userRepository = userRepository;
         }
 
-        public async Task<UserEm?> Execute(TenantId tenantId, UserId targetId)
+        public async Task<UserEm?> ExecuteAsync(TenantId tenantId, UserId targetId)
         {
             // 実行者の権限チェック
             if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))

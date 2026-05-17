@@ -6,7 +6,7 @@ namespace Web.Dtos.Tenants.GetTenant
     /// <summary>
     /// テナントの詳細レスポンス
     /// </summary>
-    public class TenantDetailResponse
+    public record TenantDetailResponse
     {
         /// <summary>
         /// テナントID

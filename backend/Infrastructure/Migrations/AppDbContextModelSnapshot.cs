@@ -188,6 +188,12 @@ namespace Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Domain.Entities.Tenants.TenantEm", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.OwnsOne("Domain.Entities.Users.UserName", "Username", b1 =>
                         {
                             b1.Property<Guid>("UserEmId")
@@ -214,6 +220,8 @@ namespace Infrastructure.Migrations
                         });
 
                     b.Navigation("Role");
+
+                    b.Navigation("Tenant");
 
                     b.Navigation("Username")
                         .IsRequired();
