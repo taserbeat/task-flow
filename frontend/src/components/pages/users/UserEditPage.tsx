@@ -87,7 +87,6 @@ const UserEditPage = () => {
         await dispatch(getCurrentUser());
       }
 
-      alert("ユーザー情報を更新しました。");
       navigate("/users");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);

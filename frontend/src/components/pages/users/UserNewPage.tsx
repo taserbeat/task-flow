@@ -48,7 +48,6 @@ const UserNewPage = () => {
         roleId: formData.roleId,
       });
 
-      alert("ユーザーを作成しました。");
       navigate("/users");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);

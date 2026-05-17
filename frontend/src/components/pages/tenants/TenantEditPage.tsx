@@ -69,7 +69,6 @@ const TenantEditPage = () => {
         await dispatch(getCurrentUser());
       }
 
-      alert("テナント情報を更新しました。");
       navigate("/tenants");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);
