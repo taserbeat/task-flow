@@ -48,7 +48,6 @@ const TenantNewPage = () => {
         initUser: formData.initUser!,
       });
 
-      alert("テナントを作成しました。");
       navigate("/tenants");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);

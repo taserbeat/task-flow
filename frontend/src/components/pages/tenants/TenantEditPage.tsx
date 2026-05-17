@@ -6,11 +6,17 @@ import BackButton from "../../ui/buttons/BackButton";
 import type { TenantDetail } from "../../../models/tenants/TenantDetail";
 import type { Role } from "../../../models/roles/Role";
 import { apiClient } from "../../../api/clients/ApiClient";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
+import { getCurrentUser } from "../../../features/profile/profileSlice";
 
 /** テナントの編集ページ */
 const TenantEditPage = () => {
   const { tenantId } = useParams();
   const navigate = useNavigate();
+
+  const currentTenant = useAppSelector((root) => root.profile.userInfo?.tenant);
+  const dispatch = useAppDispatch();
+
   const [tenant, setTenant] = useState<TenantDetail | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +65,10 @@ const TenantEditPage = () => {
         name: formData.name,
       });
 
-      alert("テナント情報を更新しました。");
+      if (tenantId === currentTenant?.id) {
+        await dispatch(getCurrentUser());
+      }
+
       navigate("/tenants");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);

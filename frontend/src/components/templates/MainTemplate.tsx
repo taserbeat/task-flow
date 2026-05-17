@@ -5,6 +5,7 @@ import { useAppSelector } from "../../app/hook";
 import logo from "../../assets/logo.svg";
 import Sidebar from "../ui/sidebar/Sidebar";
 import { NavLink } from "react-router-dom";
+import { BuildingOfficeIcon, UserIcon } from "@heroicons/react/24/solid";
 
 /** メインテンプレートのProps */
 interface MainTemplateProps {
@@ -29,10 +30,20 @@ const MainTemplate: React.FC<MainTemplateProps> = ({ children }) => {
 
         <div className="flex ml-16">
           {/* テナント名 */}
-          <span className="ml-2 mr-4">テナント: {userInfo?.tenant.name}</span>
+          <div className="flex items-center ml-2 mr-4">
+            <span className="shrink-0">
+              <BuildingOfficeIcon className="w-5 h-5" />
+            </span>
+            <span className="ml-1">{userInfo?.tenant.name}</span>
+          </div>
 
           {/* 氏名 */}
-          <span>ユーザー: {userInfo?.user.username}</span>
+          <div className="flex items-center ml-2 mr-4">
+            <span className="shrink-0">
+              <UserIcon className="w-5 h-5" />
+            </span>
+            <span className="ml-1">{userInfo?.user.username}</span>
+          </div>
         </div>
 
         <a

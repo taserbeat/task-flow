@@ -6,11 +6,17 @@ import BackButton from "../../ui/buttons/BackButton";
 import type { UserDetail } from "../../../models/users/UserDetail";
 import type { Role } from "../../../models/roles/Role";
 import { apiClient } from "../../../api/clients/ApiClient";
+import { useAppDispatch, useAppSelector } from "../../../app/hook";
+import { getCurrentUser } from "../../../features/profile/profileSlice";
 
 /** ユーザー編集ページ */
 const UserEditPage = () => {
   const { userId } = useParams();
   const navigate = useNavigate();
+
+  const currentUser = useAppSelector((root) => root.profile.userInfo?.user);
+  const dispatch = useAppDispatch();
+
   const [editUer, setEditUser] = useState<UserDetail | null>(null);
   const [roles, setRoles] = useState<Role[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -77,7 +83,10 @@ const UserEditPage = () => {
 
       await apiClient.users.updateUser(userId, updateRequest);
 
-      alert("ユーザー情報を更新しました。");
+      if (userId === currentUser?.id) {
+        await dispatch(getCurrentUser());
+      }
+
       navigate("/users");
     } catch (e) {
       const error = await apiClient.parseHttpError(e);
