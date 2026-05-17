@@ -13,7 +13,7 @@ using Web.Dtos.Tenants.UpdateTenant;
 namespace Web.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/tenants")]
     [Tags("テナント")]
     public class TenantController : ControllerBase
     {
