@@ -36,6 +36,8 @@ namespace Web.Extensions.DependencyInjection
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IBoardRepository, BoardRepository>();
+            services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
+            services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 
             services.AddScoped<IPasswordHashService, PasswordHashService>();
             services.AddScoped<IAuthorizeService, AuthorizeService>();
