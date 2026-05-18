@@ -24,12 +24,29 @@ namespace Infrastructure.Repositories
             await _dbContext.BoardColumns.AddAsync(boardColumnEm);
         }
 
-        public Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardColumnId boardColumnId)
+        public async Task<IEnumerable<BoardColumnEm>> GetColumnsByBoardAsync(TenantId tenantId, BoardId boardId)
+        {
+            return await _dbContext.BoardColumns
+                .Where(x => x.TenantId == tenantId && x.BoardId == boardId)
+                .OrderBy(x => x.Position)
+                .ToListAsync();
+        }
+
+        public Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId)
         {
             return _dbContext.BoardColumns
                 .Include(bc => bc.TaskItems.OrderBy(t => t.Position))
-                .Where(bc => bc.TenantId == tenantId && bc.Id == boardColumnId)
+                .Where(bc => bc.TenantId == tenantId && bc.BoardId == boardId && bc.Id == boardColumnId)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<BoardColumnPosition?> GetFirstPositionAsync(TenantId tenantId, BoardId boardId)
+        {
+            var firstPosition = await _dbContext.BoardColumns
+                .Where(bc => bc.TenantId == tenantId && bc.BoardId == boardId)
+                .MinAsync(bc => bc.Position);
+
+            return firstPosition;
         }
 
         public async Task<BoardColumnPosition?> GetLastPositionAsync(TenantId tenantId, BoardId boardId)
@@ -41,10 +58,17 @@ namespace Infrastructure.Repositories
             return lastPosition;
         }
 
-        public async Task<int> DeleteAsync(TenantId tenantId, BoardColumnId boardColumnId)
+        public Task<int> CountPositionRangeAsync(TenantId tenantId, BoardId boardId, BoardColumnPosition low, BoardColumnPosition high)
+        {
+            return _dbContext.BoardColumns
+                .Where(x => x.TenantId == tenantId && x.BoardId == boardId && x.Position.Value >= low.Value && x.Position.Value <= high.Value)
+                .CountAsync();
+        }
+
+        public async Task<int> DeleteAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId)
         {
             return await _dbContext.BoardColumns
-                .Where(x => x.TenantId == tenantId && x.Id == boardColumnId)
+                .Where(x => x.TenantId == tenantId && x.BoardId == boardId && x.Id == boardColumnId)
                 .ExecuteDeleteAsync();
         }
     }
