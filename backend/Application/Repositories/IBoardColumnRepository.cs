@@ -28,10 +28,9 @@ namespace Application.Repositories
         /// 指定のボード列を取得する
         /// </summary>
         /// <param name="tenantId">テナントID</param>
-        /// <param name="boardId">ボードID</param>
         /// <param name="boardColumnId">ボード列ID</param>
         /// <returns></returns>
-        Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId);
+        Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardColumnId boardColumnId);
 
         /// <summary>
         /// 指定ボードの最前列の位置番号を取得する

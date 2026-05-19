@@ -32,11 +32,11 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId)
+        public async Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardColumnId boardColumnId)
         {
-            return _dbContext.BoardColumns
+            return await _dbContext.BoardColumns
                 .Include(bc => bc.TaskItems.OrderBy(t => t.Position))
-                .Where(bc => bc.TenantId == tenantId && bc.BoardId == boardId && bc.Id == boardColumnId)
+                .Where(bc => bc.TenantId == tenantId && bc.Id == boardColumnId)
                 .FirstOrDefaultAsync();
         }
 
@@ -58,9 +58,9 @@ namespace Infrastructure.Repositories
             return lastPosition;
         }
 
-        public Task<int> CountPositionRangeAsync(TenantId tenantId, BoardId boardId, BoardColumnPosition low, BoardColumnPosition high)
+        public async Task<int> CountPositionRangeAsync(TenantId tenantId, BoardId boardId, BoardColumnPosition low, BoardColumnPosition high)
         {
-            return _dbContext.BoardColumns
+            return await _dbContext.BoardColumns
                 .Where(x => x.TenantId == tenantId && x.BoardId == boardId && x.Position >= low && x.Position <= high)
                 .CountAsync();
         }

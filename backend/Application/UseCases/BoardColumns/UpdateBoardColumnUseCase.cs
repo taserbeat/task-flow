@@ -32,7 +32,7 @@ namespace Application.UseCases.BoardColumns
         {
             var now = _timeProvider.GetUtcNow();
 
-            var targetColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, targetColumnId);
+            var targetColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, targetColumnId);
             if (targetColumnEm is null)
             {
                 throw new AppNotFoundException("指定の列は存在しません。");
@@ -72,8 +72,8 @@ namespace Application.UseCases.BoardColumns
                 var nextColumnId = BoardColumnId.New(param.NextColumnId);
 
                 // 前後の列情報を取得
-                var prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, prevColumnId);
-                var nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, nextColumnId);
+                var prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
+                var nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
 
                 // 既に採番が必要と判明している場合は採番する
                 if (prevColumnEm is not null && nextColumnEm is not null)
@@ -85,8 +85,8 @@ namespace Application.UseCases.BoardColumns
                         await _boardService.RebalanceAsync(tenantId, targetBoardId);
 
                         // 採番後の列情報を再取得
-                        prevColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, prevColumnId);
-                        nextColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, nextColumnId);
+                        prevColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
+                        nextColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
                     }
                 }
 
@@ -162,8 +162,8 @@ namespace Application.UseCases.BoardColumns
                     // 採番してリトライ
                     await _boardService.RebalanceAsync(tenantId, targetBoardId);
 
-                    prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, prevColumnId);
-                    nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, targetBoardId, nextColumnId);
+                    prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
+                    nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
 
                     ChangePosition(targetColumnEm, now, actorId, prevColumnEm, nextColumnEm);
 
