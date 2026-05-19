@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Domain.Entities.Boards;
+using Web.Dtos.BoardColumns.GetBoardColumn;
 
 namespace Web.Dtos.Boards.GetBoard
 {
@@ -36,6 +37,13 @@ namespace Web.Dtos.Boards.GetBoard
         [JsonPropertyName("updatedAt")]
         public required DateTimeOffset UpdatedAt { get; set; }
 
+        /// <summary>
+        /// ボード列の配列
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("columns")]
+        public required IEnumerable<BoardColumnDetailResponse> Columns { get; set; }
+
         public static BoardDetailResponse FromEntity(BoardEm em)
         {
             return new BoardDetailResponse
@@ -43,7 +51,8 @@ namespace Web.Dtos.Boards.GetBoard
                 Id = em.Id.Value,
                 Name = em.Name.Value,
                 CreatedAt = em.CreatedAt,
-                UpdatedAt = em.UpdatedAt
+                UpdatedAt = em.UpdatedAt,
+                Columns = em.Columns.Select(bc => BoardColumnDetailResponse.FromEntity(bc)),
             };
         }
     }

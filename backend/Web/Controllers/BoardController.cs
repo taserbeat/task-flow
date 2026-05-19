@@ -1,10 +1,14 @@
 using Application.Contexts;
+using Application.UseCases.BoardColumns;
 using Application.UseCases.Boards;
+using Domain.Entities.BoardColumns;
 using Domain.Entities.Boards;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Web.Common.Constants;
+using Web.Dtos.BoardColumns.CreateBoardColumn;
+using Web.Dtos.BoardColumns.UpdateBoardColumn;
 using Web.Dtos.Boards.CreateBoard;
 using Web.Dtos.Boards.GetBoard;
 using Web.Dtos.Boards.UpdateBoard;
@@ -17,13 +21,18 @@ namespace Web.Controllers
     public class BoardController : ControllerBase
     {
         private readonly IUserContext _userContext;
+
         private readonly CreateBoardUseCase _createBoardUseCase;
         private readonly GetBoardsUseCase _getBoardsUseCase;
         private readonly GetBoardUseCase _getBoardUseCase;
         private readonly UpdateBoardUseCase _updateBoardUseCase;
         private readonly DeleteBoardUseCase _deleteBoardUseCase;
 
-        public BoardController(IUserContext userContext, CreateBoardUseCase createBoardUseCase, GetBoardsUseCase getBoardsUseCase, GetBoardUseCase getBoardUseCase, UpdateBoardUseCase updateBoardUseCase, DeleteBoardUseCase deleteBoardUseCase)
+        private readonly CreateBoardColumnUseCase _createBoardColumnUseCase;
+        private readonly UpdateBoardColumnUseCase _updateBoardColumnUseCase;
+        private readonly DeleteBoardColumnUseCase _deleteBoardColumnUseCase;
+
+        public BoardController(IUserContext userContext, CreateBoardUseCase createBoardUseCase, GetBoardsUseCase getBoardsUseCase, GetBoardUseCase getBoardUseCase, UpdateBoardUseCase updateBoardUseCase, DeleteBoardUseCase deleteBoardUseCase, CreateBoardColumnUseCase createBoardColumnUseCase, UpdateBoardColumnUseCase updateBoardColumnUseCase, DeleteBoardColumnUseCase deleteBoardColumnUseCase)
         {
             _userContext = userContext;
             _createBoardUseCase = createBoardUseCase;
@@ -31,7 +40,12 @@ namespace Web.Controllers
             _getBoardUseCase = getBoardUseCase;
             _updateBoardUseCase = updateBoardUseCase;
             _deleteBoardUseCase = deleteBoardUseCase;
+            _createBoardColumnUseCase = createBoardColumnUseCase;
+            _updateBoardColumnUseCase = updateBoardColumnUseCase;
+            _deleteBoardColumnUseCase = deleteBoardColumnUseCase;
         }
+
+        #region ボード
 
         /// <summary>
         /// ボードの作成
@@ -144,5 +158,89 @@ namespace Web.Controllers
 
             return Ok();
         }
+
+        #endregion
+
+        #region ボード列
+
+        /// <summary>
+        /// ボード列の作成
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPost]
+        [Route("{boardId}/columns")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CreateBoardColumn([FromRoute] Guid boardId, CreateBoardColumnRequest request)
+        {
+            var param = new CreateBoardColumnParam
+            {
+                BoardId = boardId,
+                Name = request.Name,
+            };
+
+            await _createBoardColumnUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, param);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// ボード列の更新
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="columnId">更新対象のボード列ID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="404">存在しない</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPut]
+        [Route("{boardId}/columns/{columnId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateBoardColumn([FromRoute] Guid boardId, [FromRoute] Guid columnId, UpdateBoardColumnRequest request)
+        {
+            var param = new UpdateBoardColumnParam
+            {
+                Name = request.Name,
+                PreviousColumnId = request.PreviousColumnId,
+                NextColumnId = request.NextColumnId,
+            };
+
+            await _updateBoardColumnUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, BoardId.New(boardId), BoardColumnId.New(columnId), param);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// ボード列の削除
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="columnId">削除対象のボード列ID</param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpDelete]
+        [Route("{boardId}/columns/{columnId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteBoardColumn([FromRoute] Guid boardId, [FromRoute] Guid columnId)
+        {
+            await _deleteBoardColumnUseCase.ExecuteAsync(_userContext.TenantId, BoardId.New(boardId), BoardColumnId.New(columnId));
+
+            return Ok();
+        }
+
+        #endregion
     }
 }

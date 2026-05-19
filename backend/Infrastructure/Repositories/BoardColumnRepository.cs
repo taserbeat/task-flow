@@ -61,7 +61,7 @@ namespace Infrastructure.Repositories
         public Task<int> CountPositionRangeAsync(TenantId tenantId, BoardId boardId, BoardColumnPosition low, BoardColumnPosition high)
         {
             return _dbContext.BoardColumns
-                .Where(x => x.TenantId == tenantId && x.BoardId == boardId && x.Position.Value >= low.Value && x.Position.Value <= high.Value)
+                .Where(x => x.TenantId == tenantId && x.BoardId == boardId && x.Position >= low && x.Position <= high)
                 .CountAsync();
         }
 

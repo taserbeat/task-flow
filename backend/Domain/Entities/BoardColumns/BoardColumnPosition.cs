@@ -5,7 +5,7 @@ namespace Domain.Entities.BoardColumns
     /// <summary>
     /// ボード列の位置を表す値オブジェクト
     /// </summary>
-    public record BoardColumnPosition : IValueObject
+    public record BoardColumnPosition : IValueObject, IComparable<BoardColumnPosition>
     {
         /// <summary>
         /// 既定の位置番号
@@ -29,6 +29,31 @@ namespace Domain.Entities.BoardColumns
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public int CompareTo(BoardColumnPosition? other)
+        {
+            return Value.CompareTo(other!.Value);
+        }
+
+        public static bool operator <(BoardColumnPosition left, BoardColumnPosition right)
+        {
+            return left.Value < right.Value;
+        }
+
+        public static bool operator >(BoardColumnPosition left, BoardColumnPosition right)
+        {
+            return left.Value > right.Value;
+        }
+
+        public static bool operator <=(BoardColumnPosition left, BoardColumnPosition right)
+        {
+            return left.Value <= right.Value;
+        }
+
+        public static bool operator >=(BoardColumnPosition left, BoardColumnPosition right)
+        {
+            return left.Value >= right.Value;
         }
 
         /// <summary>
