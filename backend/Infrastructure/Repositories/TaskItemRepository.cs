@@ -24,6 +24,14 @@ namespace Infrastructure.Repositories
             await _dbContext.TaskItems.AddAsync(taskItemEm);
         }
 
+        public Task GetTaskItemsByBoardColumnAsync(TenantId tenantId, BoardColumnId boardColumnId)
+        {
+            return _dbContext.TaskItems
+                .Where(x => x.TenantId == tenantId && x.BoardColumnId == boardColumnId)
+                .OrderBy(x => x.Position)
+                .ToListAsync();
+        }
+
         public Task<TaskItemEm?> GetByIdAsync(TenantId tenantId, TaskItemId taskItemId)
         {
             return _dbContext.TaskItems
@@ -31,13 +39,29 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<TaskItemPosition?> GetFirstPositionAsync(TenantId tenantId, BoardColumnId boardColumnId)
+        {
+            var lastPosition = await _dbContext.TaskItems
+                .Where(t => t.TenantId == tenantId && t.BoardColumnId == boardColumnId)
+                .MinAsync(t => t.Position);
+
+            return lastPosition;
+        }
+
         public async Task<TaskItemPosition?> GetLastPositionAsync(TenantId tenantId, BoardColumnId boardColumnId)
         {
             var lastPosition = await _dbContext.TaskItems
-                .Where(x => x.TenantId == tenantId && x.BoardColumnId == boardColumnId)
+                .Where(t => t.TenantId == tenantId && t.BoardColumnId == boardColumnId)
                 .MaxAsync(t => t.Position);
 
             return lastPosition;
+        }
+
+        public async Task<int> CountPositionRangeAsync(TenantId tenantId, BoardColumnId boardColumnId, TaskItemPosition low, TaskItemPosition high)
+        {
+            return await _dbContext.TaskItems
+                .Where(x => x.TenantId == tenantId && x.BoardColumnId == boardColumnId && x.Position >= low && x.Position <= high)
+                .CountAsync();
         }
 
         public async Task<int> DeleteAsync(TenantId tenantId, TaskItemId taskItemId)
