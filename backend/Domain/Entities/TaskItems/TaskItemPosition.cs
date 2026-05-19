@@ -6,7 +6,7 @@ namespace Domain.Entities.TaskItems
     /// タスクの位置を表す値オブジェクト
     /// </summary>
     /// <value></value>
-    public record TaskItemPosition : IValueObject
+    public record TaskItemPosition : IValueObject, IComparable<TaskItemPosition>
     {
         public int Value { get; }
 
@@ -20,6 +20,31 @@ namespace Domain.Entities.TaskItems
         public override string ToString()
         {
             return Value.ToString();
+        }
+
+        public int CompareTo(TaskItemPosition? other)
+        {
+            return Value.CompareTo(other!.Value);
+        }
+
+        public static bool operator <(TaskItemPosition left, TaskItemPosition right)
+        {
+            return left.Value < right.Value;
+        }
+
+        public static bool operator >(TaskItemPosition left, TaskItemPosition right)
+        {
+            return left.Value > right.Value;
+        }
+
+        public static bool operator <=(TaskItemPosition left, TaskItemPosition right)
+        {
+            return left.Value <= right.Value;
+        }
+
+        public static bool operator >=(TaskItemPosition left, TaskItemPosition right)
+        {
+            return left.Value >= right.Value;
         }
     }
 }
