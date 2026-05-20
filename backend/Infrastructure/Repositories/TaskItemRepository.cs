@@ -24,17 +24,17 @@ namespace Infrastructure.Repositories
             await _dbContext.TaskItems.AddAsync(taskItemEm);
         }
 
-        public Task GetTaskItemsByBoardColumnAsync(TenantId tenantId, BoardColumnId boardColumnId)
+        public async Task<IEnumerable<TaskItemEm>> GetTaskItemsByBoardColumnAsync(TenantId tenantId, BoardColumnId boardColumnId)
         {
-            return _dbContext.TaskItems
+            return await _dbContext.TaskItems
                 .Where(x => x.TenantId == tenantId && x.BoardColumnId == boardColumnId)
                 .OrderBy(x => x.Position)
                 .ToListAsync();
         }
 
-        public Task<TaskItemEm?> GetByIdAsync(TenantId tenantId, TaskItemId taskItemId)
+        public async Task<TaskItemEm?> GetByIdAsync(TenantId tenantId, TaskItemId taskItemId)
         {
-            return _dbContext.TaskItems
+            return await _dbContext.TaskItems
                 .Where(x => x.TenantId == tenantId && x.Id == taskItemId)
                 .FirstOrDefaultAsync();
         }

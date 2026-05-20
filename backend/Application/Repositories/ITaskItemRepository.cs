@@ -22,7 +22,7 @@ namespace Application.Repositories
         /// <param name="tenantId">テナントID</param>
         /// <param name="boardColumnId">列ID</param>
         /// <returns></returns>
-        Task GetTaskItemsByBoardColumnAsync(TenantId tenantId, BoardColumnId boardColumnId);
+        Task<IEnumerable<TaskItemEm>> GetTaskItemsByBoardColumnAsync(TenantId tenantId, BoardColumnId boardColumnId);
 
         /// <summary>
         /// 指定のタスクを取得する

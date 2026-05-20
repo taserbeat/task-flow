@@ -1,8 +1,10 @@
 using Application.Contexts;
 using Application.UseCases.BoardColumns;
 using Application.UseCases.Boards;
+using Application.UseCases.TaskItems;
 using Domain.Entities.BoardColumns;
 using Domain.Entities.Boards;
+using Domain.Entities.TaskItems;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,6 +14,8 @@ using Web.Dtos.BoardColumns.UpdateBoardColumn;
 using Web.Dtos.Boards.CreateBoard;
 using Web.Dtos.Boards.GetBoard;
 using Web.Dtos.Boards.UpdateBoard;
+using Web.Dtos.TaskItems.CreateTaskItem;
+using Web.Dtos.TaskItems.UpdateTaskItem;
 
 namespace Web.Controllers
 {
@@ -32,17 +36,27 @@ namespace Web.Controllers
         private readonly UpdateBoardColumnUseCase _updateBoardColumnUseCase;
         private readonly DeleteBoardColumnUseCase _deleteBoardColumnUseCase;
 
-        public BoardController(IUserContext userContext, CreateBoardUseCase createBoardUseCase, GetBoardsUseCase getBoardsUseCase, GetBoardUseCase getBoardUseCase, UpdateBoardUseCase updateBoardUseCase, DeleteBoardUseCase deleteBoardUseCase, CreateBoardColumnUseCase createBoardColumnUseCase, UpdateBoardColumnUseCase updateBoardColumnUseCase, DeleteBoardColumnUseCase deleteBoardColumnUseCase)
+        private readonly CreateTaskItemUseCase _createTaskItemUseCase;
+        private readonly UpdateTaskItemUseCase _updateTaskItemUseCase;
+        private readonly DeleteTaskItemUseCase _deleteTaskItemUseCase;
+
+        public BoardController(IUserContext userContext, CreateBoardUseCase createBoardUseCase, GetBoardsUseCase getBoardsUseCase, GetBoardUseCase getBoardUseCase, UpdateBoardUseCase updateBoardUseCase, DeleteBoardUseCase deleteBoardUseCase, CreateBoardColumnUseCase createBoardColumnUseCase, UpdateBoardColumnUseCase updateBoardColumnUseCase, DeleteBoardColumnUseCase deleteBoardColumnUseCase, CreateTaskItemUseCase createTaskItemUseCase, UpdateTaskItemUseCase updateTaskItemUseCase, DeleteTaskItemUseCase deleteTaskItemUseCase)
         {
             _userContext = userContext;
+
             _createBoardUseCase = createBoardUseCase;
             _getBoardsUseCase = getBoardsUseCase;
             _getBoardUseCase = getBoardUseCase;
             _updateBoardUseCase = updateBoardUseCase;
             _deleteBoardUseCase = deleteBoardUseCase;
+
             _createBoardColumnUseCase = createBoardColumnUseCase;
             _updateBoardColumnUseCase = updateBoardColumnUseCase;
             _deleteBoardColumnUseCase = deleteBoardColumnUseCase;
+
+            _createTaskItemUseCase = createTaskItemUseCase;
+            _updateTaskItemUseCase = updateTaskItemUseCase;
+            _deleteTaskItemUseCase = deleteTaskItemUseCase;
         }
 
         #region ボード
@@ -237,6 +251,101 @@ namespace Web.Controllers
         public async Task<IActionResult> DeleteBoardColumn([FromRoute] Guid boardId, [FromRoute] Guid columnId)
         {
             await _deleteBoardColumnUseCase.ExecuteAsync(_userContext.TenantId, BoardId.New(boardId), BoardColumnId.New(columnId));
+
+            return Ok();
+        }
+
+        #endregion
+
+        #region タスク
+
+        /// <summary>
+        /// タスクの作成
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="columnId">列ID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPost]
+        [Route("{boardId}/columns/{columnId}/tasks")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CreateTaskItem([FromRoute] Guid boardId, [FromRoute] Guid columnId, CreateTaskItemRequest request)
+        {
+            var param = new CreateTaskItemParam
+            {
+                BoardColumnId = columnId,
+                Title = request.Title,
+                Description = request.Description,
+                Priority = request.Priority,
+                DueDate = request.DueDate,
+            };
+
+            await _createTaskItemUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, param);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// タスクの更新
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="columnId">列ID</param>
+        /// <param name="taskId">タスクID</param>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="404">存在しない</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpPut]
+        [Route("{boardId}/columns/{columnId}/tasks/{taskId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> UpdateTaskItem([FromRoute] Guid boardId, [FromRoute] Guid columnId, [FromRoute] Guid taskId, UpdateTaskItemRequest request)
+        {
+            var param = new UpdateTaskItemParam
+            {
+                BoardColumnId = request.BoardColumnId,
+                AssigneeId = request.AssigneeId,
+                IsReleaseAssignee = request.IsReleaseAssignee,
+                Title = request.Title,
+                Description = request.Description,
+                Priority = request.Priority,
+                DueDate = request.DueDate,
+                IsDeleteDueDate = request.IsDeleteDueDate,
+                PreviousTaskItemId = request.PreviousTaskItemId,
+                NextTaskItemId = request.NextTaskItemId,
+            };
+
+            await _updateTaskItemUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, BoardId.New(boardId), BoardColumnId.New(columnId), TaskItemId.New(taskId), param);
+
+            return Ok();
+        }
+
+        /// <summary>
+        /// タスクの削除
+        /// </summary>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="columnId">列ID</param>
+        /// <param name="taskId">タスクID</param>
+        /// <returns></returns>
+        /// <response code="200">OK</response>
+        /// <response code="400">リクエストが不正</response>
+        /// <response code="401">未認証エラー</response>
+        /// <response code="403">権限エラー</response>
+        /// <response code="500">サーバーが処理に失敗</response>
+        [HttpDelete]
+        [Route("{boardId}/columns/{columnId}/tasks/{taskId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteTaskItem([FromRoute] Guid boardId, [FromRoute] Guid columnId, [FromRoute] Guid taskId)
+        {
+            await _deleteTaskItemUseCase.ExecuteAsync(_userContext.TenantId, TaskItemId.New(taskId));
 
             return Ok();
         }

@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Domain.Entities.BoardColumns;
+using Web.Dtos.TaskItems.GetTaskItem;
 
 namespace Web.Dtos.BoardColumns.GetBoardColumn
 {
@@ -36,6 +37,13 @@ namespace Web.Dtos.BoardColumns.GetBoardColumn
         [JsonPropertyName("position")]
         public required int Position { get; set; }
 
+        /// <summary>
+        /// タスクの配列
+        /// </summary>
+        /// <value></value>
+        [JsonPropertyName("taskItems")]
+        public required IEnumerable<TaskItemDetailResponse> TaskItems { get; set; }
+
         public static BoardColumnDetailResponse FromEntity(BoardColumnEm em)
         {
             return new BoardColumnDetailResponse()
@@ -44,6 +52,7 @@ namespace Web.Dtos.BoardColumns.GetBoardColumn
                 BoardId = em.BoardId.Value,
                 Name = em.Name.Value,
                 Position = em.Position.Value,
+                TaskItems = em.TaskItems.Select(t => TaskItemDetailResponse.FromEntity(t)),
             };
         }
     }

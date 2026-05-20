@@ -45,6 +45,7 @@ namespace Web.Extensions.DependencyInjection
             services.AddScoped<IAuthorizeService, AuthorizeService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<IBoardColumnService, BoardColumnService>();
 
             return services;
         }

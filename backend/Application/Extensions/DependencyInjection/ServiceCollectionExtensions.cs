@@ -2,6 +2,7 @@ using Application.UseCases.Auth;
 using Application.UseCases.BoardColumns;
 using Application.UseCases.Boards;
 using Application.UseCases.Roles;
+using Application.UseCases.TaskItems;
 using Application.UseCases.Tenants;
 using Application.UseCases.Users;
 using Microsoft.Extensions.DependencyInjection;
@@ -42,6 +43,10 @@ namespace Application.Extensions.DependencyInjection
             services.AddScoped<CreateBoardColumnUseCase>();
             services.AddScoped<UpdateBoardColumnUseCase>();
             services.AddScoped<DeleteBoardColumnUseCase>();
+
+            services.AddScoped<CreateTaskItemUseCase>();
+            services.AddScoped<UpdateTaskItemUseCase>();
+            services.AddScoped<DeleteTaskItemUseCase>();
 
             return services;
         }
