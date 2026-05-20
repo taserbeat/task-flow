@@ -27,8 +27,6 @@ namespace Application.UseCases.BoardColumns
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, CreateBoardColumnParam param)
         {
-            var now = _timeProvider.GetUtcNow();
-
             // ボードの存在チェック
             var boardId = BoardId.New(param.BoardId);
             var boardEm = await _boardRepository.GetByIdAsync(tenantId, boardId);
@@ -37,11 +35,13 @@ namespace Application.UseCases.BoardColumns
                 throw new AppNotFoundException("指定のボードは存在しません。");
             }
 
-            // ボード列の最後に追加するので、最後の位置を取得
+            // 列の最後に追加するので、最後の位置を取得
             var lastPosition = await _boardColumnRepository.GetLastPositionAsync(tenantId, boardId);
 
             // 追加する位置を取得
             var newPosition = lastPosition is null ? BoardColumnPosition.NewInitPosition() : lastPosition.NewNextPosition();
+
+            var now = _timeProvider.GetUtcNow();
 
             // パラメータ作成
             var boardColumnEm = BoardColumnEm.Create(

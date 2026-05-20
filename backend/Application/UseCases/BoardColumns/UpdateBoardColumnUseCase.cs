@@ -30,13 +30,13 @@ namespace Application.UseCases.BoardColumns
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId targetBoardId, BoardColumnId targetColumnId, UpdateBoardColumnParam param)
         {
-            var now = _timeProvider.GetUtcNow();
-
             var targetColumnEm = await _boardColumnRepository.GetByIdAsync(tenantId, targetColumnId);
             if (targetColumnEm is null)
             {
                 throw new AppNotFoundException("指定の列は存在しません。");
             }
+
+            var now = _timeProvider.GetUtcNow();
 
             // ボード列名
             if (!string.IsNullOrWhiteSpace(param.Name))
