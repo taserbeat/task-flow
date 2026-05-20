@@ -46,6 +46,10 @@ namespace Application.UseCases.BoardColumns
             }
 
             // 位置
+            BoardColumnEm? prevColumnEm;
+            BoardColumnEm? nextColumnEm;
+            var prevColumnId = BoardColumnId.New(param.PreviousColumnId);
+            var nextColumnId = BoardColumnId.New(param.NextColumnId);
             if (param.PreviousColumnId != null || param.NextColumnId != null)
             {
                 #region 位置変更の検証
@@ -68,12 +72,9 @@ namespace Application.UseCases.BoardColumns
                     throw new AppValidateException("自身の列を後ろにある列として指定することはできません。");
                 }
 
-                var prevColumnId = BoardColumnId.New(param.PreviousColumnId);
-                var nextColumnId = BoardColumnId.New(param.NextColumnId);
-
                 // 前後の列情報を取得
-                var prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
-                var nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
+                prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
+                nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
 
                 // 既に採番が必要と判明している場合は採番する
                 if (prevColumnEm is not null && nextColumnEm is not null)
@@ -147,30 +148,30 @@ namespace Application.UseCases.BoardColumns
 
                 ChangePosition(targetColumnEm, now, actorId, prevColumnEm, nextColumnEm);
 
-                try
-                {
-                    await _uow.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    if (!_exceptionService.IsUniqueConstraintViolation(ex))
-                    {
-                        // ユニーク制約以外の例外はそのままスロー
-                        throw;
-                    }
-
-                    // 採番してリトライ
-                    await _boardService.RebalanceAsync(tenantId, targetBoardId);
-
-                    prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
-                    nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
-
-                    ChangePosition(targetColumnEm, now, actorId, prevColumnEm, nextColumnEm);
-
-                    await _uow.SaveChangesAsync();
-                }
-
                 #endregion
+            }
+
+            try
+            {
+                await _uow.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                if (!_exceptionService.IsUniqueConstraintViolation(ex))
+                {
+                    // ユニーク制約以外の例外はそのままスロー
+                    throw;
+                }
+
+                // 採番してリトライ
+                await _boardService.RebalanceAsync(tenantId, targetBoardId);
+
+                prevColumnEm = param.PreviousColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, prevColumnId);
+                nextColumnEm = param.NextColumnId is null ? null : await _boardColumnRepository.GetByIdAsync(tenantId, nextColumnId);
+
+                ChangePosition(targetColumnEm, now, actorId, prevColumnEm, nextColumnEm);
+
+                await _uow.SaveChangesAsync();
             }
         }
 
