@@ -86,7 +86,7 @@ namespace Application.UseCases.Tenants
                 updatedAt: now,
                 createdBy: actorId,
                 updatedBy: actorId,
-                name: param.Name
+                name: new(param.Name)
             );
 
             // パスワード生成

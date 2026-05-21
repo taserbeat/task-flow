@@ -51,7 +51,8 @@ namespace Application.UseCases.Tenants
             // テナント名
             if (param.Name != null)
             {
-                targetTenantEm.ChangeName(param.Name, now, actorId);
+                var newTenantName = new TenantName(param.Name);
+                targetTenantEm.ChangeName(newTenantName, now, actorId);
             }
 
             await _uow.SaveChangesAsync();
