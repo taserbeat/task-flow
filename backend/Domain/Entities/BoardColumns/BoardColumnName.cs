@@ -1,4 +1,5 @@
 using Domain.Entities.Common.ValueObjects;
+using Domain.Exceptions;
 
 namespace Domain.Entities.BoardColumns
 {
@@ -11,7 +12,10 @@ namespace Domain.Entities.BoardColumns
 
         public BoardColumnName(string value)
         {
-            // TODO: ボード名として有効か検証する処理を追加する
+            if (!Validate(value))
+            {
+                throw new AppValidateException("列名を指定してください。");
+            }
 
             Value = value;
         }
@@ -19,6 +23,11 @@ namespace Domain.Entities.BoardColumns
         public override string ToString()
         {
             return Value;
+        }
+
+        private static bool Validate(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value);
         }
     }
 }

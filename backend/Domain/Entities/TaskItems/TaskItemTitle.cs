@@ -1,4 +1,5 @@
 using Domain.Entities.Common.ValueObjects;
+using Domain.Exceptions;
 
 namespace Domain.Entities.TaskItems
 {
@@ -12,7 +13,10 @@ namespace Domain.Entities.TaskItems
 
         public TaskItemTitle(string value)
         {
-            // タスクのタイトルとして行こうか検証する処理を追加する
+            if (!Validate(value))
+            {
+                throw new AppValidateException("タイトルを指定してください。");
+            }
 
             Value = value;
         }
@@ -20,6 +24,11 @@ namespace Domain.Entities.TaskItems
         public override string ToString()
         {
             return Value;
+        }
+
+        private static bool Validate(string value)
+        {
+            return !string.IsNullOrWhiteSpace(value);
         }
     }
 }
