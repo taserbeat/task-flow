@@ -31,6 +31,14 @@ namespace Application.Repositories
         Task<BoardEm?> GetByIdAsync(TenantId tenantId, BoardId boardId);
 
         /// <summary>
+        /// 指定のボードが存在するか取得する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <param name="boardId">ボードID</param>
+        /// <returns></returns>
+        Task<bool> ExistsByIdAsync(TenantId tenantId, BoardId boardId);
+
+        /// <summary>
         /// 指定のボードを削除する
         /// </summary>
         /// <param name="tenantId">テナントID</param>

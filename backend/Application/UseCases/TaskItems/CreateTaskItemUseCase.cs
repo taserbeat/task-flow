@@ -1,5 +1,6 @@
 using Application.Repositories;
 using Domain.Entities.BoardColumns;
+using Domain.Entities.Boards;
 using Domain.Entities.TaskItems;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
@@ -25,18 +26,18 @@ namespace Application.UseCases.TaskItems
             _uow = uow;
         }
 
-        public async Task ExecuteAsync(TenantId tenantId, UserId actorId, CreateTaskItemParam param)
+        public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId targetBoardId, CreateTaskItemParam param)
         {
-            // ボード列の存在チェック
-            var columnId = BoardColumnId.New(param.BoardColumnId);
-            var columnEm = await _boardColumnRepository.GetByIdAsync(tenantId, columnId);
-            if (columnEm is null)
+            // ボードと列の存在チェック
+            var targetColumnId = BoardColumnId.New(param.BoardColumnId);
+            var isBoardAndColumnExists = await _boardColumnRepository.ExistsByIdAsync(tenantId, targetBoardId, targetColumnId);
+            if (!isBoardAndColumnExists)
             {
                 throw new AppNotFoundException("指定の列は存在しません。");
             }
 
             // 列の最後に追加するので、最後の位置を取得
-            var lastPosition = await _taskItemRepository.GetLastPositionAsync(tenantId, columnId);
+            var lastPosition = await _taskItemRepository.GetLastPositionAsync(tenantId, targetColumnId);
 
             // 追加する位置を取得
             var newPosition = lastPosition is null ? TaskItemPosition.NewInitPosition() : lastPosition.NewNextPosition();
@@ -47,7 +48,7 @@ namespace Application.UseCases.TaskItems
             var taskItemEm = TaskItemEm.Create(
                 id: TaskItemId.New(),
                 tenantId: tenantId,
-                boardColumnId: BoardColumnId.New(param.BoardColumnId),
+                boardColumnId: targetColumnId,
                 assigneeId: param.AssigneeId is null ? null : UserId.New(param.AssigneeId.Value),
                 title: new(param.Title),
                 description: new(param.Description),

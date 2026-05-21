@@ -40,6 +40,11 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<bool> ExistsByIdAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId)
+        {
+            return await _dbContext.BoardColumns.AnyAsync(x => x.TenantId == tenantId && x.BoardId == boardId && x.Id == boardColumnId);
+        }
+
         public async Task<BoardColumnPosition?> GetFirstPositionAsync(TenantId tenantId, BoardId boardId)
         {
             var firstPosition = await _dbContext.BoardColumns

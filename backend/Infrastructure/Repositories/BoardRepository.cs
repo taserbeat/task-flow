@@ -44,6 +44,11 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public Task<bool> ExistsByIdAsync(TenantId tenantId, BoardId boardId)
+        {
+            return _dbContext.Boards.AnyAsync(x => x.TenantId == tenantId && x.Id == boardId);
+        }
+
         public async Task<int> DeleteAsync(TenantId tenantId, BoardId boardId)
         {
             return await _dbContext.Boards

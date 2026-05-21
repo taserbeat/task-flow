@@ -29,8 +29,8 @@ namespace Application.UseCases.BoardColumns
         {
             // ボードの存在チェック
             var boardId = BoardId.New(param.BoardId);
-            var boardEm = await _boardRepository.GetByIdAsync(tenantId, boardId);
-            if (boardEm is null)
+            var isExists = await _boardRepository.ExistsByIdAsync(tenantId, boardId);
+            if (!isExists)
             {
                 throw new AppNotFoundException("指定のボードは存在しません。");
             }

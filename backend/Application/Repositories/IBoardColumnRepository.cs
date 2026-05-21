@@ -25,12 +25,21 @@ namespace Application.Repositories
         Task<IEnumerable<BoardColumnEm>> GetColumnsByBoardAsync(TenantId tenantId, BoardId boardId);
 
         /// <summary>
-        /// 指定のボード列を取得する
+        /// 指定の列を取得する
         /// </summary>
         /// <param name="tenantId">テナントID</param>
-        /// <param name="boardColumnId">ボード列ID</param>
+        /// <param name="boardColumnId">列ID</param>
         /// <returns></returns>
         Task<BoardColumnEm?> GetByIdAsync(TenantId tenantId, BoardColumnId boardColumnId);
+
+        /// <summary>
+        /// 指定のボードに指定の列が存在するか取得する
+        /// </summary>
+        /// <param name="tenantId">テナントID</param>
+        /// <param name="boardId">ボードID</param>
+        /// <param name="boardColumnId">列ID</param>
+        /// <returns></returns>
+        Task<bool> ExistsByIdAsync(TenantId tenantId, BoardId boardId, BoardColumnId boardColumnId);
 
         /// <summary>
         /// 指定ボードの最前列の位置番号を取得する
@@ -49,7 +58,7 @@ namespace Application.Repositories
         Task<BoardColumnPosition?> GetLastPositionAsync(TenantId tenantId, BoardId boardId);
 
         /// <summary>
-        /// 指定の位置範囲に含まれるボード列の件数を取得する
+        /// 指定の位置範囲に含まれる列の件数を取得する
         /// </summary>
         /// <param name="tenantId">テナントID</param>
         /// <param name="boardId">ボードID</param>
@@ -59,7 +68,7 @@ namespace Application.Repositories
         Task<int> CountPositionRangeAsync(TenantId tenantId, BoardId boardId, BoardColumnPosition low, BoardColumnPosition high);
 
         /// <summary>
-        /// 指定のボード列を削除する
+        /// 指定の列を削除する
         /// </summary>
         /// <param name="tenantId">テナントID</param>
         /// <param name="boardId">ボードID</param>

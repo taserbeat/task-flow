@@ -19,20 +19,30 @@ namespace Application.UseCases.TaskItems
         private readonly IUnitOfWork _uow;
         private readonly IBoardColumnService _boardColumnService;
         private readonly IExceptionService _exceptionService;
+        private readonly IBoardColumnRepository _boardColumnRepository;
 
-        public UpdateTaskItemUseCase(TimeProvider timeProvider, ITaskItemRepository taskItemRepository, IUnitOfWork uow, IBoardColumnService boardColumnService, IExceptionService exceptionService)
+        public UpdateTaskItemUseCase(TimeProvider timeProvider, ITaskItemRepository taskItemRepository, IUnitOfWork uow, IBoardColumnService boardColumnService, IExceptionService exceptionService, IBoardColumnRepository boardColumnRepository)
         {
             _timeProvider = timeProvider;
             _taskItemRepository = taskItemRepository;
             _uow = uow;
             _boardColumnService = boardColumnService;
             _exceptionService = exceptionService;
+            _boardColumnRepository = boardColumnRepository;
         }
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId targetBoardId, BoardColumnId targetColumnId, TaskItemId targetTaskId, UpdateTaskItemParam param)
         {
+            // ボードと列の存在チェック
+            var isTargetColumnExists = await _boardColumnRepository.ExistsByIdAsync(tenantId, targetBoardId, targetColumnId);
+            if (!isTargetColumnExists)
+            {
+                throw new AppNotFoundException("指定のボードと列に指定のタスクは存在しません。");
+            }
+
+            // タスクと列の存在チェック
             var targetTaskItemEm = await _taskItemRepository.GetByIdAsync(tenantId, targetTaskId);
-            if (targetTaskItemEm is null)
+            if (targetTaskItemEm is null || targetTaskItemEm.BoardColumnId != targetColumnId)
             {
                 throw new AppNotFoundException("指定のタスクは存在しません。");
             }

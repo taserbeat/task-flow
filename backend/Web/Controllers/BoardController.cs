@@ -285,7 +285,7 @@ namespace Web.Controllers
                 DueDate = request.DueDate,
             };
 
-            await _createTaskItemUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, param);
+            await _createTaskItemUseCase.ExecuteAsync(_userContext.TenantId, _userContext.UserId, BoardId.New(boardId), param);
 
             return Ok();
         }
