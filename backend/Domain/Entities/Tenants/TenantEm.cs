@@ -9,7 +9,7 @@ namespace Domain.Entities.Tenants
     public class TenantEm : BaseAuditableEm<TenantId>
     {
         /// <summary>
-        /// テナント名
+        /// テナント名  (TODO: ValueObject化する)
         /// </summary>
         /// <value></value>
         public string Name { get; protected set; } = default!;

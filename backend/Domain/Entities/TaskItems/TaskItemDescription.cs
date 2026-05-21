@@ -8,14 +8,16 @@ namespace Domain.Entities.TaskItems
     /// </summary>
     public class TaskItemDescription : IValueObject
     {
+        /// <summary>
+        /// 最大文字数
+        /// </summary>
+        public const int MaxLength = 512;
+
         public string Value { get; }
 
         public TaskItemDescription(string value)
         {
-            if (!Validate(value))
-            {
-                throw new AppValidateException("説明が不正です。");
-            }
+            Validate(value);
 
             Value = value;
         }
@@ -25,9 +27,12 @@ namespace Domain.Entities.TaskItems
             return Value;
         }
 
-        private static bool Validate(string value)
+        private static void Validate(string value)
         {
-            return true;
+            if (value.Length > MaxLength)
+            {
+                throw new AppValidateException("説明の文字数がオーバーしています。");
+            }
         }
     }
 }

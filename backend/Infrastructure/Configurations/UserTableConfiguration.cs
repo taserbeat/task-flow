@@ -41,7 +41,7 @@ namespace Infrastructure.Configurations
             // ======================================
             builder.Property(x => x.Email)
                 .HasColumnName("email")
-                .HasMaxLength(256)
+                .HasMaxLength(UserEmail.MaxLength)
                 .HasConversion(
                     v => v.Value,
                     v => new UserEmail(v)
@@ -98,12 +98,12 @@ namespace Infrastructure.Configurations
                     // ValueObject(姓+名)を設定
                     username.Property(x => x.LastName)
                         .HasColumnName("last_name")
-                        .HasMaxLength(32)
+                        .HasMaxLength(UserName.MaxLastNameLength)
                         .IsRequired();
 
                     username.Property(x => x.FirstName)
                         .HasColumnName("first_name")
-                        .HasMaxLength(32)
+                        .HasMaxLength(UserName.MaxFirstNameLength)
                         .IsRequired();
                 }
             );

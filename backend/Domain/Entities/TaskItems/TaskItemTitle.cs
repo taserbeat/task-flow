@@ -9,14 +9,16 @@ namespace Domain.Entities.TaskItems
     /// <value></value>
     public record TaskItemTitle : IValueObject
     {
+        /// <summary>
+        /// 最大文字数
+        /// </summary>
+        public const int MaxLength = 128;
+
         public string Value { get; }
 
         public TaskItemTitle(string value)
         {
-            if (!Validate(value))
-            {
-                throw new AppValidateException("タイトルを指定してください。");
-            }
+            Validate(value);
 
             Value = value;
         }
@@ -26,9 +28,17 @@ namespace Domain.Entities.TaskItems
             return Value;
         }
 
-        private static bool Validate(string value)
+        private static void Validate(string value)
         {
-            return !string.IsNullOrWhiteSpace(value);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new AppValidateException("タイトルを指定してください。");
+            }
+
+            if (value.Length > MaxLength)
+            {
+                throw new AppValidateException("タイトルの文字数がオーバーしています。");
+            }
         }
     }
 }

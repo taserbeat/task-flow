@@ -82,7 +82,7 @@ namespace Infrastructure.Configurations
             // ======================================
             builder.Property(x => x.Title)
                 .HasColumnName("title")
-                .HasMaxLength(128)
+                .HasMaxLength(TaskItemTitle.MaxLength)
                 .HasConversion(
                     v => v.Value,
                     v => new TaskItemTitle(v)
@@ -95,7 +95,7 @@ namespace Infrastructure.Configurations
             // ======================================
             builder.Property(x => x.Description)
                 .HasColumnName("description")
-                .HasMaxLength(512)
+                .HasMaxLength(TaskItemDescription.MaxLength)
                 .HasConversion(
                     v => v.Value,
                     v => new TaskItemDescription(v)

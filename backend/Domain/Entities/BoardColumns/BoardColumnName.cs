@@ -8,14 +8,16 @@ namespace Domain.Entities.BoardColumns
     /// </summary>
     public record BoardColumnName : IValueObject
     {
+        /// <summary>
+        /// 最大文字数
+        /// </summary>
+        public const int MaxLength = 128;
+
         public string Value { get; }
 
         public BoardColumnName(string value)
         {
-            if (!Validate(value))
-            {
-                throw new AppValidateException("列名を指定してください。");
-            }
+            Validate(value);
 
             Value = value;
         }
@@ -25,9 +27,17 @@ namespace Domain.Entities.BoardColumns
             return Value;
         }
 
-        private static bool Validate(string value)
+        private static void Validate(string value)
         {
-            return !string.IsNullOrWhiteSpace(value);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new AppValidateException("列名を指定してください。");
+            }
+
+            if (value.Length > MaxLength)
+            {
+                throw new AppValidateException("列名の文字数がオーバーしています。");
+            }
         }
     }
 }

@@ -40,7 +40,7 @@ namespace Infrastructure.Configurations
             // ======================================
             builder.Property(x => x.Name)
                 .HasColumnName("name")
-                .HasMaxLength(128)
+                .HasMaxLength(BoardName.MaxLength)
                 .HasConversion(
                     v => v.Value,
                     v => new BoardName(v)

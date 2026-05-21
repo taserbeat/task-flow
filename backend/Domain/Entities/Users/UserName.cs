@@ -1,4 +1,5 @@
 using Domain.Entities.Common.ValueObjects;
+using Domain.Exceptions;
 
 namespace Domain.Entities.Users
 {
@@ -7,6 +8,16 @@ namespace Domain.Entities.Users
     /// </summary>
     public sealed class UserName : IValueObject
     {
+        /// <summary>
+        /// 姓の最大文字数
+        /// </summary>
+        public const int MaxLastNameLength = 32;
+
+        /// <summary>
+        /// 名の最大文字数
+        /// </summary>
+        public const int MaxFirstNameLength = 32;
+
         /// <summary>
         /// 姓
         /// </summary>
@@ -43,8 +54,27 @@ namespace Domain.Entities.Users
 
         public UserName(string lastName, string firstName)
         {
+            ValidateLastName(lastName);
+            ValidateFirstName(firstName);
+
             LastName = lastName;
             FirstName = firstName;
+        }
+
+        private static void ValidateLastName(string value)
+        {
+            if (value.Length > MaxLastNameLength)
+            {
+                throw new AppValidateException("姓の文字数がオーバーしています。");
+            }
+        }
+
+        private static void ValidateFirstName(string value)
+        {
+            if (value.Length > MaxFirstNameLength)
+            {
+                throw new AppValidateException("名の文字数がオーバーしています。");
+            }
         }
     }
 }

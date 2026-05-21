@@ -8,14 +8,16 @@ namespace Domain.Entities.Boards
     /// </summary>
     public record BoardName : IValueObject
     {
+        /// <summary>
+        /// 最大文字数
+        /// </summary>
+        public const int MaxLength = 128;
+
         public string Value { get; }
 
         public BoardName(string value)
         {
-            if (!Validate(value))
-            {
-                throw new AppValidateException("ボード名を指定してください。");
-            }
+            Validate(value);
 
             Value = value;
         }
@@ -25,9 +27,17 @@ namespace Domain.Entities.Boards
             return Value;
         }
 
-        private static bool Validate(string value)
+        private static void Validate(string value)
         {
-            return !string.IsNullOrWhiteSpace(value);
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                throw new AppValidateException("ボード名を指定してください。");
+            }
+
+            if (value.Length > MaxLength)
+            {
+                throw new AppValidateException("ボード名の文字数がオーバーしています。");
+            }
         }
     }
 }
