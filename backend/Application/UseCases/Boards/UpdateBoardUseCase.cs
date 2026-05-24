@@ -1,7 +1,6 @@
 using Application.Repositories;
 using Application.Services;
 using Domain.Entities.Boards;
-using Domain.Entities.Roles;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Domain.Exceptions;
@@ -28,12 +27,6 @@ namespace Application.UseCases.Boards
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId boardId, UpdateBoardParam param)
         {
-            // 実行者の権限チェック
-            if (!_authorizeService.HasRequiredRole(RoleLevelEnum.Admin))
-            {
-                throw new AppForbiddenException("操作は許可されていません。");
-            }
-
             var boardEm = await _boardRepository.GetByIdAsync(tenantId, boardId);
             if (boardEm is null)
             {

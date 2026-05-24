@@ -1,15 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 
 import type { BoardSummary } from "../../../models/boards/BoardSummary";
 import { apiClient } from "../../../api/clients/ApiClient";
 import { formatDateTime } from "../../../helpers/dateUtils";
+import { useAppSelector } from "../../../app/hook";
+import type { Role } from "../../../models/roles/Role";
 
 /** ボード一覧ページ */
 const BoardIndexPage = () => {
   const navigate = useNavigate();
   const [boards, setBoards] = useState<BoardSummary[]>([]);
   const [selectedBoard, setSelectedBoard] = useState<BoardSummary | null>(null);
+  const [roles, setRoles] = useState<Role[]>([]);
+
+  const userInfo = useAppSelector((state) => state.profile.userInfo);
+
+  const isAdmin = useMemo(() => {
+    if (!userInfo) return false;
+
+    const adminRole = roles.find((role) => role.name === "Admin");
+    if (!adminRole) return false;
+
+    return userInfo.user.role.level >= adminRole.level;
+  }, [userInfo, roles]);
 
   /** ボード一覧取得APIを呼び出し、ボード一覧のステートを更新する */
   const getBoards = async () => {
@@ -23,9 +37,22 @@ const BoardIndexPage = () => {
     }
   };
 
+  /** ロール一覧取得APIを呼び出し、ロール一覧のステートを更新する */
+  const getRoles = async () => {
+    try {
+      const response = await apiClient.roles.getRoles();
+      setRoles(response);
+    } catch (e) {
+      setRoles([]);
+      const error = await apiClient.parseHttpError(e);
+      alert(error.response?.title ?? "ロール一覧の取得に失敗しました。");
+    }
+  };
+
   useEffect(() => {
     const initLoad = async () => {
       await getBoards();
+      await getRoles();
     };
 
     initLoad();
@@ -67,12 +94,14 @@ const BoardIndexPage = () => {
       </div>
 
       <div className="mb-4 flex gap-3">
-        <button
-          onClick={handleNew}
-          className="px-4 py-2 rounded-md font-medium transition-colors bg-green-600 text-white hover:bg-green-700 cursor-pointer"
-        >
-          新規
-        </button>
+        {isAdmin && (
+          <button
+            onClick={handleNew}
+            className="px-4 py-2 rounded-md font-medium transition-colors bg-green-600 text-white hover:bg-green-700 cursor-pointer"
+          >
+            新規
+          </button>
+        )}
 
         <button
           onClick={handleEdit}
@@ -86,17 +115,19 @@ const BoardIndexPage = () => {
           編集
         </button>
 
-        <button
-          onClick={handleDelete}
-          disabled={!selectedBoard}
-          className={`px-4 py-2 rounded-md font-medium transition-colors ${
-            !selectedBoard
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-red-600 text-white hover:bg-red-700 cursor-pointer"
-          }`}
-        >
-          削除
-        </button>
+        {isAdmin && (
+          <button
+            onClick={handleDelete}
+            disabled={!selectedBoard}
+            className={`px-4 py-2 rounded-md font-medium transition-colors ${
+              !selectedBoard
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-red-600 text-white hover:bg-red-700 cursor-pointer"
+            }`}
+          >
+            削除
+          </button>
+        )}
       </div>
 
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden h-96">

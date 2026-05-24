@@ -140,7 +140,7 @@ namespace Web.Controllers
         /// <response code="500">サーバーが処理に失敗</response>
         [HttpPut]
         [Route("{boardId}")]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> UpdateBoard([FromRoute] Guid boardId, UpdateBoardRequest request)
         {
             var param = new UpdateBoardParam
