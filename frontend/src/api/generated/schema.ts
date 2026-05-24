@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/api/tenant": {
+    "/api/tenants": {
         parameters: {
             query?: never;
             header?: never;
@@ -115,7 +115,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/tenant/{tenantId}": {
+    "/api/tenants/{tenantId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -314,6 +314,693 @@ export interface paths {
         put?: never;
         post?: never;
         delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ボード一覧の取得 */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BoardSummaryResponse"][];
+                        "application/json": components["schemas"]["BoardSummaryResponse"][];
+                        "text/json": components["schemas"]["BoardSummaryResponse"][];
+                    };
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        /** ボードの作成 */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateBoardRequest"];
+                    "text/json": components["schemas"]["CreateBoardRequest"];
+                    "application/*+json": components["schemas"]["CreateBoardRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards/{boardId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** ボードの取得 */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 取得対象のボードID */
+                    boardId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "text/plain": components["schemas"]["BoardDetailResponse"];
+                        "application/json": components["schemas"]["BoardDetailResponse"];
+                        "text/json": components["schemas"]["BoardDetailResponse"];
+                    };
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 存在しない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        /** ボードの更新 */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 更新対象のボードID */
+                    boardId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateBoardRequest"];
+                    "text/json": components["schemas"]["UpdateBoardRequest"];
+                    "application/*+json": components["schemas"]["UpdateBoardRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 存在しない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        /** ボードの削除 */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description 削除対象のボードID */
+                    boardId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards/{boardId}/columns": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** ボード列の作成 */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateBoardColumnRequest"];
+                    "text/json": components["schemas"]["CreateBoardColumnRequest"];
+                    "application/*+json": components["schemas"]["CreateBoardColumnRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards/{boardId}/columns/{columnId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** ボード列の更新 */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                    /** @description 更新対象のボード列ID */
+                    columnId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateBoardColumnRequest"];
+                    "text/json": components["schemas"]["UpdateBoardColumnRequest"];
+                    "application/*+json": components["schemas"]["UpdateBoardColumnRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 存在しない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        /** ボード列の削除 */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                    /** @description 削除対象のボード列ID */
+                    columnId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards/{boardId}/columns/{columnId}/tasks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** タスクの作成 */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                    /** @description 列ID */
+                    columnId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["CreateTaskItemRequest"];
+                    "text/json": components["schemas"]["CreateTaskItemRequest"];
+                    "application/*+json": components["schemas"]["CreateTaskItemRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/boards/{boardId}/columns/{columnId}/tasks/{taskId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** タスクの更新 */
+        put: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                    /** @description 列ID */
+                    columnId: string;
+                    /** @description タスクID */
+                    taskId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": components["schemas"]["UpdateTaskItemRequest"];
+                    "text/json": components["schemas"]["UpdateTaskItemRequest"];
+                    "application/*+json": components["schemas"]["UpdateTaskItemRequest"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 存在しない */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        post?: never;
+        /** タスクの削除 */
+        delete: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path: {
+                    /** @description ボードID */
+                    boardId: string;
+                    /** @description 列ID */
+                    columnId: string;
+                    /** @description タスクID */
+                    taskId: string;
+                };
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description リクエストが不正 */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 未認証エラー */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description 権限エラー */
+                403: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description サーバーが処理に失敗 */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
         options?: never;
         head?: never;
         patch?: never;
@@ -711,6 +1398,98 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /** @description ボード列の詳細レスポンス */
+        BoardColumnDetailResponse: {
+            /**
+             * Format: uuid
+             * @description 列ID
+             */
+            id: string;
+            /**
+             * Format: uuid
+             * @description ボードID
+             */
+            boardId: string;
+            /** @description 列名 */
+            name: string;
+            /**
+             * Format: int32
+             * @description 位置
+             */
+            position: number;
+            /** @description タスクの配列 */
+            taskItems: components["schemas"]["TaskItemDetailResponse"][];
+        };
+        /** @description ボードの詳細情報のレスポンス */
+        BoardDetailResponse: {
+            /**
+             * Format: uuid
+             * @description ボードID
+             */
+            id: string;
+            /** @description ボード名 */
+            name: string;
+            /**
+             * Format: date-time
+             * @description 作成日時
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updatedAt: string;
+            /** @description ボード列の配列 */
+            columns: components["schemas"]["BoardColumnDetailResponse"][];
+        };
+        /** @description ボードのサマリー情報のレスポンス */
+        BoardSummaryResponse: {
+            /**
+             * Format: uuid
+             * @description ボードID
+             */
+            id: string;
+            /** @description ボード名 */
+            name: string;
+            /**
+             * Format: date-time
+             * @description 作成日時
+             */
+            createdAt: string;
+            /**
+             * Format: date-time
+             * @description 更新日時
+             */
+            updatedAt: string;
+        };
+        /** @description ボード列の作成リクエスト */
+        CreateBoardColumnRequest: {
+            /** @description ボード列名 */
+            name: string;
+        };
+        /** @description ボード作成リクエスト */
+        CreateBoardRequest: {
+            /** @description ボード名 */
+            name: string;
+        };
+        /** @description タスクの作成リクエスト */
+        CreateTaskItemRequest: {
+            /**
+             * Format: uuid
+             * @description 担当者のユーザーID
+             */
+            assigneeId?: string | null;
+            /** @description タイトル */
+            title: string;
+            /** @description 説明 */
+            description: string;
+            priority: components["schemas"]["TaskItemPriorityEnum"];
+            /**
+             * Format: date-time
+             * @description 期限日
+             */
+            dueDate?: string | null;
+        };
         /** @description テナント作成リクエスト */
         CreateTenantRequest: {
             name: string;
@@ -755,6 +1534,41 @@ export interface components {
         };
         /** @enum {string} */
         RoleNameEnum: "User" | "Admin" | "SystemAdmin";
+        /** @description タスクの詳細レスポンス */
+        TaskItemDetailResponse: {
+            /**
+             * Format: uuid
+             * @description タスクID
+             */
+            id: string;
+            /**
+             * Format: uuid
+             * @description 列ID
+             */
+            boardColumnId: string;
+            /**
+             * Format: uuid
+             * @description 担当者のユーザーID
+             */
+            assigneeId?: string | null;
+            /** @description タイトル */
+            title: string;
+            /** @description 説明 */
+            description: string;
+            priority: components["schemas"]["TaskItemPriorityEnum"];
+            /**
+             * Format: date-time
+             * @description 期限日
+             */
+            dueDate?: string | null;
+            /**
+             * Format: int32
+             * @description 位置
+             */
+            position: number;
+        };
+        /** @enum {string} */
+        TaskItemPriorityEnum: "Low" | "Medium" | "High";
         /** @description テナントの詳細レスポンス */
         TenantDetailResponse: {
             /**
@@ -784,6 +1598,63 @@ export interface components {
             updatedAt: string;
             /** @description テナント名 */
             name: string;
+        };
+        /** @description ボード列の更新リクエスト */
+        UpdateBoardColumnRequest: {
+            /** @description ボード列名 */
+            name?: string | null;
+            /**
+             * Format: uuid
+             * @description 順番入れ替え後の位置の1つ前のボード列ID
+             */
+            previousColumnId?: string | null;
+            /**
+             * Format: uuid
+             * @description 順番入れ替え後の位置の1つ後のボード列ID
+             */
+            nextColumnId?: string | null;
+        };
+        /** @description ボードの更新リクエスト */
+        UpdateBoardRequest: {
+            /** @description ボード名 */
+            name?: string | null;
+        };
+        /** @description タスクの更新リクエスト */
+        UpdateTaskItemRequest: {
+            /**
+             * Format: uuid
+             * @description 変更後の列ID
+             */
+            boardColumnId?: string | null;
+            /**
+             * Format: uuid
+             * @description 変更後の担当者ID
+             */
+            assigneeId?: string | null;
+            /** @description 担当者を解除するか? */
+            isReleaseAssignee?: boolean | null;
+            /** @description タイトル */
+            title?: string | null;
+            /** @description 説明 */
+            description?: string | null;
+            priority?: components["schemas"]["TaskItemPriorityEnum"];
+            /**
+             * Format: date-time
+             * @description 変更後の期限日
+             */
+            dueDate?: string | null;
+            /** @description 期限日を削除するか? */
+            isDeleteDueDate?: boolean | null;
+            /**
+             * Format: uuid
+             * @description 変更後の位置の1つ前のタスクID (位置変更がある場合のみ)
+             */
+            previousTaskItemId?: string | null;
+            /**
+             * Format: uuid
+             * @description 変更後の位置の1つ後のタスクID (位置変更がある場合のみ)
+             */
+            nextTaskItemId?: string | null;
         };
         /** @description テナントの更新リクエスト */
         UpdateTenantRequest: {

@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 
 import type { RoleName } from "../models/roles/Role";
-import TaskIndexPage from "../components/pages/tasks/TaskIndexPage";
+import BoardIndexPage from "../components/pages/tasks/BoardIndexPage";
 import UserIndexPage from "../components/pages/users/UserIndexPage";
 import UserNewPage from "../components/pages/users/UserNewPage";
 import UserEditPage from "../components/pages/users/UserEditPage";
@@ -45,7 +45,7 @@ type RouteConfig = {
 export const routes: RouteConfig[] = [
   {
     path: "/tasks",
-    element: <TaskIndexPage />,
+    element: <BoardIndexPage />,
     label: "タスク",
     icon: <RectangleStackIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin", "User"],

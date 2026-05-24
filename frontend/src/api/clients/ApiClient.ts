@@ -6,6 +6,7 @@ import { RolesApi } from "../roles/rolesApi";
 import { axiosInstance } from "./axios";
 import type { ErrorResponse, HttpError } from "../common/httpError";
 import { TenantsApi } from "../tenants/tenantsApi";
+import { BoardsApi } from "../boards/boardsApi";
 
 export class ApiClient {
   private readonly instance: AxiosInstance;
@@ -13,6 +14,7 @@ export class ApiClient {
   users: UsersApi;
   roles: RolesApi;
   tenants: TenantsApi;
+  boards: BoardsApi;
 
   constructor(instance: AxiosInstance) {
     this.instance = instance;
@@ -20,6 +22,7 @@ export class ApiClient {
     this.users = new UsersApi(this.instance);
     this.roles = new RolesApi(this.instance);
     this.tenants = new TenantsApi(this.instance);
+    this.boards = new BoardsApi(this.instance);
   }
 
   /** HTTPエラーをパースする */
