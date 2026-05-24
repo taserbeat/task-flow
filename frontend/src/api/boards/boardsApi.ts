@@ -11,7 +11,8 @@ import type {
   UpdateTaskItemRequest,
 } from "./boardsDtos";
 import type { BoardSummary } from "../../models/boards/BoardSummary";
-import { toBoardSummary } from "./boardsMapper";
+import { toBoardDetail, toBoardSummary } from "./boardsMapper";
+import type { BoardDetail } from "../../models/boards/BoardDetail";
 
 export class BoardsApi {
   private readonly instance: AxiosInstance;
@@ -37,10 +38,10 @@ export class BoardsApi {
   }
 
   /** ボードの詳細を取得する */
-  public async getBoard(boardId: string): Promise<BoardDetailResponse> {
+  public async getBoard(boardId: string): Promise<BoardDetail> {
     const url = `/api/boards/${boardId}`;
     const response = await this.instance.get<BoardDetailResponse>(url);
-    return response.data;
+    return toBoardDetail(response.data);
   }
 
   /** ボードを更新する */

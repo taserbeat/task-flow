@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
+
 import type {
-  BoardDetailResponse,
   CreateBoardColumnRequest,
   UpdateBoardColumnRequest,
   CreateTaskItemRequest,
@@ -9,14 +9,16 @@ import type {
 } from "../../../api/boards/boardsDtos";
 import { apiClient } from "../../../api/clients/ApiClient";
 import type { UserSummary } from "../../../models/users/UserSummary";
-
-type Column = BoardDetailResponse["columns"][0];
-type Task = Column["taskItems"][0];
+import type { BoardDetail } from "../../../models/boards/BoardDetail";
+import type {
+  TaskItemPriority,
+  TaskItem,
+} from "../../../models/tasks/TaskItem";
 
 /** ボードの編集ページ */
 const BoardEditPage = () => {
   const { boardId } = useParams<{ boardId: string }>();
-  const [board, setBoard] = useState<BoardDetailResponse | null>(null);
+  const [board, setBoard] = useState<BoardDetail | null>(null);
   const [editingBoardName, setEditingBoardName] = useState(false);
   const [boardName, setBoardName] = useState("");
   const [editingColumnId, setEditingColumnId] = useState<string | null>(null);
@@ -25,7 +27,7 @@ const BoardEditPage = () => {
   const [taskForm, setTaskForm] = useState({
     title: "",
     description: "",
-    priority: "Medium" as "Low" | "Medium" | "High",
+    priority: "Medium" as TaskItemPriority,
     dueDate: "",
     assigneeId: "" as string | null,
   });
@@ -33,7 +35,7 @@ const BoardEditPage = () => {
     typeof taskForm | null
   >(null);
   const [draggedTask, setDraggedTask] = useState<{
-    task: Task;
+    task: TaskItem;
     columnId: string;
   } | null>(null);
   const [users, setUsers] = useState<UserSummary[]>([]);
@@ -329,7 +331,7 @@ const BoardEditPage = () => {
   };
 
   /** ドラッグ開始時に呼び出される */
-  const handleDragStart = (task: Task, columnId: string) => {
+  const handleDragStart = (task: TaskItem, columnId: string) => {
     setIsDragging(true);
     setDraggedTask({ task, columnId });
   };
@@ -533,10 +535,7 @@ const BoardEditPage = () => {
                           onChange={(e) =>
                             setTaskForm({
                               ...taskForm,
-                              priority: e.target.value as
-                                | "Low"
-                                | "Medium"
-                                | "High",
+                              priority: e.target.value as TaskItemPriority,
                             })
                           }
                           className="w-full px-2 py-1 border rounded text-sm"
@@ -752,7 +751,7 @@ const BoardEditPage = () => {
                       onChange={(e) =>
                         setTaskForm({
                           ...taskForm,
-                          priority: e.target.value as "Low" | "Medium" | "High",
+                          priority: e.target.value as TaskItemPriority,
                         })
                       }
                       className="w-full px-2 py-1 border rounded text-sm"
