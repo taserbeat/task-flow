@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import type {
   BoardDetailResponse,
@@ -34,6 +34,11 @@ const BoardEditPage = () => {
     columnId: string;
   } | null>(null);
   const [users, setUsers] = useState<UserSummary[]>([]);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const [expandedTaskIds, setExpandedTaskIds] = useState<Set<string>>(
+    new Set(),
+  );
+  const [isDragging, setIsDragging] = useState(false);
 
   /** ボードを読み込む */
   const loadBoard = async () => {
@@ -63,6 +68,27 @@ const BoardEditPage = () => {
     loadBoard();
     loadUsers();
   }, [boardId]);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      const target = e.target as HTMLElement;
+      // タスクリスト内のスクロールは変換しない
+      if (target.closest(".task-list")) {
+        return;
+      }
+
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    container.addEventListener("wheel", handleWheel, { passive: false });
+    return () => container.removeEventListener("wheel", handleWheel);
+  }, [users]);
 
   /** ボード名を更新する */
   const handleUpdateBoardName = async () => {
@@ -167,6 +193,15 @@ const BoardEditPage = () => {
       dueDate: "",
       assigneeId: null,
     });
+
+    setTimeout(() => {
+      const taskList = document.querySelector(
+        `[data-column-id="${columnId}"] .task-list`,
+      );
+      if (taskList) {
+        taskList.scrollTop = taskList.scrollHeight;
+      }
+    }, 0);
   };
 
   /** タスクを保存する */
@@ -261,7 +296,13 @@ const BoardEditPage = () => {
 
   /** ドラッグ開始時に呼び出される */
   const handleDragStart = (task: Task, columnId: string) => {
+    setIsDragging(true);
     setDraggedTask({ task, columnId });
+  };
+
+  /** ドラッグ終了時に呼び出される */
+  const handleDragEnd = () => {
+    setTimeout(() => setIsDragging(false), 100);
   };
 
   /** ドロップ時に呼び出される */
@@ -334,12 +375,16 @@ const BoardEditPage = () => {
         )}
       </div>
 
-      <div className="flex-1 overflow-x-auto overflow-y-hidden min-h-0">
+      <div
+        className="flex-1 overflow-x-auto overflow-y-hidden min-h-0"
+        ref={scrollContainerRef}
+      >
         <div className="flex gap-4 h-full">
           {/* 列リスト */}
           {board.columns.map((column, colIndex) => (
             <div
               key={column.id}
+              data-column-id={column.id}
               className="shrink-0 w-80 bg-gray-100 rounded-lg p-4 flex flex-col h-full"
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => handleDrop(column.id)}
@@ -371,8 +416,12 @@ const BoardEditPage = () => {
                   </div>
                 ) : (
                   <div className="flex items-center justify-between">
+                    {/* 列名 */}
                     <h2 className="font-semibold text-lg">{column.name}</h2>
+
+                    {/* ボタングループ */}
                     <div className="flex gap-1">
+                      {/* 左に移動ボタン */}
                       <button
                         onClick={() => handleMoveColumn(column.id, "left")}
                         disabled={colIndex === 0}
@@ -380,6 +429,8 @@ const BoardEditPage = () => {
                       >
                         ←
                       </button>
+
+                      {/* 右に移動ボタン */}
                       <button
                         onClick={() => handleMoveColumn(column.id, "right")}
                         disabled={colIndex === board.columns.length - 1}
@@ -387,6 +438,8 @@ const BoardEditPage = () => {
                       >
                         →
                       </button>
+
+                      {/* 編集ボタン */}
                       <button
                         onClick={() => {
                           setEditingColumnId(column.id);
@@ -396,6 +449,8 @@ const BoardEditPage = () => {
                       >
                         編集
                       </button>
+
+                      {/* 削除ボタン */}
                       <button
                         onClick={() => handleDeleteColumn(column.id)}
                         className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 rounded cursor-pointer"
@@ -408,11 +463,12 @@ const BoardEditPage = () => {
               </div>
 
               {/* タスクリスト */}
-              <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
+              <div className="flex-1 overflow-y-auto space-y-2 min-h-0 task-list">
                 {column.taskItems.map((task, taskIndex) => (
                   <div key={task.id}>
                     {editingTaskId === task.id ? (
                       <div className="bg-white p-3 rounded shadow space-y-2">
+                        {/* タイトル */}
                         <input
                           type="text"
                           placeholder="タイトル"
@@ -422,6 +478,8 @@ const BoardEditPage = () => {
                           }
                           className="w-full px-2 py-1 border rounded"
                         />
+
+                        {/* 説明 */}
                         <textarea
                           placeholder="説明"
                           value={taskForm.description}
@@ -434,6 +492,8 @@ const BoardEditPage = () => {
                           className="w-full px-2 py-1 border rounded text-sm"
                           rows={3}
                         />
+
+                        {/* 優先度 */}
                         <select
                           value={taskForm.priority}
                           onChange={(e) =>
@@ -451,6 +511,8 @@ const BoardEditPage = () => {
                           <option value="Medium">Medium</option>
                           <option value="High">High</option>
                         </select>
+
+                        {/* 期限日 */}
                         <input
                           type="date"
                           value={taskForm.dueDate}
@@ -462,6 +524,8 @@ const BoardEditPage = () => {
                           }
                           className="w-full px-2 py-1 border rounded text-sm"
                         />
+
+                        {/* 担当者 */}
                         <select
                           value={taskForm.assigneeId || ""}
                           onChange={(e) =>
@@ -479,6 +543,7 @@ const BoardEditPage = () => {
                             </option>
                           ))}
                         </select>
+
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleSaveTask(column.id, task.id)}
@@ -498,14 +563,65 @@ const BoardEditPage = () => {
                       <div
                         draggable
                         onDragStart={() => handleDragStart(task, column.id)}
-                        className="bg-white p-3 rounded shadow cursor-move hover:shadow-md"
+                        onDragEnd={handleDragEnd}
+                        onClick={() => {
+                          if (!isDragging) {
+                            setEditingTaskId(task.id);
+                            setTaskForm({
+                              title: task.title,
+                              description: task.description,
+                              priority: task.priority,
+                              dueDate: task.dueDate
+                                ? new Date(task.dueDate)
+                                    .toISOString()
+                                    .split("T")[0]
+                                : "",
+                              assigneeId: task.assigneeId || null,
+                            });
+                          }
+                        }}
+                        className="bg-white p-3 rounded shadow cursor-move hover:shadow-md relative"
                       >
-                        <div className="font-medium mb-1">{task.title}</div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeleteTask(column.id, task.id);
+                          }}
+                          className="absolute top-1 right-1 p-1 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded text-lg leading-none"
+                          title="削除"
+                        >
+                          ×
+                        </button>
+                        <div className="font-medium mb-1 pr-6">
+                          {task.title}
+                        </div>
                         {task.description && (
-                          <div className="text-sm text-gray-600 mb-2">
-                            {task.description}
-                          </div>
+                          <>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const newExpanded = new Set(expandedTaskIds);
+                                if (newExpanded.has(task.id)) {
+                                  newExpanded.delete(task.id);
+                                } else {
+                                  newExpanded.add(task.id);
+                                }
+                                setExpandedTaskIds(newExpanded);
+                              }}
+                              className="text-xs text-blue-600 hover:text-blue-800 mb-1"
+                            >
+                              {expandedTaskIds.has(task.id)
+                                ? "▼ 説明を隠す"
+                                : "▶ 説明を表示"}
+                            </button>
+                            {expandedTaskIds.has(task.id) && (
+                              <div className="text-sm text-gray-600 mb-2 whitespace-pre-wrap">
+                                {task.description}
+                              </div>
+                            )}
+                          </>
                         )}
+
                         <div className="flex items-center justify-between text-xs mb-2">
                           <span
                             className={`px-2 py-1 rounded ${
@@ -518,62 +634,44 @@ const BoardEditPage = () => {
                           >
                             {task.priority}
                           </span>
+
                           {task.dueDate && (
                             <span className="text-gray-500">
                               {new Date(task.dueDate).toLocaleDateString()}
                             </span>
                           )}
                         </div>
+
                         {task.assigneeId && (
                           <div className="text-xs text-gray-600 mb-2">
-                            担当:{" "}
                             {users.find((u) => u.id === task.assigneeId)
                               ?.username || "不明"}
                           </div>
                         )}
+
                         <div className="flex gap-1 mt-2">
+                          {/* 上に移動ボタン */}
                           <button
-                            onClick={() =>
-                              handleMoveTask(column.id, task.id, "up")
-                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMoveTask(column.id, task.id, "up");
+                            }}
                             disabled={taskIndex === 0}
                             className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                           >
                             ↑
                           </button>
+
+                          {/* 下に移動ボタン */}
                           <button
-                            onClick={() =>
-                              handleMoveTask(column.id, task.id, "down")
-                            }
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleMoveTask(column.id, task.id, "down");
+                            }}
                             disabled={taskIndex === column.taskItems.length - 1}
                             className="px-2 py-1 text-xs bg-gray-100 hover:bg-gray-200 rounded disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
                           >
                             ↓
-                          </button>
-                          <button
-                            onClick={() => {
-                              setEditingTaskId(task.id);
-                              setTaskForm({
-                                title: task.title,
-                                description: task.description,
-                                priority: task.priority,
-                                dueDate: task.dueDate
-                                  ? new Date(task.dueDate)
-                                      .toISOString()
-                                      .split("T")[0]
-                                  : "",
-                                assigneeId: task.assigneeId || null,
-                              });
-                            }}
-                            className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 rounded cursor-pointer"
-                          >
-                            編集
-                          </button>
-                          <button
-                            onClick={() => handleDeleteTask(column.id, task.id)}
-                            className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 rounded cursor-pointer"
-                          >
-                            削除
                           </button>
                         </div>
                       </div>
@@ -583,6 +681,7 @@ const BoardEditPage = () => {
 
                 {editingTaskId === `new-${column.id}` && (
                   <div className="bg-white p-3 rounded shadow space-y-2">
+                    {/* タイトル */}
                     <input
                       type="text"
                       placeholder="タイトル"
@@ -593,6 +692,8 @@ const BoardEditPage = () => {
                       className="w-full px-2 py-1 border rounded"
                       autoFocus
                     />
+
+                    {/* 説明 */}
                     <textarea
                       placeholder="説明"
                       value={taskForm.description}
@@ -605,6 +706,8 @@ const BoardEditPage = () => {
                       className="w-full px-2 py-1 border rounded text-sm"
                       rows={3}
                     />
+
+                    {/* 優先度 */}
                     <select
                       value={taskForm.priority}
                       onChange={(e) =>
@@ -619,6 +722,8 @@ const BoardEditPage = () => {
                       <option value="Medium">Medium</option>
                       <option value="High">High</option>
                     </select>
+
+                    {/* 期限日 */}
                     <input
                       type="date"
                       value={taskForm.dueDate}
@@ -627,6 +732,8 @@ const BoardEditPage = () => {
                       }
                       className="w-full px-2 py-1 border rounded text-sm"
                     />
+
+                    {/* 担当者 */}
                     <select
                       value={taskForm.assigneeId || ""}
                       onChange={(e) =>
@@ -644,13 +751,17 @@ const BoardEditPage = () => {
                         </option>
                       ))}
                     </select>
+
                     <div className="flex gap-2">
+                      {/* 作成ボタン */}
                       <button
                         onClick={() => handleSaveTask(column.id, null)}
                         className="flex-1 px-2 py-1 text-sm bg-blue-600 text-white rounded cursor-pointer"
                       >
                         作成
                       </button>
+
+                      {/* キャンセルボタン */}
                       <button
                         onClick={() => setEditingTaskId(null)}
                         className="flex-1 px-2 py-1 text-sm bg-gray-300 rounded cursor-pointer"
@@ -662,6 +773,7 @@ const BoardEditPage = () => {
                 )}
               </div>
 
+              {/* タスクを追加ボタン */}
               <button
                 onClick={() => handleCreateTask(column.id)}
                 className="mt-3 w-full px-3 py-2 text-sm bg-blue-600 text-white hover:bg-blue-700 rounded cursor-pointer"
@@ -671,6 +783,7 @@ const BoardEditPage = () => {
             </div>
           ))}
 
+          {/* 列を追加ボタン */}
           <button
             onClick={handleCreateColumn}
             className="shrink-0 w-80 h-32 bg-gray-200 hover:bg-gray-300 rounded-lg flex items-center justify-center text-gray-600 font-medium cursor-pointer"
