@@ -29,6 +29,9 @@ const BoardEditPage = () => {
     dueDate: "",
     assigneeId: "" as string | null,
   });
+  const [originalTaskForm, setOriginalTaskForm] = useState<
+    typeof taskForm | null
+  >(null);
   const [draggedTask, setDraggedTask] = useState<{
     task: Task;
     columnId: string;
@@ -209,14 +212,41 @@ const BoardEditPage = () => {
     if (!boardId || !taskForm.title.trim()) return;
     try {
       if (taskId && !taskId.startsWith("new-")) {
-        const request: UpdateTaskItemRequest = {
-          title: taskForm.title,
-          description: taskForm.description,
-          priority: taskForm.priority,
-          dueDate: taskForm.dueDate || null,
-          assigneeId: taskForm.assigneeId || null,
-          isReleaseAssignee: taskForm.assigneeId === null,
-        };
+        // 更新時は変更された項目のみを含める
+        const request: UpdateTaskItemRequest = {};
+
+        if (originalTaskForm) {
+          if (taskForm.title !== originalTaskForm.title) {
+            request.title = taskForm.title;
+          }
+
+          if (taskForm.description !== originalTaskForm.description) {
+            request.description = taskForm.description;
+          }
+
+          if (taskForm.priority !== originalTaskForm.priority) {
+            request.priority = taskForm.priority;
+          }
+
+          if (taskForm.dueDate !== originalTaskForm.dueDate) {
+            if (taskForm.dueDate === "") {
+              request.isDeleteDueDate = true;
+            } else {
+              request.dueDate = new Date(
+                taskForm.dueDate + "T00:00:00Z",
+              ).toISOString();
+            }
+          }
+
+          if (taskForm.assigneeId !== originalTaskForm.assigneeId) {
+            if (taskForm.assigneeId === null) {
+              request.isReleaseAssignee = true;
+            } else {
+              request.assigneeId = taskForm.assigneeId;
+            }
+          }
+        }
+
         await apiClient.boards.updateTaskItem(
           boardId,
           columnId,
@@ -224,17 +254,21 @@ const BoardEditPage = () => {
           request,
         );
       } else {
+        const dueDate = taskForm.dueDate
+          ? new Date(taskForm.dueDate + "T00:00:00Z").toISOString()
+          : null;
         const request: CreateTaskItemRequest = {
           title: taskForm.title,
           description: taskForm.description,
           priority: taskForm.priority,
-          dueDate: taskForm.dueDate || null,
+          dueDate: dueDate,
           assigneeId: taskForm.assigneeId || null,
         };
         await apiClient.boards.createTaskItem(boardId, columnId, request);
       }
       await loadBoard();
       setEditingTaskId(null);
+      setOriginalTaskForm(null);
     } catch (e) {
       const error = await apiClient.parseHttpError(e);
       alert(error.response?.title ?? "タスクの保存に失敗しました。");
@@ -552,7 +586,10 @@ const BoardEditPage = () => {
                             保存
                           </button>
                           <button
-                            onClick={() => setEditingTaskId(null)}
+                            onClick={() => {
+                              setEditingTaskId(null);
+                              setOriginalTaskForm(null);
+                            }}
                             className="flex-1 px-2 py-1 text-sm bg-gray-300 rounded cursor-pointer"
                           >
                             キャンセル
@@ -566,8 +603,7 @@ const BoardEditPage = () => {
                         onDragEnd={handleDragEnd}
                         onClick={() => {
                           if (!isDragging) {
-                            setEditingTaskId(task.id);
-                            setTaskForm({
+                            const formData = {
                               title: task.title,
                               description: task.description,
                               priority: task.priority,
@@ -577,7 +613,10 @@ const BoardEditPage = () => {
                                     .split("T")[0]
                                 : "",
                               assigneeId: task.assigneeId || null,
-                            });
+                            };
+                            setEditingTaskId(task.id);
+                            setTaskForm(formData);
+                            setOriginalTaskForm(formData);
                           }
                         }}
                         className="bg-white p-3 rounded shadow cursor-move hover:shadow-md relative"
