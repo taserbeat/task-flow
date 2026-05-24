@@ -7,6 +7,7 @@ import {
 
 import type { RoleName } from "../models/roles/Role";
 import BoardIndexPage from "../components/pages/tasks/BoardIndexPage";
+import BoardNewPage from "../components/pages/tasks/BoardNewPage";
 import UserIndexPage from "../components/pages/users/UserIndexPage";
 import UserNewPage from "../components/pages/users/UserNewPage";
 import UserEditPage from "../components/pages/users/UserEditPage";
@@ -49,7 +50,12 @@ export const routes: RouteConfig[] = [
     label: "タスク",
     icon: <RectangleStackIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin", "User"],
-    children: [],
+    children: [
+      {
+        path: "/tasks/new",
+        element: <BoardNewPage />,
+      },
+    ],
   },
   {
     path: "/users",
