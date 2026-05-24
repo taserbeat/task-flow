@@ -87,6 +87,17 @@ const BoardIndexPage = () => {
     }
   };
 
+  /** 行クリック処理 */
+  const handleRowClick = (board: BoardSummary) => {
+    setSelectedBoard(board);
+  };
+
+  /** 行ダブルクリック処理 */
+  const handleRowDoubleClick = () => {
+    // 編集ボタンと同じ処理を呼び出す
+    handleEdit();
+  };
+
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <div className="mb-8">
@@ -157,7 +168,8 @@ const BoardIndexPage = () => {
               {boards.map((board) => (
                 <tr
                   key={board.id}
-                  onClick={() => setSelectedBoard(board)}
+                  onClick={() => handleRowClick(board)}
+                  onDoubleClick={handleRowDoubleClick}
                   className={`cursor-pointer transition-colors border-b border-gray-200 ${
                     selectedBoard?.id === board.id
                       ? "bg-blue-50"
