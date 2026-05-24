@@ -35,6 +35,7 @@ const BoardEditPage = () => {
   } | null>(null);
   const [users, setUsers] = useState<UserSummary[]>([]);
 
+  /** ボードを読み込む */
   const loadBoard = async () => {
     if (!boardId) return;
     try {
@@ -47,6 +48,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** ユーザー一覧を読み込む */
   const loadUsers = async () => {
     try {
       const response = await apiClient.users.getUsers();
@@ -62,6 +64,7 @@ const BoardEditPage = () => {
     loadUsers();
   }, [boardId]);
 
+  /** ボード名を更新する */
   const handleUpdateBoardName = async () => {
     if (!boardId || !boardName.trim()) return;
     try {
@@ -74,6 +77,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** 列を作成する */
   const handleCreateColumn = async () => {
     if (!boardId) return;
     const name = prompt("列名を入力してください");
@@ -88,6 +92,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** 列を更新する */
   const handleUpdateColumn = async (columnId: string) => {
     if (!boardId || !columnName.trim()) return;
     try {
@@ -101,6 +106,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** 列を削除する */
   const handleDeleteColumn = async (columnId: string) => {
     if (!boardId || !confirm("この列を削除しますか？")) return;
     try {
@@ -112,6 +118,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** 列を移動する */
   const handleMoveColumn = async (
     columnId: string,
     direction: "left" | "right",
@@ -149,6 +156,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** タスクを作成する */
   const handleCreateTask = async (columnId: string) => {
     if (!boardId) return;
     setEditingTaskId(`new-${columnId}`);
@@ -161,6 +169,7 @@ const BoardEditPage = () => {
     });
   };
 
+  /** タスクを保存する */
   const handleSaveTask = async (columnId: string, taskId: string | null) => {
     if (!boardId || !taskForm.title.trim()) return;
     try {
@@ -197,6 +206,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** タスクを削除する */
   const handleDeleteTask = async (columnId: string, taskId: string) => {
     if (!boardId || !confirm("このタスクを削除しますか？")) return;
     try {
@@ -208,6 +218,7 @@ const BoardEditPage = () => {
     }
   };
 
+  /** タスクを移動する */
   const handleMoveTask = async (
     columnId: string,
     taskId: string,
@@ -248,10 +259,12 @@ const BoardEditPage = () => {
     }
   };
 
+  /** ドラッグ開始時に呼び出される */
   const handleDragStart = (task: Task, columnId: string) => {
     setDraggedTask({ task, columnId });
   };
 
+  /** ドロップ時に呼び出される */
   const handleDrop = async (targetColumnId: string) => {
     if (!boardId || !draggedTask) return;
     if (draggedTask.columnId === targetColumnId) {
@@ -323,6 +336,7 @@ const BoardEditPage = () => {
 
       <div className="flex-1 overflow-x-auto overflow-y-hidden min-h-0">
         <div className="flex gap-4 h-full">
+          {/* 列リスト */}
           {board.columns.map((column, colIndex) => (
             <div
               key={column.id}
@@ -340,12 +354,14 @@ const BoardEditPage = () => {
                       className="flex-1 px-2 py-1 border rounded"
                       autoFocus
                     />
+
                     <button
                       onClick={() => handleUpdateColumn(column.id)}
                       className="px-2 py-1 text-sm bg-blue-600 text-white rounded cursor-pointer"
                     >
                       保存
                     </button>
+
                     <button
                       onClick={() => setEditingColumnId(null)}
                       className="px-2 py-1 text-sm bg-gray-300 rounded cursor-pointer"
@@ -391,6 +407,7 @@ const BoardEditPage = () => {
                 )}
               </div>
 
+              {/* タスクリスト */}
               <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
                 {column.taskItems.map((task, taskIndex) => (
                   <div key={task.id}>
