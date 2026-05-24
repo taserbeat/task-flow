@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import type {
   BoardDetailResponse,
   CreateBoardColumnRequest,
@@ -16,7 +16,6 @@ type Task = Column["taskItems"][0];
 /** ボードの編集ページ */
 const BoardEditPage = () => {
   const { boardId } = useParams<{ boardId: string }>();
-  const navigate = useNavigate();
   const [board, setBoard] = useState<BoardDetailResponse | null>(null);
   const [editingBoardName, setEditingBoardName] = useState(false);
   const [boardName, setBoardName] = useState("");
@@ -282,14 +281,8 @@ const BoardEditPage = () => {
   }
 
   return (
-    <div className="p-6 h-screen flex flex-col overflow-hidden">
+    <div className="p-6 h-full flex flex-col overflow-hidden">
       <div className="mb-4 flex items-center gap-3 shrink-0">
-        <button
-          onClick={() => navigate("/boards")}
-          className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded cursor-pointer"
-        >
-          ← 戻る
-        </button>
         {editingBoardName ? (
           <>
             <input
@@ -320,7 +313,7 @@ const BoardEditPage = () => {
             <h1 className="text-2xl font-bold">{board.name}</h1>
             <button
               onClick={() => setEditingBoardName(true)}
-              className="px-3 py-1 text-sm bg-gray-200 hover:bg-gray-300 rounded cursor-pointer"
+              className="px-3 py-1 text-sm bg-blue-100 hover:bg-blue-200 rounded cursor-pointer"
             >
               編集
             </button>
@@ -329,11 +322,11 @@ const BoardEditPage = () => {
       </div>
 
       <div className="flex-1 overflow-x-auto overflow-y-hidden min-h-0">
-        <div className="flex gap-4 h-full pb-4">
+        <div className="flex gap-4 h-full">
           {board.columns.map((column, colIndex) => (
             <div
               key={column.id}
-              className="shrink-0 w-80 bg-gray-100 rounded-lg p-4 flex flex-col"
+              className="shrink-0 w-80 bg-gray-100 rounded-lg p-4 flex flex-col h-full"
               onDragOver={(e) => e.preventDefault()}
               onDrop={() => handleDrop(column.id)}
             >
@@ -383,13 +376,13 @@ const BoardEditPage = () => {
                           setEditingColumnId(column.id);
                           setColumnName(column.name);
                         }}
-                        className="px-2 py-1 text-xs bg-gray-200 hover:bg-gray-300 rounded cursor-pointer"
+                        className="px-2 py-1 text-xs bg-blue-100 hover:bg-blue-200 rounded cursor-pointer"
                       >
                         編集
                       </button>
                       <button
                         onClick={() => handleDeleteColumn(column.id)}
-                        className="px-2 py-1 text-xs bg-red-500 text-white hover:bg-red-600 rounded cursor-pointer"
+                        className="px-2 py-1 text-xs bg-red-100 hover:bg-red-200 rounded cursor-pointer"
                       >
                         削除
                       </button>
@@ -398,7 +391,7 @@ const BoardEditPage = () => {
                 )}
               </div>
 
-              <div className="flex-1 overflow-y-auto space-y-2">
+              <div className="flex-1 overflow-y-auto space-y-2 min-h-0">
                 {column.taskItems.map((task, taskIndex) => (
                   <div key={task.id}>
                     {editingTaskId === task.id ? (
