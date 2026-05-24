@@ -14,6 +14,7 @@ import UserEditPage from "../components/pages/users/UserEditPage";
 import TenantIndexPage from "../components/pages/tenants/TenantIndexPage";
 import TenantNewPage from "../components/pages/tenants/TenantNewPage";
 import TenantEditPage from "../components/pages/tenants/TenantEditPage";
+import BoardEditPage from "../components/pages/tasks/BoardEditPage";
 
 /** ルーティング設定 */
 type RouteConfig = {
@@ -45,15 +46,19 @@ type RouteConfig = {
  */
 export const routes: RouteConfig[] = [
   {
-    path: "/tasks",
+    path: "/boards",
     element: <BoardIndexPage />,
-    label: "タスク",
+    label: "ボード",
     icon: <RectangleStackIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin", "User"],
     children: [
       {
-        path: "/tasks/new",
+        path: "/boards/new",
         element: <BoardNewPage />,
+      },
+      {
+        path: "/boards/:boardId/edit",
+        element: <BoardEditPage />,
       },
     ],
   },

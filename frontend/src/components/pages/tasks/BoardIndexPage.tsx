@@ -33,14 +33,14 @@ const BoardIndexPage = () => {
 
   /** 新規ボタンのクリック処理 */
   const handleNew = () => {
-    navigate("/tasks/new");
+    navigate("/boards/new");
   };
 
   /** 編集ボタンのクリック処理 */
   const handleEdit = () => {
     if (!selectedBoard) return;
 
-    navigate(`/tasks/${selectedBoard.id}/edit`);
+    navigate(`/boards/${selectedBoard.id}/edit`);
   };
 
   /** 削除ボタンのクリック処理 */
