@@ -65,6 +65,11 @@ namespace Infrastructure.Repositories
             return userEm?.Role;
         }
 
+        public async Task<bool> ExistsByIdAsync(TenantId tenantId, UserId userId)
+        {
+            return await _dbContext.Users.AnyAsync(x => x.TenantId == tenantId && x.Id == userId);
+        }
+
         public async Task<int> DeleteAsync(TenantId tenantId, UserId userId)
         {
             return await _dbContext.Users

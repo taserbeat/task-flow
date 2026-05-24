@@ -17,13 +17,15 @@ namespace Application.UseCases.TaskItems
         private readonly IBoardColumnRepository _boardColumnRepository;
         private readonly ITaskItemRepository _taskItemRepository;
         private readonly IUnitOfWork _uow;
+        private readonly IUserRepository _userRepository;
 
-        public CreateTaskItemUseCase(TimeProvider timeProvider, IBoardColumnRepository boardColumnRepository, ITaskItemRepository taskItemRepository, IUnitOfWork uow)
+        public CreateTaskItemUseCase(TimeProvider timeProvider, IBoardColumnRepository boardColumnRepository, ITaskItemRepository taskItemRepository, IUnitOfWork uow, IUserRepository userRepository)
         {
             _timeProvider = timeProvider;
             _boardColumnRepository = boardColumnRepository;
             _taskItemRepository = taskItemRepository;
             _uow = uow;
+            _userRepository = userRepository;
         }
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId targetBoardId, CreateTaskItemParam param)
@@ -34,6 +36,16 @@ namespace Application.UseCases.TaskItems
             if (!isBoardAndColumnExists)
             {
                 throw new AppNotFoundException("指定の列は存在しません。");
+            }
+
+            // 担当者の存在チェック（担当者が指定されている場合）
+            if (param.AssigneeId is not null)
+            {
+                var isAssigneeExists = await _userRepository.ExistsByIdAsync(tenantId, UserId.New(param.AssigneeId.Value));
+                if (!isAssigneeExists)
+                {
+                    throw new AppNotFoundException("指定の担当者は存在しません。");
+                }
             }
 
             // 列の最後に追加するので、最後の位置を取得

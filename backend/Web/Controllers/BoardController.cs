@@ -279,6 +279,7 @@ namespace Web.Controllers
             var param = new CreateTaskItemParam
             {
                 BoardColumnId = columnId,
+                AssigneeId = request.AssigneeId,
                 Title = request.Title,
                 Description = request.Description,
                 Priority = request.Priority,

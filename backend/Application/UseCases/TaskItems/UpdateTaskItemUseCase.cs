@@ -20,8 +20,9 @@ namespace Application.UseCases.TaskItems
         private readonly IBoardColumnService _boardColumnService;
         private readonly IExceptionService _exceptionService;
         private readonly IBoardColumnRepository _boardColumnRepository;
+        private readonly IUserRepository _userRepository;
 
-        public UpdateTaskItemUseCase(TimeProvider timeProvider, ITaskItemRepository taskItemRepository, IUnitOfWork uow, IBoardColumnService boardColumnService, IExceptionService exceptionService, IBoardColumnRepository boardColumnRepository)
+        public UpdateTaskItemUseCase(TimeProvider timeProvider, ITaskItemRepository taskItemRepository, IUnitOfWork uow, IBoardColumnService boardColumnService, IExceptionService exceptionService, IBoardColumnRepository boardColumnRepository, IUserRepository userRepository)
         {
             _timeProvider = timeProvider;
             _taskItemRepository = taskItemRepository;
@@ -29,6 +30,7 @@ namespace Application.UseCases.TaskItems
             _boardColumnService = boardColumnService;
             _exceptionService = exceptionService;
             _boardColumnRepository = boardColumnRepository;
+            _userRepository = userRepository;
         }
 
         public async Task ExecuteAsync(TenantId tenantId, UserId actorId, BoardId targetBoardId, BoardColumnId targetColumnId, TaskItemId targetTaskId, UpdateTaskItemParam param)
@@ -59,6 +61,11 @@ namespace Application.UseCases.TaskItems
             {
                 // 担当者を変更・設定
                 var newAssigneeId = UserId.New(param.AssigneeId.Value);
+                var isAssigneeExists = await _userRepository.ExistsByIdAsync(tenantId, newAssigneeId);
+                if (!isAssigneeExists)
+                {
+                    throw new AppNotFoundException("指定の担当者は存在しません。");
+                }
                 targetTaskItemEm.Assign(newAssigneeId, now, actorId);
             }
 
@@ -70,7 +77,7 @@ namespace Application.UseCases.TaskItems
             }
 
             // 説明
-            if (!string.IsNullOrWhiteSpace(param.Description))
+            if (param.Description is not null)
             {
                 var newDescription = new TaskItemDescription(param.Description);
                 targetTaskItemEm.ChangeDescription(newDescription, now, actorId);
