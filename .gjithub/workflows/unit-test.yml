@@ -1,0 +1,82 @@
+name: Unit Test CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+
+  unit-test:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+
+      matrix:
+        project:
+          - tests/Application.UnitTests
+          - tests/Domain.UnitTests
+          - tests/Infrastructure.UnitTests
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json', '**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore task-flow.slnx
+
+      - name: Build
+        run: >
+          dotnet build task-flow.slnx
+          --no-restore
+          --configuration Release
+
+      - name: Run Test
+        run: >
+          dotnet test ${{ matrix.project }}
+          --no-build
+          --configuration Release
+          --logger trx
+          --results-directory TestResults
+          --collect:"XPlat Code Coverage"
+          --settings coverlet.runsettings
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-${{ strategy.job-index }}-${{ matrix.project }}
+          path: backend/TestResults
+
+      - name: Upload Coverage
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-${{ strategy.job-index }}-${{ matrix.project }}
+          path: backend/TestResults/**/coverage.cobertura.xml
