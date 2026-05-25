@@ -3,13 +3,11 @@ name: Unit Test CI
 on:
   push:
     branches:
-      - main
-      - develop
-      - feature/**
+      - main  # mainブランチへのプッシュイベントでトリガー
+
   pull_request:
     branches:
-      - main
-      - develop
+      - main  # mainブランチへのプルリクエストイベントでトリガー
 
 jobs:
 
