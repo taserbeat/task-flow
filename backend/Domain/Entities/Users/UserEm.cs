@@ -118,5 +118,14 @@ namespace Domain.Entities.Users
             UpdatedAt = updatedAt;
             UpdatedBy = updatedBy;
         }
+
+        /// <summary>
+        /// ロールのナビゲーションプロパティを設定する (テスト用)
+        /// </summary>
+        /// <param name="role"></param>
+        public void SetRole(RoleEm role)
+        {
+            Role = role;
+        }
     }
 }
