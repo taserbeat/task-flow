@@ -21,10 +21,15 @@ jobs:
       fail-fast: false
 
       matrix:
-        project:
-          - tests/Application.UnitTests
-          - tests/Domain.UnitTests
-          - tests/Infrastructure.UnitTests
+        include:
+          - name: Application.UnitTests
+            project: tests/Application.UnitTests
+
+          - name: Domain.UnitTests
+            project: tests/Domain.UnitTests
+
+          - name: Infrastructure.UnitTests
+            project: tests/Infrastructure.UnitTests
 
     defaults:
       run:
@@ -71,12 +76,12 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results-${{ strategy.job-index }}-${{ matrix.project }}
+          name: test-results-${{ strategy.job-index }}-${{ matrix.name }}
           path: backend/TestResults
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage-${{ strategy.job-index }}-${{ matrix.project }}
+          name: coverage-${{ strategy.job-index }}-${{ matrix.name }}
           path: backend/TestResults/**/coverage.cobertura.xml
