@@ -49,11 +49,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore task-flow.slnx
+        run: dotnet restore ../task-flow.slnx
 
       - name: Build
         run: >
-          dotnet build task-flow.slnx
+          dotnet build ../task-flow.slnx
           --no-restore
           --configuration Release
 
