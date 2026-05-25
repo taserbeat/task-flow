@@ -6,7 +6,7 @@ using Xunit.Abstractions;
 namespace Domain.UnitTests.Entities.Tenants
 {
     /// <summary>
-    /// <see cref="TenantName"/>のテストクラス。
+    /// <see cref="TenantName"/>のテスト
     /// </summary>
     public class TenantNameTests
     {
@@ -30,16 +30,17 @@ namespace Domain.UnitTests.Entities.Tenants
         [InlineData("  ")]
         [InlineData("　")]
         [InlineData("　　")]
-        public void Constructor_Should_Fail_When_Value_Is_Whitespace(string value)
+        public void Constructor_Should_Fail_When_Value_Is_Whitespace(string name)
         {
-            Assert.Throws<AppValidateException>(() => new TenantName(value));
+            _outputHelper.WriteLine($"入力値: {name}");
+            Assert.Throws<AppValidateException>(() => new TenantName(name));
         }
 
         [Fact(DisplayName = "テナント名の生成に失敗する (最大文字数オーバー)")]
         public void Constructor_Should_Fail_When_Value_Exceeds_MaxLength()
         {
-            var longValue = new string('a', TenantName.MaxLength + 1);
-            Assert.Throws<AppValidateException>(() => new TenantName(longValue));
+            var longName = new string('a', TenantName.MaxLength + 1);
+            Assert.Throws<AppValidateException>(() => new TenantName(longName));
         }
     }
 }
