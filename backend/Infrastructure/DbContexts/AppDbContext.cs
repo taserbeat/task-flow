@@ -1,4 +1,7 @@
+using Domain.Entities.BoardColumns;
+using Domain.Entities.Boards;
 using Domain.Entities.Roles;
+using Domain.Entities.TaskItems;
 using Domain.Entities.Tenants;
 using Domain.Entities.Users;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +39,12 @@ namespace Infrastructure.DbContexts
         public DbSet<RoleEm> Roles { get; set; }
 
         public DbSet<UserEm> Users { get; set; }
+
+        public DbSet<BoardEm> Boards { get; set; }
+
+        public DbSet<BoardColumnEm> BoardColumns { get; set; }
+
+        public DbSet<TaskItemEm> TaskItems { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

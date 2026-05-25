@@ -32,6 +32,17 @@ const UserIndexPage = () => {
     initLoad();
   }, []);
 
+  const isEditDisabled =
+    !selectedUser ||
+    !currentUser ||
+    selectedUser.role.level > currentUser.role.level;
+
+  const isDeleteDisabled =
+    !selectedUser ||
+    !currentUser ||
+    selectedUser.id === currentUser.id ||
+    selectedUser.role.level > currentUser.role.level;
+
   /** 新規ボタンのクリック処理 */
   const handleNew = () => {
     navigate("/users/new");
@@ -40,6 +51,7 @@ const UserIndexPage = () => {
   /** 編集ボタンのクリック処理 */
   const handleEdit = () => {
     if (!selectedUser) return;
+    if (isEditDisabled) return;
 
     navigate(`/users/${selectedUser.id}/edit`);
   };
@@ -47,6 +59,7 @@ const UserIndexPage = () => {
   /** 削除ボタンのクリック処理 */
   const handleDelete = async () => {
     if (
+      isDeleteDisabled ||
       !selectedUser ||
       selectedUser.id === currentUser?.id ||
       !confirm("選択したユーザーを削除しますか？")
@@ -66,16 +79,16 @@ const UserIndexPage = () => {
     }
   };
 
-  const isEditDisabled =
-    !selectedUser ||
-    !currentUser ||
-    selectedUser.role.level > currentUser.role.level;
+  /** 行クリック処理 */
+  const handleRowClick = (user: UserSummary) => {
+    setSelectedUser(user);
+  };
 
-  const isDeleteDisabled =
-    !selectedUser ||
-    !currentUser ||
-    selectedUser.id === currentUser.id ||
-    selectedUser.role.level > currentUser.role.level;
+  /** 行ダブルクリック処理 */
+  const handleRowDoubleClick = () => {
+    // 編集ボタンと同じ処理を呼び出す
+    handleEdit();
+  };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
@@ -145,7 +158,8 @@ const UserIndexPage = () => {
               {users.map((user) => (
                 <tr
                   key={user.id}
-                  onClick={() => setSelectedUser(user)}
+                  onClick={() => handleRowClick(user)}
+                  onDoubleClick={handleRowDoubleClick}
                   className={`cursor-pointer transition-colors border-b border-gray-200 ${
                     selectedUser?.id === user.id
                       ? "bg-blue-50"

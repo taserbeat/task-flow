@@ -42,7 +42,7 @@ namespace Web.Dtos.Tenants.GetTenant
             return new TenantSummaryResponse
             {
                 Id = em.Id.Value,
-                Name = em.Name,
+                Name = em.Name.Value,
                 CreatedAt = em.CreatedAt,
                 UpdatedAt = em.UpdatedAt,
             };

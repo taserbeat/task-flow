@@ -62,7 +62,7 @@ namespace Web.Workers
                 updatedAt: now,
                 null,
                 null,
-                "システム管理用テナント"
+                new("システム管理用テナント")
             );
 
             using (var scope = _scopeFactory.CreateScope())

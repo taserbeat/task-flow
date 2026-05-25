@@ -27,7 +27,7 @@ namespace Web.Dtos.Tenants.GetTenant
             return new TenantDetailResponse
             {
                 Id = em.Id.Value,
-                Name = em.Name,
+                Name = em.Name.Value,
             };
         }
     }

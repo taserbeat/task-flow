@@ -26,6 +26,7 @@ namespace Web.Extensions.DependencyInjection
         {
             services.AddHttpContextAccessor();
             services.AddSingleton<ITicketStore, AuthSessionStore>();
+            services.AddScoped<IAuthorizationHandler, RoleLevelHandler>();
 
             services.AddSingleton(TimeProvider.System);
 
@@ -35,11 +36,16 @@ namespace Web.Extensions.DependencyInjection
             services.AddScoped<ITenantRepository, TenantRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IBoardRepository, BoardRepository>();
+            services.AddScoped<IBoardColumnRepository, BoardColumnRepository>();
+            services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 
+            services.AddScoped<IExceptionService, ExceptionService>();
             services.AddScoped<IPasswordHashService, PasswordHashService>();
             services.AddScoped<IAuthorizeService, AuthorizeService>();
             services.AddScoped<IRoleService, RoleService>();
-            services.AddScoped<IAuthorizationHandler, RoleLevelHandler>();
+            services.AddScoped<IBoardService, BoardService>();
+            services.AddScoped<IBoardColumnService, BoardColumnService>();
 
             return services;
         }

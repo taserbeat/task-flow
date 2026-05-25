@@ -23,6 +23,119 @@ namespace Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("Domain.Entities.BoardColumns.BoardColumnEm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasComment("エンティティのID");
+
+                    b.Property<Guid>("BoardId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("board_id")
+                        .HasComment("ボードID");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasComment("作成日時");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by")
+                        .HasComment("作成者");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("name")
+                        .HasComment("列名");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer")
+                        .HasColumnName("position")
+                        .HasComment("位置");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id")
+                        .HasComment("テナントID");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasComment("最終更新日時");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by")
+                        .HasComment("最終更新者");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Position");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("BoardId", "Position")
+                        .IsUnique();
+
+                    b.ToTable("board_columns", "tf", t =>
+                        {
+                            t.HasComment("ボード列テーブル");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.Boards.BoardEm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasComment("エンティティのID");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasComment("作成日時");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by")
+                        .HasComment("作成者");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("name")
+                        .HasComment("ボード名");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id")
+                        .HasComment("テナントID");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasComment("最終更新日時");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by")
+                        .HasComment("最終更新者");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TenantId");
+
+                    b.ToTable("boards", "tf", t =>
+                        {
+                            t.HasComment("ボードテーブル");
+                        });
+                });
+
             modelBuilder.Entity("Domain.Entities.Roles.RoleEm", b =>
                 {
                     b.Property<Guid>("Id")
@@ -60,6 +173,98 @@ namespace Infrastructure.Migrations
                     b.ToTable("roles", "tf", t =>
                         {
                             t.HasComment("ロールテーブル");
+                        });
+                });
+
+            modelBuilder.Entity("Domain.Entities.TaskItems.TaskItemEm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("id")
+                        .HasComment("エンティティのID");
+
+                    b.Property<Guid?>("AssigneeId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("assignee_id")
+                        .HasComment("担当者ID");
+
+                    b.Property<Guid>("BoardColumnId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("board_column_id")
+                        .HasComment("ボード列ID");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("created_at")
+                        .HasComment("作成日時");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("created_by")
+                        .HasComment("作成者");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)")
+                        .HasColumnName("description")
+                        .HasComment("説明");
+
+                    b.Property<DateTimeOffset?>("DueDate")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("due_date")
+                        .HasComment("期限日");
+
+                    b.Property<int>("Position")
+                        .HasColumnType("integer")
+                        .HasColumnName("position")
+                        .HasComment("位置");
+
+                    b.Property<int>("Priority")
+                        .HasColumnType("integer")
+                        .HasColumnName("priority")
+                        .HasComment("優先度");
+
+                    b.Property<Guid>("TenantId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("tenant_id")
+                        .HasComment("テナントID");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)")
+                        .HasColumnName("title")
+                        .HasComment("タイトル");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("updated_at")
+                        .HasComment("最終更新日時");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid")
+                        .HasColumnName("updated_by")
+                        .HasComment("最終更新者");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AssigneeId");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("DueDate");
+
+                    b.HasIndex("Position");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("BoardColumnId", "Position")
+                        .IsUnique();
+
+                    b.ToTable("tasks", "tf", t =>
+                        {
+                            t.HasComment("タスクテーブル");
                         });
                 });
 
@@ -180,6 +385,53 @@ namespace Infrastructure.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Domain.Entities.BoardColumns.BoardColumnEm", b =>
+                {
+                    b.HasOne("Domain.Entities.Boards.BoardEm", "Board")
+                        .WithMany("Columns")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Board");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Boards.BoardEm", b =>
+                {
+                    b.HasOne("Domain.Entities.Tenants.TenantEm", "Tenant")
+                        .WithMany()
+                        .HasForeignKey("TenantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tenant");
+                });
+
+            modelBuilder.Entity("Domain.Entities.TaskItems.TaskItemEm", b =>
+                {
+                    b.HasOne("Domain.Entities.Users.UserEm", "Assignee")
+                        .WithMany("AssignedTasks")
+                        .HasForeignKey("AssigneeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("Domain.Entities.BoardColumns.BoardColumnEm", "Column")
+                        .WithMany("TaskItems")
+                        .HasForeignKey("BoardColumnId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.Entities.Users.UserEm", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatedBy")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Assignee");
+
+                    b.Navigation("Column");
+
+                    b.Navigation("Creator");
+                });
+
             modelBuilder.Entity("Domain.Entities.Users.UserEm", b =>
                 {
                     b.HasOne("Domain.Entities.Roles.RoleEm", "Role")
@@ -225,6 +477,21 @@ namespace Infrastructure.Migrations
 
                     b.Navigation("Username")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Entities.BoardColumns.BoardColumnEm", b =>
+                {
+                    b.Navigation("TaskItems");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Boards.BoardEm", b =>
+                {
+                    b.Navigation("Columns");
+                });
+
+            modelBuilder.Entity("Domain.Entities.Users.UserEm", b =>
+                {
+                    b.Navigation("AssignedTasks");
                 });
 #pragma warning restore 612, 618
         }

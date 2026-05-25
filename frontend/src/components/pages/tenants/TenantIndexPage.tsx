@@ -69,6 +69,17 @@ const TenantIndexPage = () => {
     }
   };
 
+  /** 行クリック処理 */
+  const handleRowClick = (tenant: TenantSummary) => {
+    setSelectedTenant(tenant);
+  };
+
+  /** 行ダブルクリック処理 */
+  const handleRowDoubleClick = () => {
+    // 編集ボタンと同じ処理を呼び出す
+    handleEdit();
+  };
+
   const isDeleteDisabled =
     !selectedTenant ||
     !currentUser ||
@@ -142,7 +153,8 @@ const TenantIndexPage = () => {
               {tenants.map((tenant) => (
                 <tr
                   key={tenant.id}
-                  onClick={() => setSelectedTenant(tenant)}
+                  onClick={() => handleRowClick(tenant)}
+                  onDoubleClick={handleRowDoubleClick}
                   className={`cursor-pointer transition-colors border-b border-gray-200 ${
                     selectedTenant?.id === tenant.id
                       ? "bg-blue-50"

@@ -39,7 +39,11 @@ namespace Infrastructure.Configurations
             // テナント名
             builder.Property(x => x.Name)
                 .HasColumnName("name")
-                .HasMaxLength(128)
+                .HasMaxLength(TenantName.MaxLength)
+                .HasConversion(
+                    v => v.Value,
+                    v => new TenantName(v)
+                )
                 .HasComment("テナント名")
                 .IsRequired();
 

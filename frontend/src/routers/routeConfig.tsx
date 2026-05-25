@@ -6,13 +6,15 @@ import {
 } from "@heroicons/react/24/solid";
 
 import type { RoleName } from "../models/roles/Role";
-import TaskIndexPage from "../components/pages/tasks/TaskIndexPage";
+import BoardIndexPage from "../components/pages/tasks/BoardIndexPage";
+import BoardNewPage from "../components/pages/tasks/BoardNewPage";
 import UserIndexPage from "../components/pages/users/UserIndexPage";
 import UserNewPage from "../components/pages/users/UserNewPage";
 import UserEditPage from "../components/pages/users/UserEditPage";
 import TenantIndexPage from "../components/pages/tenants/TenantIndexPage";
 import TenantNewPage from "../components/pages/tenants/TenantNewPage";
 import TenantEditPage from "../components/pages/tenants/TenantEditPage";
+import BoardEditPage from "../components/pages/tasks/BoardEditPage";
 
 /** ルーティング設定 */
 type RouteConfig = {
@@ -44,12 +46,21 @@ type RouteConfig = {
  */
 export const routes: RouteConfig[] = [
   {
-    path: "/tasks",
-    element: <TaskIndexPage />,
-    label: "タスク",
+    path: "/boards",
+    element: <BoardIndexPage />,
+    label: "ボード",
     icon: <RectangleStackIcon className="w-5 h-5" />,
     roles: ["SystemAdmin", "Admin", "User"],
-    children: [],
+    children: [
+      {
+        path: "/boards/new",
+        element: <BoardNewPage />,
+      },
+      {
+        path: "/boards/:boardId/edit",
+        element: <BoardEditPage />,
+      },
+    ],
   },
   {
     path: "/users",

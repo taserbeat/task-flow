@@ -77,7 +77,7 @@ namespace Web.Controllers
         /// <response code="500">サーバーが処理に失敗</response>
         [HttpGet]
         [Route("")]
-        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme, Policy = AuthorizePolicyNames.RequireAdmin)]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<UserSummaryResponse>>> GetUsers()
         {
             var userEms = await _getUsersUseCase.ExecuteAsync(_userContext.TenantId);

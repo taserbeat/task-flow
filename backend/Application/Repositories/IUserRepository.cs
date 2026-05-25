@@ -48,6 +48,14 @@ namespace Application.Repositories
         Task<RoleEm?> GetRoleByUserIdAsync(TenantId tenantId, UserId userId);
 
         /// <summary>
+        /// 指定のユーザーがテナントに存在するか?
+        /// </summary>
+        /// <param name="tenantId"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<bool> ExistsByIdAsync(TenantId tenantId, UserId userId);
+
+        /// <summary>
         /// 指定ユーザーを削除する
         /// </summary>
         /// <param name="tenantId">テナントID</param>
