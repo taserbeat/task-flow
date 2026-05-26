@@ -3,13 +3,11 @@ name: Unit Test CI
 on:
   push:
     branches:
-      - main
-      - develop
-      - feature/**
+      - main  # mainブランチへのプッシュイベントでトリガー
+
   pull_request:
     branches:
-      - main
-      - develop
+      - main  # mainブランチへのプルリクエストイベントでトリガー
 
 jobs:
 
@@ -21,10 +19,15 @@ jobs:
       fail-fast: false
 
       matrix:
-        project:
-          - tests/Application.UnitTests
-          - tests/Domain.UnitTests
-          - tests/Infrastructure.UnitTests
+        include:
+          - name: Application.UnitTests
+            project: tests/Application.UnitTests
+
+          - name: Domain.UnitTests
+            project: tests/Domain.UnitTests
+
+          - name: Infrastructure.UnitTests
+            project: tests/Infrastructure.UnitTests
 
     defaults:
       run:
@@ -49,11 +52,11 @@ jobs:
             ${{ runner.os }}-nuget-
 
       - name: Restore
-        run: dotnet restore task-flow.slnx
+        run: dotnet restore ../task-flow.slnx
 
       - name: Build
         run: >
-          dotnet build task-flow.slnx
+          dotnet build ../task-flow.slnx
           --no-restore
           --configuration Release
 
@@ -71,12 +74,12 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results-${{ strategy.job-index }}-${{ matrix.project }}
+          name: test-results-${{ strategy.job-index }}-${{ matrix.name }}
           path: backend/TestResults
 
       - name: Upload Coverage
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: coverage-${{ strategy.job-index }}-${{ matrix.project }}
+          name: coverage-${{ strategy.job-index }}-${{ matrix.name }}
           path: backend/TestResults/**/coverage.cobertura.xml
