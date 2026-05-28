@@ -9,5 +9,6 @@
     <Project Path="backend/tests/Application.UnitTests/Application.UnitTests.csproj" />
     <Project Path="backend/tests/Domain.UnitTests/Domain.UnitTests.csproj" />
     <Project Path="backend/tests/Infrastructure.UnitTests/Infrastructure.UnitTests.csproj" />
+    <Project Path="backend/tests/Web.IntegrationTests/Web.IntegrationTests.csproj" />
   </Folder>
 </Solution>
