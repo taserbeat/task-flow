@@ -70,5 +70,21 @@ namespace Web.IntegrationTests.Controllers
                 }
             });
         }
+
+        [Fact(DisplayName = "認証されていない場合は401を返す")]
+        public async Task GetRoles_Returns401_WhenUnAuthenticate()
+        {
+            // 準備
+            await _env.DbFixture.ResetDatabaseAsync();
+
+            await _env.Factory.RunWithoutAuthenticationAsync(async (client) =>
+            {
+                // 実行
+                var response = await client.GetAsync("/api/roles");
+
+                // 検証
+                response.IsUnauthorized();
+            });
+        }
     }
 }
