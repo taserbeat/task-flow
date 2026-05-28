@@ -137,7 +137,7 @@ const UserForm = ({
                   htmlFor="lastName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  苗字
+                  姓
                 </label>
                 <input
                   id="lastName"
@@ -156,7 +156,7 @@ const UserForm = ({
                   htmlFor="firstName"
                   className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  名前
+                  名
                 </label>
                 <input
                   id="firstName"
