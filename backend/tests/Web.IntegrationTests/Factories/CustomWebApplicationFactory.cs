@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Time.Testing;
 using Web.IntegrationTests.Contexts;
 using Web.IntegrationTests.Fixtures;
 using Web.IntegrationTests.Handlers;
@@ -23,11 +24,15 @@ namespace Web.IntegrationTests.Factories
     {
         private readonly TestDataBaseFixture _dbFixture;
         public TestAuthContext AuthContext { get; set; }
+        public TimeProvider TimeProvider { get; }
+        public FakeTimeProvider FakeTimeProvider { get; }
 
         public CustomWebApplicationFactory(TestDataBaseFixture dbFixture)
         {
             _dbFixture = dbFixture;
             AuthContext = new();
+            TimeProvider = TimeProvider.System;
+            FakeTimeProvider = new();
         }
 
         protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -81,6 +86,9 @@ namespace Web.IntegrationTests.Factories
                 {
                     options.UseNpgsql(connectionString);
                 });
+
+                // DIに登録
+                services.AddSingleton(TimeProvider.System);
             });
         }
     }
