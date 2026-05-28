@@ -191,7 +191,7 @@ const TenantForm = ({
                     htmlFor="lastName"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    苗字
+                    姓
                   </label>
 
                   <input
@@ -210,7 +210,7 @@ const TenantForm = ({
                     htmlFor="firstName"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    名前
+                    名
                   </label>
 
                   <input
