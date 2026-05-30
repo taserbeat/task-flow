@@ -1,6 +1,7 @@
 using Application.Repositories;
 using Infrastructure.Common.Constants;
 using Infrastructure.DbContexts;
+using Infrastructure.Interceptors;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -25,10 +26,13 @@ namespace Infrastructure.Extensions.DependencyInjection
             {
                 options.UseNpgsql(configuration.GetConnectionString(ConnectionStringNames.DefaultConnection));
 
-                // TODO: テーブル構成が整ってきた段階で、RLSを適用する場合はインターセプターのコメントアウトを解除する
-                options.AddInterceptors([
-                    // provider.GetRequiredService<AppDbConnectionInterceptor>(),
-                ]);
+                var isRlsEnabled = configuration[EnvNames.EnableRls]?.ToLower() == "true";
+                if (isRlsEnabled)
+                {
+                    options.AddInterceptors([
+                        provider.GetRequiredService<AppDbConnectionInterceptor>(),
+                    ]);
+                }
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
